@@ -1,0 +1,84 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2,0,0,1), box-shadow 0.3s cubic-bezier(0.2,0,0,1);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  background: var(--md-sys-color-surface);
+  border: 1px solid transparent;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--elevation-2);
+  border-color: var(--md-sys-color-outline); /* Subtle border on hover? Or just shadow */
+  border-color: transparent;
+}
+
+.imageContainer {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background: var(--md-sys-color-surface-variant);
+  overflow: hidden;
+}
+
+.image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.content {
+  padding: 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.category {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--md-sys-color-primary);
+  margin-bottom: 12px;
+  letter-spacing: 0.8px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  margin-bottom: 12px;
+  line-height: 1.3;
+  color: var(--md-sys-color-on-surface);
+}
+
+.summary {
+  font-size: 16px;
+  color: var(--md-sys-color-on-surface-variant);
+  line-height: 1.6;
+  margin-bottom: 24px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.meta {
+  margin-top: auto;
+  font-size: 14px;
+  color: var(--md-sys-color-outline);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
