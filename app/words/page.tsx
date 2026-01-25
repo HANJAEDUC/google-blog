@@ -22,11 +22,12 @@ export default function WordsPage() {
   // Playback state
   const [isPlayingSequence, setIsPlayingSequence] = useState(false);
   const [currentSequenceIndex, setCurrentSequenceIndex] = useState(-1);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
-  // Refs for checking state inside async functions
+  // Ref to track active state to preventing overlap
   const isPlayingRef = useRef(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // 1. Fetch Data
   useEffect(() => {
     Papa.parse(`${SHEET_URL}&t=${Date.now()}`, {
       download: true,
@@ -34,7 +35,6 @@ export default function WordsPage() {
       transformHeader: (h) => h.trim(),
       complete: (results) => {
         const data = (results.data as Word[]).filter(row => row.german && row.german.trim() !== '');
-        console.log('Fetched Vocabulary Data (First Item):', data[0]);
         setVocabulary(data);
         setLoading(false);
       },
@@ -44,107 +44,117 @@ export default function WordsPage() {
       }
     });
 
-    // Cleanup on unmount
     return () => {
-      stopAudio();
+      if (typeof window !== 'undefined') {
+        window.speechSynthesis.cancel();
+      }
     };
   }, []);
 
-  const stopAudio = () => {
-    isPlayingRef.current = false;
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
+  // 2. Load Voices (Mobile Support)
+  useEffect(() => {
+    const updateVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        setAvailableVoices(voices);
+      }
+    };
+
+    updateVoices();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = updateVoices;
     }
-  };
+  }, []);
 
-  const playGoogleAudio = (text: string, lang: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      stopAudio(); // Ensure previous is stopped
-      if (isPlayingSequence) isPlayingRef.current = true; // Restore flag if we are in sequence mode
-
-      const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(text)}`;
-      const audio = new Audio(url);
-      audioRef.current = audio;
-
-      audio.onended = () => resolve();
-      audio.onerror = (e) => reject(e);
-
-      // Attempt play
-      audio.play().catch(e => {
-        console.error("Audio play failed", e);
-        reject(e);
-      });
-    });
-  };
-
-  const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-
-  const playSequenceRecursive = async (index: number) => {
-    // Check if stopped or finished
-    if (!isPlayingRef.current || index >= vocabulary.length) {
-      setIsPlayingSequence(false);
-      setCurrentSequenceIndex(-1);
-      isPlayingRef.current = false;
+  // 3. Sequence Logic
+  useEffect(() => {
+    if (!isPlayingSequence || currentSequenceIndex < 0 || currentSequenceIndex >= vocabulary.length) {
+      if (currentSequenceIndex >= vocabulary.length) {
+        handleStop();
+      }
       return;
     }
 
-    setCurrentSequenceIndex(index);
+    const word = vocabulary[currentSequenceIndex];
+    speakWordSequence(word);
 
-    try {
-      // 1. Play German
-      await playGoogleAudio(vocabulary[index].german, 'de');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentSequenceIndex, isPlayingSequence, vocabulary]);
 
+  const handleStop = () => {
+    setIsPlayingSequence(false);
+    setCurrentSequenceIndex(-1);
+    isPlayingRef.current = false;
+    window.speechSynthesis.cancel();
+  };
+
+  const getBestVoice = (langPrefix: string) => {
+    return availableVoices.find(v => v.lang === langPrefix) ||
+      availableVoices.find(v => v.lang.startsWith(langPrefix.split('-')[0]));
+  };
+
+  const speakWordSequence = (word: Word) => {
+    window.speechSynthesis.cancel();
+    isPlayingRef.current = true;
+
+    const germanUtterance = new SpeechSynthesisUtterance(word.german);
+    germanUtterance.lang = 'de-DE';
+    germanUtterance.rate = 0.9;
+
+    const gVoice = getBestVoice('de-DE');
+    if (gVoice) germanUtterance.voice = gVoice;
+
+    const koreanUtterance = new SpeechSynthesisUtterance(word.korean);
+    koreanUtterance.lang = 'ko-KR';
+    koreanUtterance.rate = 0.9;
+
+    const kVoice = getBestVoice('ko-KR');
+    if (kVoice) koreanUtterance.voice = kVoice;
+
+    germanUtterance.onend = () => {
       if (!isPlayingRef.current) return;
-      await wait(500);
+      setTimeout(() => {
+        if (isPlayingRef.current) window.speechSynthesis.speak(koreanUtterance);
+      }, 500);
+    };
 
-      // 2. Play Korean
+    koreanUtterance.onend = () => {
       if (!isPlayingRef.current) return;
-      await playGoogleAudio(vocabulary[index].korean, 'ko');
+      setTimeout(() => {
+        if (isPlayingRef.current) setCurrentSequenceIndex(prev => prev + 1);
+      }, 1000);
+    };
 
-      if (!isPlayingRef.current) return;
-      await wait(1000);
+    germanUtterance.onerror = (e) => {
+      console.error(e);
+      handleStop();
+    };
 
-      // 3. Next Word
-      playSequenceRecursive(index + 1);
-    } catch (error) {
-      console.error("Sequence stopped or error:", error);
-      setIsPlayingSequence(false);
-      setCurrentSequenceIndex(-1);
-      isPlayingRef.current = false;
-    }
+    window.speechSynthesis.speak(germanUtterance);
+  };
+
+  const speakIndividual = (text: string, lang: 'de' | 'ko') => {
+    if (isPlayingSequence) handleStop();
+
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    const targetLang = lang === 'de' ? 'de-DE' : 'ko-KR';
+    utterance.lang = targetLang;
+
+    const voice = getBestVoice(targetLang);
+    if (voice) utterance.voice = voice;
+
+    window.speechSynthesis.speak(utterance);
   };
 
   const togglePlayAll = () => {
     if (isPlayingSequence) {
-      // Stop
-      setIsPlayingSequence(false);
-      setCurrentSequenceIndex(-1);
-      isPlayingRef.current = false;
-      stopAudio();
+      handleStop();
     } else {
-      // Start
       setIsPlayingSequence(true);
+      setCurrentSequenceIndex(0);
       isPlayingRef.current = true;
-      playSequenceRecursive(0);
     }
-  };
-
-  const speakIndividual = (text: string, lang: 'de' | 'ko' = 'de') => {
-    // If playing sequence, stop it first
-    if (isPlayingSequence) {
-      setIsPlayingSequence(false);
-      setCurrentSequenceIndex(-1);
-      isPlayingRef.current = false;
-    }
-
-    // Just play once without tracking sequence
-    // Using a separate throwaway audio logic or reusing the helper
-    const url = `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=${lang}&q=${encodeURIComponent(text)}`;
-    const audio = new Audio(url);
-    stopAudio(); // Stop any currently playing
-    audioRef.current = audio;
-    audio.play().catch(e => console.error(e));
   };
 
 
