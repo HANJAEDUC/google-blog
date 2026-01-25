@@ -63,9 +63,22 @@ export default function WordsPage() {
       germanUtterance.lang = 'de-DE';
       germanUtterance.rate = 0.9;
 
+      // Explicitly try to find a German voice
+      const voices = window.speechSynthesis.getVoices();
+      const germanVoice = voices.find(v => v.lang.startsWith('de'));
+      if (germanVoice) {
+        germanUtterance.voice = germanVoice;
+      }
+
       const koreanUtterance = new SpeechSynthesisUtterance(word.korean);
       koreanUtterance.lang = 'ko-KR';
       koreanUtterance.rate = 0.9;
+
+      // Explicitly try to find a Korean voice
+      const koreanVoice = voices.find(v => v.lang.startsWith('ko'));
+      if (koreanVoice) {
+        koreanUtterance.voice = koreanVoice;
+      }
 
       germanUtterance.onend = () => {
         if (!active) return;
@@ -108,6 +121,13 @@ export default function WordsPage() {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = 'de-DE';
       utterance.rate = 0.9;
+
+      const voices = window.speechSynthesis.getVoices();
+      const germanVoice = voices.find(v => v.lang.startsWith('de'));
+      if (germanVoice) {
+        utterance.voice = germanVoice;
+      }
+
       window.speechSynthesis.speak(utterance);
     }
   };
