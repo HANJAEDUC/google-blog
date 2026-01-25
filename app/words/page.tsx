@@ -21,17 +21,17 @@ export default function WordsPage() {
   const [loading, setLoading] = useState(true);
   const [isPlayingSequence, setIsPlayingSequence] = useState(false);
   const [currentSequenceIndex, setCurrentSequenceIndex] = useState(-1);
+  const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([]);
 
+  // 1. Data Fetching
   useEffect(() => {
-    // Append timestamp to avoid browser caching
     Papa.parse(`${SHEET_URL}&t=${Date.now()}`, {
       download: true,
       header: true,
-      transformHeader: (h) => h.trim(), // Remove whitespace from headers
+      transformHeader: (h) => h.trim(),
       complete: (results) => {
-        // Filter out empty rows just in case
         const data = (results.data as Word[]).filter(row => row.german && row.german.trim() !== '');
-        console.log('Fetched Vocabulary Data (First Item):', data[0]); // Log first item to check keys
+        console.log('Fetched Vocabulary Data (First Item):', data[0]);
         setVocabulary(data);
         setLoading(false);
       },
@@ -42,7 +42,24 @@ export default function WordsPage() {
     });
   }, []);
 
-  // Handle sequential playback
+  // 2. Voice Loading (Mobile Support)
+  useEffect(() => {
+    const updateVoices = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        setAvailableVoices(voices);
+      }
+    };
+
+    updateVoices();
+
+    // Chrome/Android loads voices asynchronously
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+      window.speechSynthesis.onvoiceschanged = updateVoices;
+    }
+  }, []);
+
+  // 3. Playback Logic
   useEffect(() => {
     let active = true;
 
@@ -63,9 +80,9 @@ export default function WordsPage() {
       germanUtterance.lang = 'de-DE';
       germanUtterance.rate = 0.9;
 
-      // Explicitly try to find a German voice
-      const voices = window.speechSynthesis.getVoices();
-      const germanVoice = voices.find(v => v.lang.startsWith('de'));
+      // Strict German voice selection
+      const germanVoice = availableVoices.find(v => v.lang === 'de-DE') ||
+        availableVoices.find(v => v.lang.startsWith('de'));
       if (germanVoice) {
         germanUtterance.voice = germanVoice;
       }
@@ -74,8 +91,8 @@ export default function WordsPage() {
       koreanUtterance.lang = 'ko-KR';
       koreanUtterance.rate = 0.9;
 
-      // Explicitly try to find a Korean voice
-      const koreanVoice = voices.find(v => v.lang.startsWith('ko'));
+      const koreanVoice = availableVoices.find(v => v.lang === 'ko-KR') ||
+        availableVoices.find(v => v.lang.startsWith('ko'));
       if (koreanVoice) {
         koreanUtterance.voice = koreanVoice;
       }
@@ -107,7 +124,7 @@ export default function WordsPage() {
     return () => {
       active = false;
     };
-  }, [currentSequenceIndex, isPlayingSequence, vocabulary]);
+  }, [currentSequenceIndex, isPlayingSequence, vocabulary, availableVoices]);
 
   const speak = (text: string) => {
     // Stop sequence if user manually plays a word
@@ -122,8 +139,10 @@ export default function WordsPage() {
       utterance.lang = 'de-DE';
       utterance.rate = 0.9;
 
-      const voices = window.speechSynthesis.getVoices();
-      const germanVoice = voices.find(v => v.lang.startsWith('de'));
+      // Use the loaded voices
+      const germanVoice = availableVoices.find(v => v.lang === 'de-DE') ||
+        availableVoices.find(v => v.lang.startsWith('de'));
+
       if (germanVoice) {
         utterance.voice = germanVoice;
       }
@@ -197,4 +216,4 @@ export default function WordsPage() {
     </div>
   );
 }
- 
+
