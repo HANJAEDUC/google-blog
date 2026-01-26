@@ -14,7 +14,7 @@ export default function Navbar() {
             <span style={{ color: '#4285F4' }}>l</span>
             <span style={{ color: '#34A853' }}>y</span>
           </div>
-          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '2px' }}>words</span>
+          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '1px' }}>words</span>
         </Link>
 
         <div className={styles.links}>
