@@ -230,7 +230,14 @@ export default function WordsPage() {
             data-part={word.part}
           >
             {/* Index Counter */}
-            <div style={{ fontSize: '13px', color: '#9aa0a6', marginBottom: '4px', fontWeight: 400 }}>
+            <div style={{
+              position: 'absolute',
+              top: '12px',
+              right: '16px',
+              fontSize: '70%',
+              color: '#9aa0a6',
+              fontWeight: 400
+            }}>
               {index + 1} / {vocabulary.length}
             </div>
             <h2
