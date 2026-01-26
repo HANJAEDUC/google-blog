@@ -96,40 +96,68 @@ export default function WordsPage() {
     window.speechSynthesis.cancel();
     isPlayingRef.current = true;
 
-    const germanUtterance = new SpeechSynthesisUtterance(word.german);
-    germanUtterance.lang = 'de-DE';
-    germanUtterance.rate = 0.9;
+    // Helper to create utterances with consistent error handling and options
+    const playStep = (text: string, lang: string, nextStep: () => void, delay: number = 500) => {
+      // If text is effectively empty (or just placeholder formatting), skip
+      if (!text || text.trim() === '') {
+        nextStep();
+        return;
+      }
 
-    const gVoice = getBestVoice('de-DE');
-    if (gVoice) germanUtterance.voice = gVoice;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang;
+      utterance.rate = 0.9;
 
-    const koreanUtterance = new SpeechSynthesisUtterance(word.korean);
-    koreanUtterance.lang = 'ko-KR';
-    koreanUtterance.rate = 0.9;
+      const voice = getBestVoice(lang);
+      if (voice) utterance.voice = voice;
 
-    const kVoice = getBestVoice('ko-KR');
-    if (kVoice) koreanUtterance.voice = kVoice;
+      utterance.onend = () => {
+        if (!isPlayingRef.current) return;
+        setTimeout(() => {
+          if (isPlayingRef.current) nextStep();
+        }, delay);
+      };
 
-    germanUtterance.onend = () => {
-      if (!isPlayingRef.current) return;
-      setTimeout(() => {
-        if (isPlayingRef.current) window.speechSynthesis.speak(koreanUtterance);
-      }, 500);
+      utterance.onerror = (e) => {
+        console.error("Speech error", e);
+        // On error, stop to prevent broken state
+        handleStop();
+      };
+
+      window.speechSynthesis.speak(utterance);
     };
 
-    koreanUtterance.onend = () => {
-      if (!isPlayingRef.current) return;
-      setTimeout(() => {
-        if (isPlayingRef.current) setCurrentSequenceIndex(prev => prev + 1);
-      }, 1000);
+    // Step 4: Finish (Next Word)
+    const stepFinish = () => {
+      setCurrentSequenceIndex(prev => prev + 1);
     };
 
-    germanUtterance.onerror = (e) => {
-      console.error(e);
-      handleStop();
+    // Step 3: Korean Example Meaning
+    const stepExampleMeaning = () => {
+      // Only play if example exists
+      if (word.exampleMeaning) {
+        playStep(word.exampleMeaning, 'ko-KR', stepFinish, 1000);
+      } else {
+        stepFinish();
+      }
     };
 
-    window.speechSynthesis.speak(germanUtterance);
+    // Step 2: German Example
+    const stepExample = () => {
+      if (word.example) {
+        playStep(word.example, 'de-DE', stepExampleMeaning, 500);
+      } else {
+        stepExampleMeaning();
+      }
+    };
+
+    // Step 1: Korean Word Meaning
+    const stepWordMeaning = () => {
+      playStep(word.korean, 'ko-KR', stepExample, 500);
+    };
+
+    // Start: German Word
+    playStep(word.german, 'de-DE', stepWordMeaning, 500);
   };
 
   const speakIndividual = (text: string, lang: 'de' | 'ko') => {
