@@ -14,12 +14,11 @@ export default function Navbar() {
             <span style={{ color: '#4285F4' }}>l</span>
             <span style={{ color: '#34A853' }}>y</span>
           </div>
-          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '5px' }}>words</span>
+          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '2px' }}>words</span>
         </Link>
 
         <div className={styles.links}>
-          <Link href="/words" className={styles.link}>Words</Link>
-          <Link href="/products" className={styles.link}>Dialog</Link>
+          <Link href="/words" className={styles.link}>GermanWords</Link>
         </div>
 
         <div className={styles.actions}>

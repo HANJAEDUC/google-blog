@@ -6,11 +6,11 @@ export default function Hero() {
     <section className="container">
       <div className={styles.hero}>
         <div className={styles.imageWrapper}>
-          <Image 
-            src="/hero.png" 
-            alt="Google Abstract Visualization" 
-            width={800} 
-            height={800} 
+          <Image
+            src="/hero-vocab.png"
+            alt="German Vocabulary Learning"
+            width={500}
+            height={500}
             className={styles.image}
             priority
           />
