@@ -229,7 +229,10 @@ export default function WordsPage() {
             className={`${styles.card} ${index === currentSequenceIndex ? styles.activeCard : ''}`}
             data-part={word.part}
           >
-            {/* Tag removed as requested */}
+            {/* Index Counter */}
+            <div style={{ fontSize: '13px', color: '#9aa0a6', marginBottom: '4px', fontWeight: 400 }}>
+              {index + 1} / {vocabulary.length}
+            </div>
             <h2
               className={styles.word}
               onClick={() => speakIndividual(word.german, 'de')}
