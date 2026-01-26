@@ -14,17 +14,11 @@ export default function Navbar() {
             <span style={{ color: '#4285F4' }}>l</span>
             <span style={{ color: '#34A853' }}>y</span>
           </div>
-          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '1px' }}>words</span>
+          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '0px', letterSpacing: '-0.5px' }}>words</span>
         </Link>
 
         <div className={styles.links}>
           <Link href="/words" className={styles.link}>GermanWords</Link>
-        </div>
-
-        <div className={styles.actions}>
-          <button className="btn btn-tonal" style={{ width: 48, padding: 0 }}>
-            <IoSearchOutline size={24} />
-          </button>
         </div>
       </div>
     </nav>
