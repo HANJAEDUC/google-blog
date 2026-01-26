@@ -11,12 +11,14 @@
 
 .inner {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  justify-content: center;
   max-width: var(--site-max-width);
   margin: 0 auto;
   padding: 0 24px;
-  gap: 40px;
+  position: relative;
+  height: 100%;
+  /* Ensure full height */
 }
 
 .logo {
@@ -26,6 +28,8 @@
   align-items: center;
   gap: 8px;
   color: var(--md-sys-color-on-surface);
+  position: absolute;
+  left: 24px;
 }
 
 .logo span:nth-child(1) {
@@ -54,7 +58,10 @@
 
 .links {
   display: flex;
-  gap: 24px;
+  width: 100%;
+  max-width: 600px;
+  /* Matches the words grid width */
+  padding-left: 0;
 }
 
 .link {

@@ -25,6 +25,8 @@ export default function WordsPage() {
 
   // Ref to track active state to preventing overlap
   const isPlayingRef = useRef(false);
+  // Ref for auto-scrolling
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // 1. Fetch Data
   useEffect(() => {
@@ -76,6 +78,14 @@ export default function WordsPage() {
     }
 
     if (currentSequenceIndex < 0) return;
+
+    // Auto-scroll to active card
+    if (cardRefs.current[currentSequenceIndex]) {
+      cardRefs.current[currentSequenceIndex]?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
 
     const word = vocabulary[currentSequenceIndex];
     speakWordSequence(word);
@@ -215,6 +225,7 @@ export default function WordsPage() {
         {vocabulary.map((word, index) => (
           <div
             key={index}
+            ref={(el) => { cardRefs.current[index] = el; }}
             className={`${styles.card} ${index === currentSequenceIndex ? styles.activeCard : ''}`}
             data-part={word.part}
           >
