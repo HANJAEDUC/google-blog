@@ -67,12 +67,15 @@ export default function WordsPage() {
 
   // 3. Sequence Logic
   useEffect(() => {
-    if (!isPlayingSequence || currentSequenceIndex < 0 || currentSequenceIndex >= vocabulary.length) {
-      if (currentSequenceIndex >= vocabulary.length) {
-        handleStop();
-      }
+    if (!isPlayingSequence) return;
+
+    if (currentSequenceIndex >= vocabulary.length) {
+      if (vocabulary.length > 0) setCurrentSequenceIndex(0);
+      else handleStop();
       return;
     }
+
+    if (currentSequenceIndex < 0) return;
 
     const word = vocabulary[currentSequenceIndex];
     speakWordSequence(word);
