@@ -10,8 +10,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Google Blog",
-  description: "A beautifully designed blog inspired by Google Material Design 3.",
+  title: "Daily Words",
+  description: "Your daily source for German vocabulary and inspiration.",
 };
 
 export default function RootLayout({
