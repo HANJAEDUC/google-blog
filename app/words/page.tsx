@@ -11,6 +11,7 @@ interface Word {
   example: string;
   exampleMeaning: string;
   pronunciation?: string;
+  ipa?: string;
 }
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-L3a9lSp_MK1Gdmkl3PJK0lugAMmOYVnmqMuCmDdTGjLky0k_EFUFLJ-2TR9hIxKHpjWer_98r1wk/pub?gid=0&single=true&output=csv';
@@ -35,7 +36,10 @@ export default function WordsPage() {
       header: true,
       transformHeader: (h) => h.trim(),
       complete: (results) => {
-        const data = (results.data as Word[]).filter(row => row.german && row.german.trim() !== '');
+        const data = (results.data as any[]).filter(row => row.german && row.german.trim() !== '').map(row => ({
+          ...row,
+          ipa: row['IPA'] || row['ipa']
+        }));
         setVocabulary(data);
         setLoading(false);
       },
@@ -306,6 +310,7 @@ export default function WordsPage() {
               {word.pronunciation && !word.pronunciation.startsWith('#') && (
                 <span className={styles.pronunciationInline}>
                   {word.pronunciation}
+                  {word.ipa && <span style={{ fontSize: '0.8em', opacity: 0.7, marginLeft: '8px', fontWeight: 300 }}>{word.ipa}</span>}
                 </span>
               )}
             </h2>
