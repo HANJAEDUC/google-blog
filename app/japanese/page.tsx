@@ -228,15 +228,16 @@ export default function JapaneseWordsPage() {
                             color: '#9aa0a6',
                             fontWeight: 400,
                             display: 'flex',
-                            alignItems: 'center'
-                        }}>
-                            <span style={{ cursor: 'pointer', display: 'flex', marginRight: '6px' }} onClick={(e) => {
-                                e.stopPropagation();
-                                setCurrentSequenceIndex(index);
-                                setIsPlayingSequence(true);
-                                isPlayingRef.current = true;
-                            }} title="Start loop from here">
-                                <span>▶</span>
+                            alignItems: 'center',
+                            cursor: 'pointer'
+                        }} onClick={(e) => {
+                            e.stopPropagation();
+                            setCurrentSequenceIndex(index);
+                            setIsPlayingSequence(true);
+                            isPlayingRef.current = true;
+                        }} title="Start loop from here">
+                            <span style={{ display: 'flex', marginRight: '6px' }}>
+                                <span style={{ fontSize: '1.2em' }}>▶</span>
                             </span>
                             {index + 1} / {vocabulary.length}
                         </div>
