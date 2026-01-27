@@ -310,7 +310,7 @@ export default function WordsPage() {
               {word.pronunciation && !word.pronunciation.startsWith('#') && (
                 <span className={styles.pronunciationInline}>
                   {word.pronunciation}
-                  {word.ipa && <span style={{ opacity: 0.8, marginLeft: '8px', fontWeight: 300 }}>{word.ipa}</span>}
+                  {word.ipa && <span style={{ opacity: 0.8, marginLeft: '8px', fontWeight: 400, fontFamily: 'Arial, sans-serif' }}>{word.ipa}</span>}
                 </span>
               )}
             </h2>
