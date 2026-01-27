@@ -208,7 +208,16 @@ export default function JapaneseWordsPage() {
                     {isPlayingSequence ? 'Stop Playing' : 'Play All Words'}
                 </button>
 
-                <div style={{ marginTop: '20px', fontSize: '0.75rem', color: '#9aa0a6', lineHeight: '1.6', opacity: 0.8 }}>
+                <div style={{
+                    marginTop: '20px',
+                    fontSize: '0.65rem',
+                    color: '#9aa0a6',
+                    lineHeight: '1.6',
+                    opacity: 0.8,
+                    textAlign: 'left',
+                    width: 'fit-content',
+                    margin: '20px auto'
+                }}>
                     <div>• Play All Words : Start from beginning</div>
                     <div>• Click Index / ▶ : Loop from that word</div>
                     <div>• Click Text : Play individual sound</div>
