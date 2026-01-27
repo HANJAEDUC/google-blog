@@ -8,10 +8,10 @@ export default function Hero() {
   const [currentImage, setCurrentImage] = useState('german');
 
   useEffect(() => {
-    // Toggle image every 4 seconds
+    // Toggle image every 8 seconds
     const interval = setInterval(() => {
       setCurrentImage(prev => prev === 'german' ? 'japanese' : 'german');
-    }, 4000);
+    }, 8000);
     return () => clearInterval(interval);
   }, []);
 
@@ -24,7 +24,7 @@ export default function Hero() {
             style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
               opacity: currentImage === 'german' ? 1 : 0,
-              transition: 'opacity 1s ease-in-out'
+              transition: 'opacity 2s ease-in-out'
             }}
           >
             <Image
@@ -42,7 +42,7 @@ export default function Hero() {
             style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
               opacity: currentImage === 'japanese' ? 1 : 0,
-              transition: 'opacity 1s ease-in-out'
+              transition: 'opacity 2s ease-in-out'
             }}
           >
             <Image
