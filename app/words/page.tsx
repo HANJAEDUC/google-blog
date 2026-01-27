@@ -228,16 +228,24 @@ export default function WordsPage() {
   const [resumeIndex, setResumeIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('vocab_last_index_de');
-    if (saved) {
-      const idx = parseInt(saved, 10);
-      if (!isNaN(idx) && idx >= 0) setResumeIndex(idx);
+    try {
+      const saved = localStorage.getItem('vocab_last_index_de');
+      if (saved) {
+        const idx = parseInt(saved, 10);
+        if (!isNaN(idx) && idx >= 0) setResumeIndex(idx);
+      }
+    } catch (e) {
+      console.error('Failed to access localStorage', e);
     }
   }, []);
 
   useEffect(() => {
-    if (isPlayingSequence && currentSequenceIndex >= 0) {
-      localStorage.setItem('vocab_last_index_de', currentSequenceIndex.toString());
+    try {
+      if (isPlayingSequence && currentSequenceIndex >= 0) {
+        localStorage.setItem('vocab_last_index_de', currentSequenceIndex.toString());
+      }
+    } catch (e) {
+      // Ignore write errors (e.g. quota exceeded or private mode)
     }
   }, [currentSequenceIndex, isPlayingSequence]);
 

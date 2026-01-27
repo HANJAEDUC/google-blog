@@ -201,16 +201,24 @@ export default function JapaneseWordsPage() {
     const [resumeIndex, setResumeIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        const saved = localStorage.getItem('vocab_last_index_jp');
-        if (saved) {
-            const idx = parseInt(saved, 10);
-            if (!isNaN(idx) && idx >= 0) setResumeIndex(idx);
+        try {
+            const saved = localStorage.getItem('vocab_last_index_jp');
+            if (saved) {
+                const idx = parseInt(saved, 10);
+                if (!isNaN(idx) && idx >= 0) setResumeIndex(idx);
+            }
+        } catch (e) {
+            console.error('Failed to verify localStorage', e);
         }
     }, []);
 
     useEffect(() => {
-        if (isPlayingSequence && currentSequenceIndex >= 0) {
-            localStorage.setItem('vocab_last_index_jp', currentSequenceIndex.toString());
+        try {
+            if (isPlayingSequence && currentSequenceIndex >= 0) {
+                localStorage.setItem('vocab_last_index_jp', currentSequenceIndex.toString());
+            }
+        } catch (e) {
+            // Ignore error
         }
     }, [currentSequenceIndex, isPlayingSequence]);
 
