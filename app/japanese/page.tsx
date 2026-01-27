@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
-import { IoPlayCircleOutline } from 'react-icons/io5';
 import styles from './japanese.module.css';
 import Papa from 'papaparse';
 
@@ -248,7 +247,7 @@ export default function JapaneseWordsPage() {
                     isPlayingRef.current = true;
                     setResumeIndex(null);
                 }}>
-                    <IoPlayCircleOutline size={20} />
+                    <span style={{ fontSize: '1.2em' }}>▶</span>
                     <span style={{ fontWeight: 500 }}>Resume from #{resumeIndex + 1}</span>
                     <span style={{ marginLeft: 8, opacity: 0.5, fontSize: '1.2em', lineHeight: 0.5 }} onClick={(e) => {
                         e.stopPropagation(); setResumeIndex(null);
@@ -281,7 +280,7 @@ export default function JapaneseWordsPage() {
                                 setIsPlayingSequence(true);
                                 isPlayingRef.current = true;
                             }} title="Start loop from here">
-                                <IoPlayCircleOutline size={16} />
+                                <span>▶</span>
                             </span>
                             {index + 1} / {vocabulary.length}
                         </div>
