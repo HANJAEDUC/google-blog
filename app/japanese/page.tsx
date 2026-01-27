@@ -164,8 +164,13 @@ export default function JapaneseWordsPage() {
         };
         const stepWordMeaning = () => playStep(word.korean, 'ko-KR', stepExample, 500);
 
-        // Start with Japanese
-        playStep(word.word, 'ja-JP', stepWordMeaning, 500);
+        // Step 0.5: Japanese Word (2nd time)
+        const stepWordSecond = () => {
+            playStep(word.word, 'ja-JP', stepWordMeaning, 500);
+        };
+
+        // Start with Japanese (1st time)
+        playStep(word.word, 'ja-JP', stepWordSecond, 1000);
     };
 
     const speakIndividual = (text: string, lang: 'ja' | 'ko') => {

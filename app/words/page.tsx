@@ -186,8 +186,13 @@ export default function WordsPage() {
       playStep(word.korean, 'ko-KR', stepExample, 500);
     };
 
-    // Start: German Word
-    playStep(word.german, 'de-DE', stepWordMeaning, 500);
+    // Step 0.5: German Word (2nd time)
+    const stepWordSecond = () => {
+      playStep(word.german, 'de-DE', stepWordMeaning, 500);
+    };
+
+    // Start: German Word (1st time)
+    playStep(word.german, 'de-DE', stepWordSecond, 1000);
   };
 
   const speakIndividual = (text: string, lang: 'de' | 'ko') => {
