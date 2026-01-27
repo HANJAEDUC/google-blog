@@ -196,30 +196,8 @@ export default function JapaneseWordsPage() {
         );
     }
 
-    // Resume Logic
-    const [resumeIndex, setResumeIndex] = useState<number | null>(null);
-
-    useEffect(() => {
-        try {
-            const saved = localStorage.getItem('vocab_last_index_jp');
-            if (saved) {
-                const idx = parseInt(saved, 10);
-                if (!isNaN(idx) && idx >= 0) setResumeIndex(idx);
-            }
-        } catch (e) {
-            console.error('Failed to verify localStorage', e);
-        }
-    }, []);
-
-    useEffect(() => {
-        try {
-            if (isPlayingSequence && currentSequenceIndex >= 0) {
-                localStorage.setItem('vocab_last_index_jp', currentSequenceIndex.toString());
-            }
-        } catch (e) {
-            // Ignore error
-        }
-    }, [currentSequenceIndex, isPlayingSequence]);
+    // Resume Logic Disabled
+    // const [resumeIndex, setResumeIndex] = useState<number | null>(null);
 
     return (
         <div className={styles.container}>
@@ -231,29 +209,7 @@ export default function JapaneseWordsPage() {
                 </button>
             </header>
 
-            {/* Resume Button */}
-            {resumeIndex !== null && !isPlayingSequence && (
-                <div style={{
-                    position: 'fixed', bottom: 30, left: '50%', transform: 'translateX(-50%)',
-                    zIndex: 100,
-                    backgroundColor: '#323232', color: '#fff',
-                    padding: '12px 24px', borderRadius: '50px',
-                    boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
-                    cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px',
-                    animation: 'fadeIn 0.5s ease-out'
-                }} onClick={() => {
-                    setCurrentSequenceIndex(resumeIndex);
-                    setIsPlayingSequence(true);
-                    isPlayingRef.current = true;
-                    setResumeIndex(null);
-                }}>
-                    <span style={{ fontSize: '1.2em' }}>▶</span>
-                    <span style={{ fontWeight: 500 }}>Resume from #{resumeIndex + 1}</span>
-                    <span style={{ marginLeft: 8, opacity: 0.5, fontSize: '1.2em', lineHeight: 0.5 }} onClick={(e) => {
-                        e.stopPropagation(); setResumeIndex(null);
-                    }}>×</span>
-                </div>
-            )}
+            {/* Resume Button Removed */}
 
             <div className={styles.grid}>
                 {vocabulary.map((word, index) => (
