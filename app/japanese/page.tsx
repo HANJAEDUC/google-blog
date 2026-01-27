@@ -182,7 +182,7 @@ export default function JapaneseWordsPage() {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1 className={styles.title}>Japanese Words</h1>
+                <h1 className={styles.title}>日本語単語</h1>
                 <p className={styles.subtitle}>Daily Japanese Vocabulary</p>
                 <button className={styles.playAllButton} onClick={togglePlayAll}>
                     {isPlayingSequence ? 'Stop Playing' : 'Play All Words'}

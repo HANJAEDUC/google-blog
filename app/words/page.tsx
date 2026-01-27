@@ -211,7 +211,7 @@ export default function WordsPage() {
       <header className={styles.header}>
         <h1 className={styles.title}>Wortschatz</h1>
         <p className={styles.subtitle}>
-          Daily German Vocabulary for Inspiration
+          Daily German Vocabulary
         </p>
         <button
           className={styles.playAllButton}
