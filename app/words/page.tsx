@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from 'react';
+import { IoPlayCircleOutline } from 'react-icons/io5';
 import styles from './words.module.css';
 import Papa from 'papaparse';
 
@@ -223,6 +224,23 @@ export default function WordsPage() {
     );
   }
 
+  // Resume Logic
+  const [resumeIndex, setResumeIndex] = useState<number | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('vocab_last_index_de');
+    if (saved) {
+      const idx = parseInt(saved, 10);
+      if (!isNaN(idx) && idx >= 0) setResumeIndex(idx);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isPlayingSequence && currentSequenceIndex >= 0) {
+      localStorage.setItem('vocab_last_index_de', currentSequenceIndex.toString());
+    }
+  }, [currentSequenceIndex, isPlayingSequence]);
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
@@ -237,6 +255,30 @@ export default function WordsPage() {
           {isPlayingSequence ? 'Stop Playing' : 'Play All Words'}
         </button>
       </header>
+
+      {/* Resume Button */}
+      {resumeIndex !== null && !isPlayingSequence && (
+        <div style={{
+          position: 'fixed', bottom: 30, left: '50%', transform: 'translateX(-50%)',
+          zIndex: 100,
+          backgroundColor: '#323232', color: '#fff',
+          padding: '12px 24px', borderRadius: '50px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+          cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px',
+          animation: 'fadeIn 0.5s ease-out'
+        }} onClick={() => {
+          setCurrentSequenceIndex(resumeIndex);
+          setIsPlayingSequence(true);
+          isPlayingRef.current = true;
+          setResumeIndex(null);
+        }}>
+          <IoPlayCircleOutline size={20} />
+          <span style={{ fontWeight: 500 }}>Resume from #{resumeIndex + 1}</span>
+          <span style={{ marginLeft: 8, opacity: 0.5, fontSize: '1.2em', lineHeight: 0.5 }} onClick={(e) => {
+            e.stopPropagation(); setResumeIndex(null);
+          }}>×</span>
+        </div>
+      )}
 
       <div className={styles.grid}>
         {vocabulary.map((word, index) => (
@@ -253,8 +295,18 @@ export default function WordsPage() {
               right: '16px',
               fontSize: '70%',
               color: '#9aa0a6',
-              fontWeight: 400
+              fontWeight: 400,
+              display: 'flex',
+              alignItems: 'center'
             }}>
+              <span style={{ cursor: 'pointer', display: 'flex', marginRight: '6px' }} onClick={(e) => {
+                e.stopPropagation();
+                setCurrentSequenceIndex(index);
+                setIsPlayingSequence(true);
+                isPlayingRef.current = true;
+              }} title="Start loop from here">
+                <IoPlayCircleOutline size={16} />
+              </span>
               {index + 1} / {vocabulary.length}
             </div>
             <h2
