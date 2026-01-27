@@ -101,8 +101,25 @@ export default function WordsPage() {
   };
 
   const getBestVoice = (langPrefix: string) => {
-    return availableVoices.find(v => v.lang === langPrefix) ||
-      availableVoices.find(v => v.lang.startsWith(langPrefix.split('-')[0]));
+    const rootLang = langPrefix.split('-')[0];
+    const voices = availableVoices.filter(v => v.lang.startsWith(rootLang));
+
+    // 1. Prefer "Google" voices (Chrome/Android High Quality)
+    const googleVoice = voices.find(v => v.name.includes('Google'));
+    if (googleVoice) return googleVoice;
+
+    // 2. Prefer specific natural voices on macOS/iOS
+    if (rootLang === 'ko') {
+      const yuna = voices.find(v => v.name.includes('Yuna')); // macOS/iOS 'Yuna'
+      if (yuna) return yuna;
+    }
+    if (rootLang === 'de') {
+      const anna = voices.find(v => v.name.includes('Anna')); // macOS 'Anna'
+      if (anna) return anna;
+    }
+
+    // 3. Fallback to exact match or first available
+    return voices.find(v => v.lang === langPrefix) || voices[0];
   };
 
   const speakWordSequence = (word: Word) => {
