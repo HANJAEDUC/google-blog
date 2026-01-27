@@ -14,9 +14,8 @@ interface Word {
 }
 
 // TODO: Replace with your Japanese Google Sheet CSV URL
-// CSV Header must contain: 'german' (or change code to 'japanese'), 'korean', 'part', 'example', 'exampleMeaning'
-// Currently reusing German sheet for demo purposes.
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-L3a9lSp_MK1Gdmkl3PJK0lugAMmOYVnmqMuCmDdTGjLky0k_EFUFLJ-2TR9hIxKHpjWer_98r1wk/pub?gid=0&single=true&output=csv';
+// Currently empty to show blank state.
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQqKyjSncskBs0QKQcqOJV0ZaMuWWjdmaHH70Mcnd6hBcVSabE2PbG6zOLNDQa40Y6jMso7_c7uUGTm/pub?gid=0&single=true&output=csv';
 
 export default function JapaneseWordsPage() {
     const [vocabulary, setVocabulary] = useState<Word[]>([]);
@@ -31,6 +30,11 @@ export default function JapaneseWordsPage() {
 
     // 1. Fetch Data
     useEffect(() => {
+        if (!SHEET_URL) {
+            setLoading(false);
+            return;
+        }
+
         Papa.parse(`${SHEET_URL}&t=${Date.now()}`, {
             download: true,
             header: true,
@@ -39,9 +43,9 @@ export default function JapaneseWordsPage() {
                 // Map CSV fields to Word interface
                 // Assuming CSV has 'german' column currently. Change to 'japanese' if you update CSV headers.
                 const data = (results.data as any[]).
-                    filter(row => row.german && row.german.trim() !== '')
+                    filter(row => row.japanese && row.japanese.trim() !== '')
                     .map(row => ({
-                        word: row.german, // Mapping 'german' column to 'word'
+                        word: row.japanese, // Mapping 'japanese' column to 'word'
                         korean: row.korean,
                         part: row.part,
                         example: row.example,

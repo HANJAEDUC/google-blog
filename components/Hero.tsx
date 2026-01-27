@@ -42,10 +42,7 @@ export default function Hero() {
             style={{
               position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
               opacity: currentImage === 'japanese' ? 1 : 0,
-              transition: 'opacity 1s ease-in-out',
-              // Temporary Styling to differentiate (Red hue check)
-              // Remove filter when real image is ready
-              filter: 'hue-rotate(90deg)'
+              transition: 'opacity 1s ease-in-out'
             }}
           >
             <Image
