@@ -30,24 +30,46 @@ export default function WordsPage() {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // 1. Fetch Data
+  // 1. Fetch Data
   useEffect(() => {
-    Papa.parse(`${SHEET_URL}&t=${Date.now()}`, {
-      download: true,
-      header: true,
-      transformHeader: (h) => h.trim(),
-      complete: (results) => {
-        const data = (results.data as any[]).filter(row => row.german && row.german.trim() !== '').map(row => ({
-          ...row,
-          ipa: row['IPA'] || row['ipa']
-        }));
-        setVocabulary(data);
-        setLoading(false);
-      },
-      error: (error) => {
-        console.error('Error parsing CSV:', error);
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${SHEET_URL}&t=${Date.now()}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch CSV: ${response.statusText}`);
+        }
+        let csvText = await response.text();
+
+        // Fix duplicate headers from Google Sheets (if present) to prevent overwriting valid data
+        // The sheet seems to output: ...,pronunciation,IPA,pronunciation,IPA
+        // The second pair often contains "Loading..." values
+        if (csvText.includes(',pronunciation,IPA,pronunciation,IPA')) {
+          csvText = csvText.replace(',pronunciation,IPA,pronunciation,IPA', ',pronunciation,IPA,pronunciation_backup,IPA_backup');
+        }
+
+        Papa.parse(csvText, {
+          header: true,
+          transformHeader: (h) => h.trim(),
+          complete: (results) => {
+            const data = (results.data as any[]).filter(row => row.german && row.german.trim() !== '').map(row => ({
+              ...row,
+              ipa: row['IPA'] || row['ipa']
+            }));
+            setVocabulary(data);
+            setLoading(false);
+          },
+          error: (error: unknown) => {
+            console.error('Error parsing CSV:', error);
+            setLoading(false);
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
         setLoading(false);
       }
-    });
+    };
+
+    fetchData();
 
     return () => {
       if (typeof window !== 'undefined') {
