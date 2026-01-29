@@ -198,10 +198,19 @@ export default function WordsPage() {
       }
     };
 
+    // Step 2.5: German Example (2nd time)
+    const stepExampleSecond = () => {
+      if (word.example) {
+        playStep(word.example, 'de-DE', stepExampleMeaning, 500);
+      } else {
+        stepExampleMeaning();
+      }
+    };
+
     // Step 2: German Example
     const stepExample = () => {
       if (word.example) {
-        playStep(word.example, 'de-DE', stepExampleMeaning, 500);
+        playStep(word.example, 'de-DE', stepExampleSecond, 500);
       } else {
         stepExampleMeaning();
       }
