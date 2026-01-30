@@ -148,6 +148,14 @@ export default function WordsPage() {
     return voices.find(v => v.lang === langPrefix) || voices[0];
   };
 
+  // Helper function to preprocess text for TTS
+  const preprocessForTTS = (text: string, lang: string) => {
+    if (lang.startsWith('ko') && text.includes('~')) {
+      return text.replace(/~/g, '뭐뭐 ');
+    }
+    return text;
+  };
+
   const speakWordSequence = (word: Word) => {
     window.speechSynthesis.cancel();
     isPlayingRef.current = true;
@@ -160,7 +168,10 @@ export default function WordsPage() {
         return;
       }
 
-      const utterance = new SpeechSynthesisUtterance(text);
+      // Preprocess text for better pronunciation (e.g. ~ -> 뭐뭐)
+      const speechText = preprocessForTTS(text, lang);
+
+      const utterance = new SpeechSynthesisUtterance(speechText);
       utterance.lang = lang;
       utterance.rate = 0.9;
 
@@ -234,8 +245,14 @@ export default function WordsPage() {
     if (isPlayingSequence) handleStop();
 
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(text);
+
+    // Determine language code
     const targetLang = lang === 'de' ? 'de-DE' : 'ko-KR';
+
+    // Preprocess text (e.g. replace ~ with 뭐뭐 in Korean)
+    const speechText = preprocessForTTS(text, targetLang);
+
+    const utterance = new SpeechSynthesisUtterance(speechText);
     utterance.lang = targetLang;
 
     const voice = getBestVoice(targetLang);
