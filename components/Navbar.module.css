@@ -123,4 +123,38 @@
     white-space: nowrap;
     padding: 8px 12px;
   }
+
+  .scrollHint {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(to right, transparent, var(--md-sys-color-surface));
+    pointer-events: none;
+    /* Let clicks pass through */
+    color: var(--md-sys-color-primary);
+    animation: pulse 2s infinite;
+    z-index: 10;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.3;
+      transform: translateX(0);
+    }
+
+    50% {
+      opacity: 1;
+      transform: translateX(3px);
+    }
+
+    100% {
+      opacity: 0.3;
+      transform: translateX(0);
+    }
+  }
 }
