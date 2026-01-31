@@ -36,8 +36,11 @@
     font-weight: 500;
     color: var(--md-sys-color-on-surface);
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+    /* Force fixed width numbers */
     /* Keeps numbers aligned even with variable width font */
-    letter-spacing: 0;
+    letter-spacing: 0.5px;
+    /* Increase spacing positively */
     white-space: nowrap;
 }
 
