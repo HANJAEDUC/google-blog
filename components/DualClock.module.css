@@ -1,8 +1,8 @@
 .clockContainer {
     display: flex;
     align-items: center;
-    gap: 48px;
-    /* Doubled the spacing as requested */
+    gap: 24px;
+    /* Matches navbar links gap */
     margin-left: 24px;
     padding-left: 24px;
     border-left: 1px solid var(--md-sys-color-outline-variant);
