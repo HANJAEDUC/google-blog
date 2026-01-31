@@ -23,9 +23,9 @@ export default function Navbar() {
           <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
           <DualClock />
         </div>
-      </div>
-      <div className={styles.scrollHint}>
-        <IoChevronForward />
+        <div className={styles.scrollHint}>
+          <IoChevronForward />
+        </div>
       </div>
     </nav>
   );
