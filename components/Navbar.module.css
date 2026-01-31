@@ -129,13 +129,16 @@
     right: 0;
     top: 0;
     bottom: 0;
-    width: 40px;
+    width: 60px;
+    /* Wider fade area */
     display: flex;
     align-items: center;
-    justify-content: center;
-    background: linear-gradient(to right, transparent, var(--md-sys-color-surface));
+    justify-content: flex-end;
+    /* Align arrow to right */
+    padding-right: 8px;
+    background: linear-gradient(to right, transparent 0%, var(--md-sys-color-surface) 50%);
+    /* Clear fade */
     pointer-events: none;
-    /* Let clicks pass through */
     color: var(--md-sys-color-primary);
     animation: pulse 2s infinite;
     z-index: 10;
