@@ -6,12 +6,13 @@ import styles from './DualClock.module.css';
 // Coordinates
 const LOCATIONS = {
     de: { lat: 50.25, lon: 8.63 }, // Friedrichsdorf
-    kr: { lat: 37.56, lon: 126.97 } // Seoul
+    kr: { lat: 37.56, lon: 126.97 }, // Seoul
+    jp: { lat: 35.68, lon: 139.69 } // Tokyo
 };
 
 export default function DualClock() {
-    const [times, setTimes] = useState({ de: '', kr: '' });
-    const [temps, setTemps] = useState<{ de: number | null, kr: number | null }>({ de: null, kr: null });
+    const [times, setTimes] = useState({ de: '', kr: '', jp: '' });
+    const [temps, setTemps] = useState<{ de: number | null, kr: number | null, jp: number | null }>({ de: null, kr: null, jp: null });
 
     // 1. Time Update (Every 1 second)
     useEffect(() => {
@@ -25,7 +26,8 @@ export default function DualClock() {
 
             setTimes({
                 de: fmt('Europe/Berlin'),
-                kr: fmt('Asia/Seoul')
+                kr: fmt('Asia/Seoul'),
+                jp: fmt('Asia/Tokyo')
             });
         };
 
@@ -34,23 +36,26 @@ export default function DualClock() {
         return () => clearInterval(timer);
     }, []);
 
-    // 2. Weather Update (Every 30 minutes)
+    // 2. Weather Update (Every 10 minutes)
     useEffect(() => {
         const fetchWeather = async () => {
             try {
-                // Fetch both in parallel
-                const [resDe, resKr] = await Promise.all([
+                // Fetch all in parallel
+                const [resDe, resKr, resJp] = await Promise.all([
                     fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LOCATIONS.de.lat}&longitude=${LOCATIONS.de.lon}&current_weather=true`),
-                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LOCATIONS.kr.lat}&longitude=${LOCATIONS.kr.lon}&current_weather=true`)
+                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LOCATIONS.kr.lat}&longitude=${LOCATIONS.kr.lon}&current_weather=true`),
+                    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${LOCATIONS.jp.lat}&longitude=${LOCATIONS.jp.lon}&current_weather=true`)
                 ]);
 
-                if (resDe.ok && resKr.ok) {
+                if (resDe.ok && resKr.ok && resJp.ok) {
                     const dataDe = await resDe.json();
                     const dataKr = await resKr.json();
+                    const dataJp = await resJp.json();
 
                     setTemps({
                         de: Math.round(dataDe.current_weather.temperature),
-                        kr: Math.round(dataKr.current_weather.temperature)
+                        kr: Math.round(dataKr.current_weather.temperature),
+                        jp: Math.round(dataJp.current_weather.temperature)
                     });
                 }
             } catch (e) {
@@ -60,7 +65,7 @@ export default function DualClock() {
 
         fetchWeather(); // Initial fetch
 
-        const weatherTimer = setInterval(fetchWeather, 30 * 60 * 1000); // 30 minutes
+        const weatherTimer = setInterval(fetchWeather, 10 * 60 * 1000); // 10 minutes
         return () => clearInterval(weatherTimer);
     }, []);
 
@@ -69,7 +74,16 @@ export default function DualClock() {
 
     return (
         <div className={styles.clockContainer}>
-            {/* Germany */}
+            {/* Korea (First) */}
+            <div className={styles.clockGroup}>
+                <span className={styles.flag}>🇰🇷</span>
+                <span className={styles.time}>{times.kr}</span>
+                {temps.kr !== null && (
+                    <span className={styles.temp}>{temps.kr}°C</span>
+                )}
+            </div>
+
+            {/* Germany (Second) */}
             <div className={styles.clockGroup}>
                 <span className={styles.flag}>🇩🇪</span>
                 <span className={styles.time}>{times.de}</span>
@@ -78,15 +92,12 @@ export default function DualClock() {
                 )}
             </div>
 
-            {/* Divider / Spacer */}
-            {/* Spacer is handled by gap in CSS, can adjust there */}
-
-            {/* Korea */}
+            {/* Japan (Third) */}
             <div className={styles.clockGroup}>
-                <span className={styles.flag}>🇰🇷</span>
-                <span className={styles.time}>{times.kr}</span>
-                {temps.kr !== null && (
-                    <span className={styles.temp}>{temps.kr}°C</span>
+                <span className={styles.flag}>🇯🇵</span>
+                <span className={styles.time}>{times.jp}</span>
+                {temps.jp !== null && (
+                    <span className={styles.temp}>{temps.jp}°C</span>
                 )}
             </div>
         </div>
