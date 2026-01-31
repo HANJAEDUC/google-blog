@@ -91,29 +91,36 @@
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .inner {
-    justify-content: space-between;
+    justify-content: flex-start;
     padding: 0 16px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    /* Firefox */
+    gap: 20px;
+  }
+
+  .inner::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
   }
 
   .logo {
     position: static;
     left: auto;
+    flex-shrink: 0;
   }
 
   .links {
     width: auto;
     max-width: none;
-    justify-content: flex-end;
-    gap: 8px;
-    /* Reduce gap */
+    justify-content: flex-start;
+    flex-shrink: 0;
+    gap: 16px;
   }
 
   .link {
-    padding: 6px 8px;
-    font-size: 14px;
-  }
-
-  .logoText {
-    display: none;
+    white-space: nowrap;
+    padding: 8px 12px;
   }
 }
