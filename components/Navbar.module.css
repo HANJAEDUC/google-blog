@@ -112,4 +112,8 @@
     padding: 6px 8px;
     font-size: 14px;
   }
+
+  .logoText {
+    display: none;
+  }
 }

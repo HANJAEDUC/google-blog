@@ -37,6 +37,7 @@
     font-variant-numeric: tabular-nums;
     /* Keeps numbers aligned even with variable width font */
     letter-spacing: -0.5px;
+    white-space: nowrap;
 }
 
 .temp {

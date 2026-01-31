@@ -15,12 +15,12 @@ export default function Navbar() {
             <span style={{ color: '#4285F4' }}>l</span>
             <span style={{ color: '#34A853' }}>y</span>
           </div>
-          <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '0px', letterSpacing: '-0.5px' }}>words</span>
+          <span className={styles.logoText} style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '0px', letterSpacing: '-0.5px' }}>words</span>
         </Link>
 
         <div className={styles.links}>
-          <Link href="/words" className={styles.link}>GermanWords</Link>
-          <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
+          <Link href="/words" className={styles.link}>German</Link>
+          <Link href="/japanese" className={styles.link}>Japanese</Link>
           <DualClock />
         </div>
       </div>
