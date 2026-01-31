@@ -3,12 +3,17 @@
 import { useEffect, useState, useRef } from 'react';
 import styles from './words.module.css';
 
+export interface WordExample {
+    sentence: string;
+    meaning: string;
+}
+
 export interface Word {
     german: string;
     korean: string;
     part: string;
-    example: string;
-    exampleMeaning: string;
+    // Changed from single string to array of objects
+    examples: WordExample[];
     pronunciation?: string;
     ipa?: string;
 }
@@ -18,7 +23,6 @@ interface WordsClientProps {
 }
 
 export default function WordsClient({ initialVocabulary }: WordsClientProps) {
-    // Vocabulary is passed as a prop, but we keep it in variable for consistent access
     const vocabulary = initialVocabulary;
 
     const [isPlayingSequence, setIsPlayingSequence] = useState(false);
@@ -44,7 +48,6 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
             window.speechSynthesis.onvoiceschanged = updateVoices;
         }
 
-        // Cleanup speech on unmount
         return () => {
             if (typeof window !== 'undefined') {
                 window.speechSynthesis.cancel();
@@ -91,25 +94,21 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
         const rootLang = langPrefix.split('-')[0];
         const voices = availableVoices.filter(v => v.lang.startsWith(rootLang));
 
-        // 1. Prefer "Google" voices (Chrome/Android High Quality)
         const googleVoice = voices.find(v => v.name.includes('Google'));
         if (googleVoice) return googleVoice;
 
-        // 2. Prefer specific natural voices on macOS/iOS
         if (rootLang === 'ko') {
-            const yuna = voices.find(v => v.name.includes('Yuna')); // macOS/iOS 'Yuna'
+            const yuna = voices.find(v => v.name.includes('Yuna'));
             if (yuna) return yuna;
         }
         if (rootLang === 'de') {
-            const anna = voices.find(v => v.name.includes('Anna')); // macOS 'Anna'
+            const anna = voices.find(v => v.name.includes('Anna'));
             if (anna) return anna;
         }
 
-        // 3. Fallback to exact match or first available
         return voices.find(v => v.lang === langPrefix) || voices[0];
     };
 
-    // Helper function to preprocess text for TTS
     const preprocessForTTS = (text: string, lang: string) => {
         if (lang.startsWith('ko') && text.includes('~')) {
             return text.replace(/~/g, '뭐뭐 ');
@@ -121,18 +120,17 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
         window.speechSynthesis.cancel();
         isPlayingRef.current = true;
 
-        // Helper to create utterances with consistent error handling and options
+        // Basic helper for a single TTS step
         const playStep = (text: string, lang: string, nextStep: () => void, delay: number = 500) => {
-            // If text is effectively empty (or just placeholder formatting), skip
             if (!text || text.trim() === '') {
                 nextStep();
                 return;
             }
 
-            // Preprocess text for better pronunciation (e.g. ~ -> 뭐뭐)
             const speechText = preprocessForTTS(text, lang);
-
             const utterance = new SpeechSynthesisUtterance(speechText);
+
+            // Language specifics
             utterance.lang = lang;
             utterance.rate = 0.9;
 
@@ -148,52 +146,56 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
 
             utterance.onerror = (e) => {
                 console.error("Speech error", e);
-                // On error, stop to prevent broken state
                 handleStop();
             };
 
             window.speechSynthesis.speak(utterance);
         };
 
-        // Step 4: Finish (Next Word)
-        const stepFinish = () => {
-            setCurrentSequenceIndex(prev => prev + 1);
-        };
-
-        // Step 3: Korean Example Meaning
-        const stepExampleMeaning = () => {
-            // Only play if example exists
-            if (word.exampleMeaning) {
-                playStep(word.exampleMeaning, 'ko-KR', stepFinish, 1000);
-            } else {
-                stepFinish();
+        // Recursive function to play examples one by one
+        const playExamples = (index: number) => {
+            // If no more examples, move to next word
+            if (index >= word.examples.length) {
+                setCurrentSequenceIndex(prev => prev + 1);
+                return;
             }
+
+            const ex = word.examples[index];
+
+            // Define the micro-sequence for ONE example: German -> German(2nd) -> Korean
+            // 3. Korean Meaning
+            const stepExampleMeaning = () => {
+                playStep(ex.meaning, 'ko-KR', () => playExamples(index + 1), 1000);
+            };
+
+            // 2. German (2nd time)
+            const stepExampleSecond = () => {
+                playStep(ex.sentence, 'de-DE', stepExampleMeaning, 500);
+            };
+
+            // 1. German (1st time)
+            const stepExampleFirst = () => {
+                playStep(ex.sentence, 'de-DE', stepExampleSecond, 500);
+            };
+
+            // Start this example sequence
+            stepExampleFirst();
         };
 
-        // Step 2.5: German Example (2nd time)
-        const stepExampleSecond = () => {
-            if (word.example) {
-                playStep(word.example, 'de-DE', stepExampleMeaning, 500);
-            } else {
-                stepExampleMeaning();
-            }
+
+        // Main Sequence: German Word -> German Word(2nd) -> Korean Meaning -> [Examples...]
+
+        // Step 3: Start Examples Loop
+        const startExamples = () => {
+            playExamples(0);
         };
 
-        // Step 2: German Example
-        const stepExample = () => {
-            if (word.example) {
-                playStep(word.example, 'de-DE', stepExampleSecond, 500);
-            } else {
-                stepExampleMeaning();
-            }
-        };
-
-        // Step 1: Korean Word Meaning
+        // Step 2: Korean Word Meaning
         const stepWordMeaning = () => {
-            playStep(word.korean, 'ko-KR', stepExample, 500);
+            playStep(word.korean, 'ko-KR', startExamples, 500);
         };
 
-        // Step 0.5: German Word (2nd time)
+        // Step 1: German Word (2nd time)
         const stepWordSecond = () => {
             playStep(word.german, 'de-DE', stepWordMeaning, 500);
         };
@@ -206,19 +208,12 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
         if (isPlayingSequence) handleStop();
 
         window.speechSynthesis.cancel();
-
-        // Determine language code
         const targetLang = lang === 'de' ? 'de-DE' : 'ko-KR';
-
-        // Preprocess text (e.g. replace ~ with 뭐뭐 in Korean)
         const speechText = preprocessForTTS(text, targetLang);
-
         const utterance = new SpeechSynthesisUtterance(speechText);
         utterance.lang = targetLang;
-
         const voice = getBestVoice(targetLang);
         if (voice) utterance.voice = voice;
-
         window.speechSynthesis.speak(utterance);
     };
 
@@ -232,18 +227,12 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
         }
     };
 
-
     return (
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Wortschatz</h1>
-                <p className={styles.subtitle}>
-                    Daily German Vocabulary
-                </p>
-                <button
-                    className={styles.playAllButton}
-                    onClick={togglePlayAll}
-                >
+                <p className={styles.subtitle}>Daily German Vocabulary</p>
+                <button className={styles.playAllButton} onClick={togglePlayAll}>
                     {isPlayingSequence ? 'Stop Playing' : 'Play All Words'}
                 </button>
 
@@ -293,6 +282,8 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
                             </span>
                             {index + 1} / {vocabulary.length}
                         </div>
+
+                        {/* Word Header */}
                         <h2
                             className={styles.word}
                             onClick={() => speakIndividual(word.german, 'de')}
@@ -307,10 +298,28 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
                             )}
                         </h2>
                         <p className={styles.translation}>{word.korean}</p>
-                        <div className={styles.example} onClick={() => speakIndividual(word.example, 'de')} title="Click to listen">
-                            <p style={{ marginBottom: 4 }}>{word.example}</p>
-                            <p style={{ opacity: 0.7, fontStyle: 'normal', fontSize: '0.9em' }}>{word.exampleMeaning}</p>
-                        </div>
+
+                        {/* Examples List */}
+                        {word.examples.length > 0 && (
+                            <div className={styles.examplesContainer} style={{ marginTop: '16px' }}>
+                                {word.examples.map((ex, i) => (
+                                    <div
+                                        key={i}
+                                        className={styles.example}
+                                        style={{
+                                            marginTop: i > 0 ? '12px' : '0',
+                                            paddingTop: i > 0 ? '12px' : '10px',
+                                            borderTop: i > 0 ? '1px solid rgba(255,255,255,0.05)' : 'none'
+                                        }}
+                                        onClick={() => speakIndividual(ex.sentence, 'de')}
+                                        title="Click to listen"
+                                    >
+                                        <p style={{ marginBottom: 4 }}>{ex.sentence}</p>
+                                        <p style={{ opacity: 0.7, fontStyle: 'normal', fontSize: '0.9em' }}>{ex.meaning}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
