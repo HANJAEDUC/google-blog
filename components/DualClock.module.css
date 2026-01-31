@@ -68,8 +68,7 @@
 
     .temp {
         font-size: 0.6rem;
-        display: none;
-        /* Hide temp on mobile to save space */
+        /* Show temp on mobile */
     }
 
     .flag {
