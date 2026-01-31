@@ -3,8 +3,8 @@ import Papa from 'papaparse';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-L3a9lSp_MK1Gdmkl3PJK0lugAMmOYVnmqMuCmDdTGjLky0k_EFUFLJ-2TR9hIxKHpjWer_98r1wk/pub?gid=0&single=true&output=csv';
 
-// Cache for 1 hour (3600 seconds)
-export const revalidate = 3600;
+// Cache for 5 minutes (300 seconds)
+export const revalidate = 300;
 
 export default async function WordsPage() {
   try {
