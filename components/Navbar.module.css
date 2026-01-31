@@ -104,5 +104,12 @@
     width: auto;
     max-width: none;
     justify-content: flex-end;
+    gap: 8px;
+    /* Reduce gap */
+  }
+
+  .link {
+    padding: 6px 8px;
+    font-size: 14px;
   }
 }
