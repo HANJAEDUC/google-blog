@@ -1,47 +1,54 @@
 .clockContainer {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 48px;
+    /* Doubled the spacing as requested */
     margin-left: 24px;
     padding-left: 24px;
     border-left: 1px solid var(--md-sys-color-outline-variant);
     height: 32px;
 }
 
-.clockItem {
+.clockGroup {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    /* Strict vertical center */
     justify-content: center;
-    line-height: 1.1;
+    gap: 8px;
+    /* Spacing between Flag, Time, Temp */
+    height: 100%;
 }
 
-.label {
-    font-size: 0.65rem;
-    color: var(--md-sys-color-on-surface-variant);
-    font-weight: 500;
-    margin-bottom: 2px;
+.flag {
+    font-size: 1.2rem;
+    line-height: 1;
+    /* Minimize line-height impact on vertical alignment */
+    display: flex;
+    /* Helps remove extra spacing in some browsers */
+    align-items: center;
 }
 
 .time {
-    font-family: 'Roboto Mono', monospace, sans-serif;
-    font-size: 0.85rem;
+    /* Use the same font as the main site (Outfit) instead of Monospace */
+    font-family: var(--font-outfit), sans-serif;
+    font-size: 0.95rem;
     font-weight: 500;
     color: var(--md-sys-color-on-surface);
     font-variant-numeric: tabular-nums;
+    /* Keeps numbers aligned even with variable width font */
+    letter-spacing: -0.5px;
 }
 
-.divider {
-    width: 1px;
-    height: 24px;
-    background-color: var(--md-sys-color-outline-variant);
-    display: none;
-    /* Hidden by default, can be shown if design needs separation */
+.temp {
+    font-family: var(--font-outfit), sans-serif;
+    font-size: 0.8rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 400;
+    margin-left: 2px;
 }
 
 @media (max-width: 768px) {
     .clockContainer {
         display: none;
-        /* Hide on mobile to save space, or adjust layout */
     }
 }

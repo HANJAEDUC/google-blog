@@ -59,6 +59,8 @@
 
 .links {
   display: flex;
+  align-items: center;
+  /* Vertically align items */
   width: 100%;
   max-width: 600px;
   /* Matches the words grid width */
