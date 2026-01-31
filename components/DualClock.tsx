@@ -19,7 +19,7 @@ export default function DualClock() {
             const now = new Date();
             const fmt = (tz: string) => new Intl.DateTimeFormat('de-DE', {
                 timeZone: tz,
-                hour: '2-digit', minute: '2-digit', second: '2-digit',
+                hour: '2-digit', minute: '2-digit',
                 hour12: false
             }).format(now);
 

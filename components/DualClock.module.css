@@ -14,8 +14,8 @@
     align-items: center;
     /* Strict vertical center */
     justify-content: center;
-    gap: 8px;
-    /* Spacing between Flag, Time, Temp */
+    gap: 4px;
+    /* Reduced spacing between Flag, Time, Temp */
     height: 100%;
 }
 
