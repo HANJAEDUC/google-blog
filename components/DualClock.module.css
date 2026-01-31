@@ -14,7 +14,6 @@
     align-items: center;
     /* Strict vertical center */
     justify-content: center;
-    gap: 4px;
     /* Reduced spacing between Flag, Time, Temp */
     height: 100%;
 }
@@ -26,6 +25,8 @@
     display: flex;
     /* Helps remove extra spacing in some browsers */
     align-items: center;
+    margin-right: 4px;
+    /* Ensure literal spacing */
 }
 
 .time {
@@ -36,7 +37,7 @@
     color: var(--md-sys-color-on-surface);
     font-variant-numeric: tabular-nums;
     /* Keeps numbers aligned even with variable width font */
-    letter-spacing: -0.5px;
+    letter-spacing: 0;
     white-space: nowrap;
 }
 
