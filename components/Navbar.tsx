@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import styles from './Navbar.module.css';
 import { IoSearchOutline, IoApps } from 'react-icons/io5';
+import DualClock from './DualClock';
 
 export default function Navbar() {
   return (
@@ -20,6 +21,7 @@ export default function Navbar() {
         <div className={styles.links}>
           <Link href="/words" className={styles.link}>GermanWords</Link>
           <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
+          <DualClock />
         </div>
       </div>
     </nav>

@@ -26,7 +26,7 @@ export default function RootLayout({
       <body className={outfit.variable}>
         <InAppBrowserGuard />
         <Navbar />
-        <main style={{ flex: 1 }}>{children}</main>
+        <main style={{ flex: 1, paddingTop: '80px' }}>{children}</main>
       </body>
     </html>
   );

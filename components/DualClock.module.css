@@ -1,0 +1,47 @@
+.clockContainer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-left: 24px;
+    padding-left: 24px;
+    border-left: 1px solid var(--md-sys-color-outline-variant);
+    height: 32px;
+}
+
+.clockItem {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    line-height: 1.1;
+}
+
+.label {
+    font-size: 0.65rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.time {
+    font-family: 'Roboto Mono', monospace, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    font-variant-numeric: tabular-nums;
+}
+
+.divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--md-sys-color-outline-variant);
+    display: none;
+    /* Hidden by default, can be shown if design needs separation */
+}
+
+@media (max-width: 768px) {
+    .clockContainer {
+        display: none;
+        /* Hide on mobile to save space, or adjust layout */
+    }
+}
