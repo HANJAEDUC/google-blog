@@ -1,79 +1,50 @@
 :root {
-  /* MD3 Color Tokens - Light */
-  --md-sys-color-primary: #4285F4; /* Google Blue */
-  --md-sys-color-on-primary: #FFFFFF;
-  --md-sys-color-primary-container: #D2E3FC;
-  --md-sys-color-on-primary-container: #001D35;
-  
-  --md-sys-color-secondary: #EA4335; /* Google Red */
-  --md-sys-color-on-secondary: #FFFFFF;
-  --md-sys-color-secondary-container: #FAD2CF;
-  --md-sys-color-on-secondary-container: #410E0B;
+  /* Enforce Dark Mode Colors Always */
+  --md-sys-color-primary: #8AB4F8;
+  --md-sys-color-on-primary: #002D6E;
+  --md-sys-color-primary-container: #174EA6;
+  --md-sys-color-on-primary-container: #D2E3FC;
 
-  --md-sys-color-tertiary: #FBBC04; /* Google Yellow */
-  --md-sys-color-on-tertiary: #FFFFFF;
-  --md-sys-color-tertiary-container: #FEEFC3;
-  --md-sys-color-on-tertiary-container: #231B00;
-  
-  --md-sys-color-success: #34A853; /* Google Green */
-  
-  --md-sys-color-background: #F8F9FA;
-  --md-sys-color-on-background: #1F1F1F;
-  --md-sys-color-surface: #FFFFFF;
-  --md-sys-color-on-surface: #1F1F1F;
-  --md-sys-color-surface-variant: #E1E3E1;
-  --md-sys-color-on-surface-variant: #444746;
-  --md-sys-color-outline: #747775;
-  
+  --md-sys-color-secondary: #F28B82;
+  --md-sys-color-on-secondary: #601410;
+  --md-sys-color-secondary-container: #8C1D18;
+  --md-sys-color-on-secondary-container: #FAD2CF;
+
+  --md-sys-color-tertiary: #FDD663;
+  --md-sys-color-on-tertiary: #4D3D00;
+  --md-sys-color-tertiary-container: #705D00;
+  --md-sys-color-on-tertiary-container: #FEEFC3;
+
+  --md-sys-color-background: #191C1F;
+  /* Darker grey */
+  --md-sys-color-on-background: #E3E3E3;
+  --md-sys-color-surface: #1E1F20;
+  --md-sys-color-on-surface: #E3E3E3;
+  --md-sys-color-surface-variant: #444746;
+  --md-sys-color-on-surface-variant: #C4C6C4;
+  --md-sys-color-outline: #8E918F;
+
   --site-max-width: 1200px;
   --border-radius-xl: 28px;
   --border-radius-lg: 16px;
   --border-radius-md: 12px;
   --border-radius-sm: 8px;
-  
-  /* Elevation */
-  --elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
-  --elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.3);
-  --elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.3);
+
+  /* Elevation (Adjusted for dark mode visibility) */
+  --elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+  --elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
 
   /* Transitions */
   --motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
   --motion-duration-medium: 300ms;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* MD3 Color Tokens - Dark */
-    --md-sys-color-primary: #8AB4F8;
-    --md-sys-color-on-primary: #002D6E;
-    --md-sys-color-primary-container: #174EA6;
-    --md-sys-color-on-primary-container: #D2E3FC;
-
-    --md-sys-color-secondary: #F28B82;
-    --md-sys-color-on-secondary: #601410;
-    --md-sys-color-secondary-container: #8C1D18;
-    --md-sys-color-on-secondary-container: #FAD2CF;
-
-    --md-sys-color-tertiary: #FDD663;
-    --md-sys-color-on-tertiary: #4D3D00;
-    --md-sys-color-tertiary-container: #705D00;
-    --md-sys-color-on-tertiary-container: #FEEFC3;
-
-    --md-sys-color-background: #191C1F; /* Darker grey */
-    --md-sys-color-on-background: #E3E3E3;
-    --md-sys-color-surface: #1E1F20;
-    --md-sys-color-on-surface: #E3E3E3;
-    --md-sys-color-surface-variant: #444746;
-    --md-sys-color-on-surface-variant: #C4C6C4;
-    --md-sys-color-outline: #8E918F;
-    
-    --elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
-  }
-}
-
 html {
-  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-family: var(--font-outfit), var(--font-noto), system-ui, sans-serif;
   scroll-behavior: smooth;
+  color-scheme: dark;
+  /* Hint to browser to use dark scrollbars etc */
 }
 
 body {
@@ -151,7 +122,12 @@ a {
 }
 
 /* Text Styles */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   margin: 0;
   color: var(--md-sys-color-on-surface);
   line-height: 1.2;
@@ -173,4 +149,3 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 24px;
   letter-spacing: 0.5px;
 }
-
