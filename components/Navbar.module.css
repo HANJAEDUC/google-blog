@@ -3,7 +3,8 @@
   width: 100%;
   top: 0;
   z-index: 1000;
-  background: rgba(var(--md-sys-color-surface), 0.8);
+  background: rgba(30, 31, 32, 0.95);
+  /* Hardcoded RGB for #1E1F20 compatibility */
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--md-sys-color-outline);
   padding: 16px 0;
