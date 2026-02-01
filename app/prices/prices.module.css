@@ -1,5 +1,6 @@
 .container {
-    max-width: 1200px;
+    max-width: 800px;
+    /* Reduced width for vertical list focus */
     margin: 0 auto;
     padding: 40px 24px;
 }
@@ -101,50 +102,62 @@
     font-weight: 500;
 }
 
-/* List Items Grid */
+/* List Layout (Single Column, Wide Cards) */
 .listSectionTitle {
-    font-size: 24px;
-    margin-bottom: 24px;
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 32px;
     color: var(--md-sys-color-on-surface);
-    padding-left: 8px;
-    border-left: 4px solid var(--md-sys-color-tertiary);
 }
 
-.itemGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
+.itemList {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
     width: 100%;
 }
 
 .itemCard {
-    background: var(--md-sys-color-surface);
-    border-radius: var(--border-radius-lg);
+    background: #1E1F20;
+    /* Dark card background */
+    border-radius: 12px;
+    position: relative;
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    transition: all 0.3s ease;
-    /* Smoother transition */
     overflow: hidden;
-    /* For image zoom */
-    padding: 0;
-    /* Padding moved to content */
+    box-shadow: var(--elevation-1);
 }
 
-.itemCard:hover {
-    transform: translateY(-4px);
-    border-color: var(--md-sys-color-primary);
-    box-shadow: var(--elevation-2);
+/* Accent Line like Word Card */
+.itemCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #8AB4F8;
+    /* Blue accent */
+}
+
+/* Index Number */
+.itemIndex {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    font-size: 0.8rem;
+    color: var(--md-sys-color-on-surface-variant);
+    opacity: 0.7;
 }
 
 /*** Image Styles ***/
 .itemImageContainer {
     width: 100%;
-    height: 220px;
-    /* Fixed height for consistency */
-    position: relative;
-    background: #1e1e1e;
+    height: 250px;
+    background: #000;
     overflow: hidden;
+    position: relative;
     border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
@@ -152,80 +165,75 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: transform 0.5s ease;
 }
 
-.itemCard:hover .itemImage {
-    transform: scale(1.08);
+.itemImage:hover {
+    transform: scale(1.03);
 }
 
 .itemContent {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    padding: 32px;
 }
 
 .itemHeader {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 12px;
-    gap: 12px;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 16px;
 }
 
 .itemName {
     margin: 0;
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-size: 2rem;
+    /* Big title */
+    font-weight: 500;
     color: var(--md-sys-color-on-surface);
 }
 
 .itemCategory {
-    font-size: 0.75rem;
-    padding: 4px 10px;
-    background: var(--md-sys-color-surface-variant);
-    border-radius: 12px;
-    white-space: nowrap;
-    color: var(--md-sys-color-on-surface-variant);
-    font-weight: 500;
-    text-transform: uppercase;
+    font-size: 0.9rem;
+    color: #8AB4F8;
+    /* Accent color text */
+    font-family: var(--font-outfit);
 }
 
+/* Price Section (Like Meaning in Word Card) */
 .priceRow {
     display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
 }
 
 .itemPrice {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 700;
-    color: #FBBC04;
+    color: var(--md-sys-color-on-surface);
     font-family: var(--font-outfit);
 }
 
 .convertedPrice {
-    font-size: 1rem;
-    color: var(--md-sys-color-primary);
+    font-size: 1.4rem;
+    color: var(--md-sys-color-on-surface-variant);
+    /* Muted for KRW */
     font-family: var(--font-outfit);
 }
 
-.itemDescription {
-    font-size: 0.95rem;
-    color: var(--md-sys-color-on-surface-variant);
-    margin: 0;
-    line-height: 1.5;
+/* Description Box (Like Example Box) */
+.descriptionBox {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    padding: 20px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
 }
 
-.emptyState {
-    text-align: center;
-    padding: 60px;
+.itemDescription {
+    font-size: 1rem;
     color: var(--md-sys-color-on-surface-variant);
-    grid-column: 1 / -1;
+    margin: 0;
+    line-height: 1.6;
+    font-style: italic;
 }
 
 .footer {
@@ -240,7 +248,11 @@
         font-size: 36px;
     }
 
-    .itemImageContainer {
-        height: 180px;
+    .itemName {
+        font-size: 1.6rem;
+    }
+
+    .itemContent {
+        padding: 24px;
     }
 }

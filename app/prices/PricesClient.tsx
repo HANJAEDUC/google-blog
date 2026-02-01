@@ -63,7 +63,7 @@ export default function PricesClient({ initialItems }: Props) {
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>German Prices</h1>
-                <p className={styles.subtitle}>Exchange Rates (EUR)</p>
+                <p className={styles.subtitle}>Exchange Rates & Living Costs</p>
             </header>
 
             {/* Big Exchange Rate Card */}
@@ -93,12 +93,17 @@ export default function PricesClient({ initialItems }: Props) {
                 </div>
             </div>
 
-            {/* Price Items List */}
-            <h3 className={styles.listSectionTitle}>German Living Costs</h3>
+            {/* Price Items List (Vertical Stack) */}
+            <h3 className={styles.listSectionTitle}>Warenkorb (Items)</h3>
 
-            <div className={styles.itemGrid}>
+            <div className={styles.itemList}>
                 {initialItems.map((item, index) => (
                     <div key={index} className={styles.itemCard}>
+                        {/* Index Indicator */}
+                        <div className={styles.itemIndex}>
+                            {index + 1} / {initialItems.length}
+                        </div>
+
                         {/* Image Section */}
                         {item.image && (
                             <div className={styles.itemImageContainer}>
@@ -111,17 +116,24 @@ export default function PricesClient({ initialItems }: Props) {
                             </div>
                         )}
 
-                        {/* Content Section */}
+                        {/* Card Content (Mimicking Word Card Structure) */}
                         <div className={styles.itemContent}>
                             <div className={styles.itemHeader}>
                                 <h3 className={styles.itemName}>{item.item}</h3>
                                 <span className={styles.itemCategory}>{item.category}</span>
                             </div>
+
                             <div className={styles.priceRow}>
                                 <span className={styles.itemPrice}>{item.price} €</span>
-                                <span className={styles.convertedPrice}>≈ {getConvertedPrice(item.price)} 원</span>
+                                <span style={{ color: '#5f6368', fontSize: '1.2rem' }}>≈</span>
+                                <span className={styles.convertedPrice}>{getConvertedPrice(item.price)} 원</span>
                             </div>
-                            <p className={styles.itemDescription}>{item.description}</p>
+
+                            {item.description && (
+                                <div className={styles.descriptionBox}>
+                                    <p className={styles.itemDescription}>{item.description}</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 ))}
