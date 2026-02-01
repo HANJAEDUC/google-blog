@@ -121,7 +121,6 @@ export default function PricesClient({ initialItems }: Props) {
 
                             <div className={styles.priceRow}>
                                 <span className={styles.itemPrice}>{item.price} €</span>
-                                <span style={{ color: '#5f6368', fontSize: '1.2rem' }}>≈</span>
                                 <span className={styles.convertedPrice}>{getConvertedPrice(item.price)} 원</span>
                             </div>
 
