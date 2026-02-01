@@ -1,77 +1,118 @@
 .container {
     max-width: 1200px;
-    /* Wider container for grid */
     margin: 0 auto;
     padding: 40px 24px;
 }
 
 .header {
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 40px;
 }
 
 .title {
     font-size: 48px;
-    font-weight: 700;
+    font-weight: 500;
     margin-bottom: 8px;
     color: var(--md-sys-color-on-surface);
-    letter-spacing: -1px;
 }
 
 .subtitle {
     font-size: 18px;
     color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 24px;
 }
 
-/* Rate Banner */
-.rateBanner {
-    background: rgba(30, 31, 32, 0.6);
-    border: 1px solid var(--md-sys-color-outline);
-    padding: 12px 24px;
-    border-radius: 99px;
-    /* Pill shape */
-    display: inline-flex;
-    align-items: center;
+/* Big Exchange Rate Card */
+.exchangeSection {
+    display: flex;
     justify-content: center;
-    backdrop-filter: blur(8px);
+    margin-bottom: 60px;
 }
 
-.rateContent {
+.bigCard {
+    background: var(--md-sys-color-surface);
+    border-radius: var(--border-radius-lg);
+    padding: 40px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-color: rgba(255, 255, 255, 0.1);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+    /* Big and centered */
+    box-shadow: var(--elevation-3);
+    transition: transform 0.2s;
+}
+
+.bigCard:hover {
+    transform: translateY(-2px);
+}
+
+.bigCard::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: #4285F4;
+    /* Blue for KRW */
+}
+
+.bigTitle {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
     justify-content: center;
-    font-size: 0.95rem;
+    gap: 12px;
 }
 
-.rateLabel {
+.bigPriceContainer {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.bigPrice {
+    font-size: 4.5rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--font-outfit);
+    letter-spacing: -2px;
+    line-height: 1;
+}
+
+.bigUnit {
+    font-size: 1.5rem;
+    font-weight: 500;
     color: var(--md-sys-color-on-surface-variant);
 }
 
-.rateGroup {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.rateValue {
-    color: #4285F4;
-    /* Tech Blue */
-    font-family: var(--font-outfit);
-    font-weight: 600;
-}
-
-.rateChange {
-    font-size: 0.85rem;
+.bigChange {
+    font-size: 1.1rem;
     color: var(--md-sys-color-primary);
     background: rgba(var(--md-sys-color-primary), 0.1);
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 6px 16px;
+    border-radius: 99px;
+    display: inline-block;
+    font-weight: 500;
 }
 
-/* Grid Layout */
+/* List Items Grid */
+.listSectionTitle {
+    font-size: 24px;
+    margin-bottom: 24px;
+    color: var(--md-sys-color-on-surface);
+    padding-left: 8px;
+    border-left: 4px solid var(--md-sys-color-tertiary);
+    /* Yellow accent */
+}
+
 .itemGrid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -87,8 +128,6 @@
     display: flex;
     flex-direction: column;
     transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
 }
 
 .itemCard:hover {
@@ -107,10 +146,9 @@
 
 .itemName {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--md-sys-color-on-surface);
-    line-height: 1.3;
 }
 
 .itemCategory {
@@ -122,7 +160,6 @@
     color: var(--md-sys-color-on-surface-variant);
     font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 .priceRow {
@@ -135,10 +172,9 @@
 }
 
 .itemPrice {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     font-weight: 700;
     color: #FBBC04;
-    /* Yellow for Euro price */
     font-family: var(--font-outfit);
 }
 
@@ -146,43 +182,39 @@
     font-size: 1rem;
     color: var(--md-sys-color-primary);
     font-family: var(--font-outfit);
-    font-weight: 500;
 }
 
 .itemDescription {
     font-size: 0.95rem;
     color: var(--md-sys-color-on-surface-variant);
-    line-height: 1.6;
     margin: 0;
+    line-height: 1.5;
 }
 
 .emptyState {
     text-align: center;
     padding: 60px;
     color: var(--md-sys-color-on-surface-variant);
+    grid-column: 1 / -1;
 }
 
 .footer {
     text-align: center;
-    margin-top: 60px;
+    margin-top: 80px;
     color: #5f6368;
     font-size: 0.8rem;
 }
 
-/* Mobile Responsive */
 @media (max-width: 600px) {
     .title {
         font-size: 36px;
     }
 
-    .rateBanner {
-        padding: 10px 16px;
-        width: 100%;
-        border-radius: 12px;
+    .bigPrice {
+        font-size: 3.5rem;
     }
 
-    .rateContent {
-        flex-direction: column;
-        gap: 4px;
+    .bigCard {
+        padding: 24px;
     }
 }

@@ -7,12 +7,10 @@ import styles from './prices.module.css';
 interface PriceData {
     price: string;
     change: string;
-    rate: string;
 }
 
 interface Rates {
     eur_krw: PriceData;
-    eur_usd: PriceData;
 }
 
 export interface PriceItem {
@@ -51,44 +49,52 @@ export default function PricesClient({ initialItems }: Props) {
         return () => clearInterval(interval);
     }, []);
 
-    // Calculate converted Price
     const getConvertedPrice = (euroPrice: string) => {
         if (!rates || !rates.eur_krw.price) return '...';
-        // Clean strings: '1,719.50' -> 1719.50
         const rate = parseFloat(rates.eur_krw.price.replace(/,/g, ''));
         const price = parseFloat(euroPrice.replace(/,/g, ''));
         if (isNaN(rate) || isNaN(price)) return '...';
 
-        const krw = price * rate;
-        // Format: 12,345
-        return krw.toLocaleString('ko-KR', { maximumFractionDigits: 0 });
+        return (price * rate).toLocaleString('ko-KR', { maximumFractionDigits: 0 });
     };
 
     return (
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>German Prices</h1>
-                <p className={styles.subtitle}>Living Costs in Germany</p>
-
-                {/* Exchange Rate Banner */}
-                <div className={styles.rateBanner}>
-                    {loading && !rates ? (
-                        <span>Loading Exchange Rate...</span>
-                    ) : rates ? (
-                        <div className={styles.rateContent}>
-                            <span className={styles.rateLabel}>Current Exchange Rate:</span>
-                            <div className={styles.rateGroup}>
-                                <strong className={styles.rateValue}>1 EUR = {rates.eur_krw.price} KRW</strong>
-                                <span className={styles.rateChange}>({rates.eur_krw.change})</span>
-                            </div>
-                        </div>
-                    ) : (
-                        <span>Exchange Rate Unavailable</span>
-                    )}
-                </div>
+                <p className={styles.subtitle}>Exchange Rates (EUR)</p>
             </header>
 
-            {/* Price Items Grid */}
+            {/* Big Exchange Rate Card (Restored Design) */}
+            <div className={styles.exchangeSection}>
+                <div className={styles.bigCard}>
+                    <h2 className={styles.bigTitle}>
+                        <span style={{ fontSize: '1.4em' }}>💶</span>
+                        EUR ➔
+                        <span style={{ fontSize: '1.4em' }}>🇰🇷</span> KRW
+                    </h2>
+
+                    {loading && !rates ? (
+                        <div style={{ padding: '20px', opacity: 0.6 }}>Loading...</div>
+                    ) : rates ? (
+                        <>
+                            <div className={styles.bigPriceContainer}>
+                                <span className={styles.bigPrice}>{rates.eur_krw.price}</span>
+                                <span className={styles.bigUnit}>원</span>
+                            </div>
+                            <div className={styles.bigChange}>
+                                {rates.eur_krw.change} (오늘 변동)
+                            </div>
+                        </>
+                    ) : (
+                        <div>Unavailable</div>
+                    )}
+                </div>
+            </div>
+
+            {/* Price Items List (Sheet 2) */}
+            <h3 className={styles.listSectionTitle}>German Living Costs</h3>
+
             <div className={styles.itemGrid}>
                 {initialItems.map((item, index) => (
                     <div key={index} className={styles.itemCard}>
@@ -108,12 +114,11 @@ export default function PricesClient({ initialItems }: Props) {
             {initialItems.length === 0 && (
                 <div className={styles.emptyState}>
                     <p>No price data found.</p>
-                    <p style={{ fontSize: '0.8em', marginTop: '8px' }}>Please update the Google Sheet GID in code.</p>
                 </div>
             )}
 
             <footer className={styles.footer}>
-                <p>* Exchange rate updates every 10 minutes via Naver Finance</p>
+                <p>* Live exchange rate updates every 10 minutes</p>
             </footer>
         </div>
     );
