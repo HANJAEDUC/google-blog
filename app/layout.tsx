@@ -19,7 +19,7 @@ const notoSansKr = Noto_Sans_KR({
 });
 
 export const metadata: Metadata = {
-  title: "My German",
+  title: "Daily Words",
   description: "Your daily source for German vocabulary and inspiration.",
 };
 
