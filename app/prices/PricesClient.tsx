@@ -116,7 +116,7 @@ export default function PricesClient({ initialItems }: Props) {
                         <div className={styles.itemContent}>
                             <div className={styles.itemHeader}>
                                 <h3 className={styles.itemName}>{item.item}</h3>
-                                <span className={styles.itemCategory}>{item.category}</span>
+                                {item.category && <span className={styles.itemCategory}>{item.category}</span>}
                             </div>
 
                             <div className={styles.priceRow}>

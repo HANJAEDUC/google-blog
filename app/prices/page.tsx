@@ -42,7 +42,7 @@ export default async function PricesPage() {
                 item: row['내용'] || row.item || 'Unknown',
                 price: row['GermanPrices'] || row.price || '0',
                 description: row['설명'] || row.description || '', // Added '설명' just in case
-                category: row['카테고리'] || row.category || 'Living Cost',
+                category: row['카테고리'] || row.category || '',
                 // Check multiple possible headers for image
                 image: formatImageUrl(row['이미지'] || row['Image'] || row['image'] || row['그림'])
             })).filter(i => i.item && i.item !== 'Unknown' && i.price !== '0');

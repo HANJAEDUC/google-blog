@@ -1,5 +1,6 @@
 .container {
-    max-width: 800px;
+    max-width: 720px;
+    /* Restored Width (Step 398) */
     margin: 0 auto;
     padding: 64px 24px;
 }
@@ -19,8 +20,8 @@
 .mainStack {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-    /* Slightly tighter gap */
+    gap: 32px;
+    /* Restored gap */
     width: 100%;
 }
 
@@ -32,20 +33,21 @@
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: var(--elevation-1);
     width: 100%;
-    height: 260px;
-    /* Fixed height unification */
     overflow: hidden;
     transition: transform 0.2s ease;
 }
 
-/*** Big Exchange Rate Card ***/
+/*** Big Exchange Rate Card (Restored to Vertical Auto-Height) ***/
 .bigCard {
     composes: cardBase;
-    padding: 0 32px;
+    /* Restored original padding and auto layout */
+    padding: 40px 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: auto;
+    /* Allow natural height based on text */
 }
 
 .bigCard:hover {
@@ -64,10 +66,10 @@
 }
 
 .bigTitle {
-    font-size: 1.4rem;
+    font-size: 1.5rem;
     font-weight: 500;
     color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -79,11 +81,11 @@
     align-items: baseline;
     justify-content: center;
     gap: 12px;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
 }
 
 .bigPrice {
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 700;
     color: var(--md-sys-color-on-surface);
     font-family: var(--font-outfit);
@@ -98,20 +100,22 @@
 }
 
 .bigChange {
-    font-size: 1rem;
+    font-size: 1.1rem;
     color: var(--md-sys-color-primary);
     background: rgba(var(--md-sys-color-primary), 0.1);
-    padding: 4px 12px;
+    padding: 6px 16px;
     border-radius: 99px;
     font-weight: 500;
 }
 
-/*** Item List Cards (Horizontal Layout) ***/
+/*** Item List Cards (Horizontal to match height) ***/
 .itemCard {
     composes: cardBase;
     display: flex;
     flex-direction: row;
-    /* Horizontal Image + Content */
+    /* KEEP Horizontal */
+    height: 250px;
+    /* Fixed height to match approx size of Big Card */
     align-items: stretch;
 }
 
@@ -143,18 +147,16 @@
 }
 
 .itemImageContainer {
-    width: 260px;
-    /* Square region for image */
+    width: 250px;
+    /* Square image to match height */
     height: 100%;
     background: #000;
     overflow: hidden;
     position: relative;
     border-right: 1px solid rgba(255, 255, 255, 0.05);
     flex-shrink: 0;
-    /* Prevent shrinking */
 }
 
-/* Fallback if no image */
 .itemImageContainer.noImage {
     display: none;
 }
@@ -221,8 +223,7 @@
 }
 
 .descriptionBox {
-    /* Removed background box for cleaner look in horizontal layout */
-    margin-top: 8px;
+    /* No bg */
 }
 
 .itemDescription {
@@ -232,7 +233,6 @@
     line-height: 1.5;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    /* Limit text lines */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -250,19 +250,10 @@
     font-size: 0.8rem;
 }
 
-/* Mobile Responsive: Switch to Stack */
+/* Mobile: Stack again */
 @media (max-width: 600px) {
     .title {
         font-size: 36px;
-    }
-
-    .bigCard {
-        height: auto;
-        padding: 32px 24px;
-    }
-
-    .bigPrice {
-        font-size: 3.5rem;
     }
 
     .itemCard {
@@ -272,13 +263,8 @@
 
     .itemImageContainer {
         width: 100%;
-        height: 200px;
+        height: 220px;
         border-right: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .itemContent {
-        padding: 24px;
-        height: auto;
     }
 }
