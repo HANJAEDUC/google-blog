@@ -19,6 +19,8 @@ export interface PriceItem {
     description: string;
     category: string;
     image?: string;
+    link?: string; // Logo Image
+    site?: string; // Target Link
 }
 
 interface Props {
@@ -132,14 +134,16 @@ export default function PricesClient({ initialItems }: Props) {
                                 </div>
                             )}
 
-                            {/* Aldi Logo Link */}
-                            <a href="https://www.aldi-sued.de/" target="_blank" rel="noopener noreferrer">
-                                <img
-                                    src="https://drive.google.com/thumbnail?id=1Q5XjjVkDxD6wgCjZEhuMtpao2KCsfXGR&sz=w100"
-                                    alt="Aldi Süd"
-                                    className={styles.brandLogo}
-                                />
-                            </a>
+                            {/* Dynamic Logo Link */}
+                            {item.site && item.link && (
+                                <a href={item.site} target="_blank" rel="noopener noreferrer">
+                                    <img
+                                        src={item.link}
+                                        alt="Store Link"
+                                        className={styles.brandLogo}
+                                    />
+                                </a>
+                            )}
                         </div>
                     </div>
                 ))}

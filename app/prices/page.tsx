@@ -56,6 +56,10 @@ export default async function PricesPage() {
                     // Default category to empty as requested
                     category: row['카테고리'] || row.category || '',
                     image: formatImageUrl(rawImage),
+                    // '링크' column is now the Logo Image
+                    link: formatImageUrl(row['링크'] || row.link),
+                    // '사이트' column is the Target URL
+                    site: row['사이트'] || row.site || undefined,
                 };
             }).filter(i => {
                 // Updated Filter: Allow if Price matches non-zero OR Name exists
