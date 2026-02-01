@@ -1,6 +1,5 @@
 .container {
     max-width: 720px;
-    /* Restored Width (Step 398) */
     margin: 0 auto;
     padding: 64px 24px;
 }
@@ -21,7 +20,6 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
-    /* Restored gap */
     width: 100%;
 }
 
@@ -37,17 +35,15 @@
     transition: transform 0.2s ease;
 }
 
-/*** Big Exchange Rate Card (Restored to Vertical Auto-Height) ***/
+/*** Big Exchange Rate Card ***/
 .bigCard {
     composes: cardBase;
-    /* Restored original padding and auto layout */
     padding: 40px 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: auto;
-    /* Allow natural height based on text */
 }
 
 .bigCard:hover {
@@ -108,14 +104,13 @@
     font-weight: 500;
 }
 
-/*** Item List Cards (Horizontal to match height) ***/
+/*** Item List Cards (Image on Right) ***/
 .itemCard {
     composes: cardBase;
     display: flex;
-    flex-direction: row;
-    /* KEEP Horizontal */
+    flex-direction: row-reverse;
+    /* Image on RIGHT */
     height: 250px;
-    /* Fixed height to match approx size of Big Card */
     align-items: stretch;
 }
 
@@ -139,7 +134,10 @@
 .itemIndex {
     position: absolute;
     top: 16px;
-    right: 20px;
+    right: auto;
+    /* Reset right */
+    left: 20px;
+    /* Move index to Left since Image is on Right */
     font-size: 0.8rem;
     color: var(--md-sys-color-on-surface-variant);
     opacity: 0.7;
@@ -148,12 +146,13 @@
 
 .itemImageContainer {
     width: 250px;
-    /* Square image to match height */
     height: 100%;
     background: #000;
     overflow: hidden;
     position: relative;
-    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    /* Border on left */
+    border-right: none;
     flex-shrink: 0;
 }
 
@@ -179,6 +178,8 @@
     flex-direction: column;
     justify-content: center;
     position: relative;
+    text-align: left;
+    /* Keep text left aligned */
 }
 
 .itemHeader {
@@ -222,10 +223,6 @@
     font-family: var(--font-outfit);
 }
 
-.descriptionBox {
-    /* No bg */
-}
-
 .itemDescription {
     font-size: 1rem;
     color: var(--md-sys-color-on-surface-variant);
@@ -250,7 +247,6 @@
     font-size: 0.8rem;
 }
 
-/* Mobile: Stack again */
 @media (max-width: 600px) {
     .title {
         font-size: 36px;
@@ -258,13 +254,19 @@
 
     .itemCard {
         flex-direction: column;
+        /* Stack vertically on mobile */
         height: auto;
     }
 
     .itemImageContainer {
         width: 100%;
         height: 220px;
-        border-right: none;
+        border-left: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .itemIndex {
+        left: auto;
+        right: 20px;
     }
 }

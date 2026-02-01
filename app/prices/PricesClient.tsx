@@ -63,11 +63,10 @@ export default function PricesClient({ initialItems }: Props) {
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Deutsche Preise</h1>
-                {/* Subtitle removed per user request */}
             </header>
 
             <div className={styles.mainStack}>
-                {/* Big Exchange Rate Card (Same width as items) */}
+                {/* Big Exchange Rate Card */}
                 <div className={styles.bigCard}>
                     <h2 className={styles.bigTitle}>
                         <span style={{ fontSize: '1.4em' }}>💶</span>
@@ -92,7 +91,7 @@ export default function PricesClient({ initialItems }: Props) {
                     )}
                 </div>
 
-                {/* Price Items List (Vertical, Wide) */}
+                {/* Price Items List */}
                 {initialItems.map((item, index) => (
                     <div key={index} className={styles.itemCard}>
                         {/* Index Indicator */}
@@ -100,7 +99,7 @@ export default function PricesClient({ initialItems }: Props) {
                             {index + 1} / {initialItems.length}
                         </div>
 
-                        {/* Image Section */}
+                        {/* Image Section (Now on Right due to flex-row-reverse in CSS) */}
                         {item.image && (
                             <div className={styles.itemImageContainer}>
                                 <img
@@ -112,7 +111,7 @@ export default function PricesClient({ initialItems }: Props) {
                             </div>
                         )}
 
-                        {/* Card Content */}
+                        {/* Card Content (On Left) */}
                         <div className={styles.itemContent}>
                             <div className={styles.itemHeader}>
                                 <h3 className={styles.itemName}>{item.item}</h3>
