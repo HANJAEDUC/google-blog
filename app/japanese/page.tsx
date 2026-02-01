@@ -193,13 +193,9 @@ export default function JapaneseWordsPage() {
         }
     };
 
-    if (loading) {
-        return (
-            <div className={styles.container} style={{ textAlign: 'center', minHeight: '50vh', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <p style={{ fontSize: 18, color: 'var(--md-sys-color-on-surface-variant)' }}>Loading Japanese vocabulary...</p>
-            </div>
-        );
-    }
+    // Non-blocking loading
+    // if (loading) { ... } removed to show page immediately
+
 
     // Resume Logic Disabled
     // const [resumeIndex, setResumeIndex] = useState<number | null>(null);

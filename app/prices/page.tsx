@@ -17,7 +17,8 @@ function formatImageUrl(url: string | undefined): string | undefined {
     if (trimmed.includes('drive.google.com')) {
         const idMatch = trimmed.match(/\/d\/(.+?)(\/|$)/);
         if (idMatch && idMatch[1]) {
-            return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+            // Use thumbnail endpoint for better hotlinking reliability
+            return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
         }
     }
     return trimmed;
