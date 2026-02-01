@@ -1,0 +1,110 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 64px 24px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 48px;
+}
+
+.title {
+    font-size: 48px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    color: var(--md-sys-color-on-surface);
+}
+
+.subtitle {
+    font-size: 18px;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.card {
+    background: var(--md-sys-color-surface);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-color: rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--elevation-2);
+}
+
+.card[data-type="KRW"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #4285F4;
+    /* Blue for KRW/Won */
+}
+
+.card[data-type="USD"]::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #34A853;
+    /* Green for USD */
+}
+
+.currencyTitle {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.priceContainer {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.price {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    font-family: var(--font-outfit), sans-serif;
+    letter-spacing: -1px;
+}
+
+.unit {
+    font-size: 1.5rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-weight: 500;
+}
+
+.change {
+    font-size: 1rem;
+    color: var(--md-sys-color-primary);
+    background: rgba(var(--md-sys-color-primary), 0.1);
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 12px;
+}
