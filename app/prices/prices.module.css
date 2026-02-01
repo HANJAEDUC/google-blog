@@ -243,9 +243,9 @@
 
 .brandLogo {
     position: absolute;
-    bottom: 16px;
-    right: 4px;
-    /* Move closer to the image */
+    bottom: 24px;
+    left: 32px;
+    /* Move to bottom-left */
     width: 32px;
     height: 32px;
     object-fit: contain;
