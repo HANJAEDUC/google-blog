@@ -76,7 +76,11 @@ export default function DualClock() {
         <div className={styles.clockContainer}>
             {/* Korea (First) */}
             <div className={styles.clockGroup}>
-                <span className={styles.flag}>🇰🇷</span>
+                <img
+                    src="https://flagcdn.com/w40/kr.png"
+                    alt="KR"
+                    className={styles.flagIcon}
+                />
                 <span className={styles.time}>{times.kr}</span>
                 {temps.kr !== null && (
                     <span className={styles.temp}>{temps.kr}°C</span>
@@ -85,7 +89,11 @@ export default function DualClock() {
 
             {/* Germany (Second) */}
             <div className={styles.clockGroup}>
-                <span className={styles.flag}>🇩🇪</span>
+                <img
+                    src="https://flagcdn.com/w40/de.png"
+                    alt="DE"
+                    className={styles.flagIcon}
+                />
                 <span className={styles.time}>{times.de}</span>
                 {temps.de !== null && (
                     <span className={styles.temp}>{temps.de}°C</span>
@@ -94,7 +102,11 @@ export default function DualClock() {
 
             {/* Japan (Third) */}
             <div className={styles.clockGroup}>
-                <span className={styles.flag}>🇯🇵</span>
+                <img
+                    src="https://flagcdn.com/w40/jp.png"
+                    alt="JP"
+                    className={styles.flagIcon}
+                />
                 <span className={styles.time}>{times.jp}</span>
                 {temps.jp !== null && (
                     <span className={styles.temp}>{temps.jp}°C</span>

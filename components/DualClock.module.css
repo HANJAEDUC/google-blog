@@ -18,15 +18,13 @@
     height: 100%;
 }
 
-.flag {
-    font-size: 1.2rem;
-    line-height: 1;
-    /* Minimize line-height impact on vertical alignment */
-    display: flex;
-    /* Helps remove extra spacing in some browsers */
-    align-items: center;
-    margin-right: 4px;
-    /* Ensure literal spacing */
+.flagIcon {
+    width: 20px;
+    height: auto;
+    object-fit: contain;
+    margin-right: 6px;
+    border-radius: 2px;
+    display: block;
 }
 
 .time {
@@ -75,7 +73,12 @@
         /* Show temp on mobile */
     }
 
-    .flag {
-        font-size: 0.8rem;
+    .flagIcon {
+        width: 16px;
+        margin-right: 0;
+        /* Stacked vertically in mobile, remove right margin if needed or keep for side alignment? 
+                          Wait, clockGroup is flex-direction: column on mobile.
+                          Let's verify clockGroup layout. */
+        margin-bottom: 2px;
     }
 }
