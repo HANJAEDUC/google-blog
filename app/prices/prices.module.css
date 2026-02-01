@@ -297,4 +297,9 @@
         right: 20px;
         left: auto;
     }
+
+    .itemContent {
+        padding-bottom: 72px;
+        /* Prevent description description overlap with logo */
+    }
 }
