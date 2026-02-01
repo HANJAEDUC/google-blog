@@ -107,6 +107,7 @@ export default function PricesClient({ initialItems }: Props) {
                                     alt={item.item}
                                     className={styles.itemImage}
                                     loading="lazy"
+                                    referrerPolicy="no-referrer"
                                 />
                             </div>
                         )}
