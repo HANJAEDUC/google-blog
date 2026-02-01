@@ -1,44 +1,51 @@
 .container {
-    max-width: 720px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 64px 24px;
-    /* Matched Words layout (64px) */
 }
 
 .header {
     text-align: center;
     margin-bottom: 64px;
-    /* Matched Words layout (64px) */
 }
 
 .title {
     font-size: 48px;
     font-weight: 500;
     margin-bottom: 16px;
-    /* Matched Words layout */
     color: var(--md-sys-color-on-surface);
 }
 
-/*** Unified Vertical Stack ***/
 .mainStack {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
+    /* Slightly tighter gap */
     width: 100%;
 }
 
-/*** Big Exchange Rate Card ***/
-.bigCard {
+/*** Shared Card Metrics ***/
+.cardBase {
     background: #1E1F20;
     border-radius: 12px;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow: var(--elevation-1);
-    padding: 40px 24px;
-    text-align: center;
-    overflow: hidden;
     width: 100%;
+    height: 260px;
+    /* Fixed height unification */
+    overflow: hidden;
     transition: transform 0.2s ease;
+}
+
+/*** Big Exchange Rate Card ***/
+.bigCard {
+    composes: cardBase;
+    padding: 0 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .bigCard:hover {
@@ -54,14 +61,13 @@
     right: 0;
     height: 4px;
     background: #4285F4;
-    /* Primary Blue */
 }
 
 .bigTitle {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     font-weight: 500;
     color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -73,11 +79,11 @@
     align-items: baseline;
     justify-content: center;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .bigPrice {
-    font-size: 4.5rem;
+    font-size: 4rem;
     font-weight: 700;
     color: var(--md-sys-color-on-surface);
     font-family: var(--font-outfit);
@@ -92,31 +98,25 @@
 }
 
 .bigChange {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: var(--md-sys-color-primary);
     background: rgba(var(--md-sys-color-primary), 0.1);
-    padding: 6px 16px;
+    padding: 4px 12px;
     border-radius: 99px;
-    display: inline-block;
     font-weight: 500;
 }
 
-/*** Item List Cards ***/
+/*** Item List Cards (Horizontal Layout) ***/
 .itemCard {
-    background: #1E1F20;
-    border-radius: 12px;
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    composes: cardBase;
     display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    box-shadow: var(--elevation-1);
-    width: 100%;
-    transition: all 0.3s ease;
+    flex-direction: row;
+    /* Horizontal Image + Content */
+    align-items: stretch;
 }
 
 .itemCard:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
     border-color: var(--md-sys-color-primary);
     box-shadow: var(--elevation-2);
 }
@@ -129,7 +129,7 @@
     right: 0;
     height: 4px;
     background: #8AB4F8;
-    /* Light Blue accent */
+    z-index: 10;
 }
 
 .itemIndex {
@@ -143,12 +143,20 @@
 }
 
 .itemImageContainer {
-    width: 100%;
-    height: 250px;
+    width: 260px;
+    /* Square region for image */
+    height: 100%;
     background: #000;
     overflow: hidden;
     position: relative;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    flex-shrink: 0;
+    /* Prevent shrinking */
+}
+
+/* Fallback if no image */
+.itemImageContainer.noImage {
+    display: none;
 }
 
 .itemImage {
@@ -159,38 +167,44 @@
 }
 
 .itemImage:hover {
-    transform: scale(1.03);
+    transform: scale(1.05);
 }
 
 .itemContent {
     padding: 32px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
 }
 
 .itemHeader {
     display: flex;
     align-items: baseline;
     gap: 16px;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .itemName {
     margin: 0;
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 1.8rem;
+    font-weight: 600;
     color: var(--md-sys-color-on-surface);
 }
 
 .itemCategory {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: #8AB4F8;
     font-family: var(--font-outfit);
+    text-transform: uppercase;
 }
 
 .priceRow {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
 }
 
 .itemPrice {
@@ -207,17 +221,20 @@
 }
 
 .descriptionBox {
-    background: rgba(255, 255, 255, 0.03);
-    border-radius: 8px;
-    padding: 20px;
-    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    /* Removed background box for cleaner look in horizontal layout */
+    margin-top: 8px;
 }
 
 .itemDescription {
     font-size: 1rem;
     color: var(--md-sys-color-on-surface-variant);
     margin: 0;
-    line-height: 1.6;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    /* Limit text lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .emptyState {
@@ -228,25 +245,40 @@
 
 .footer {
     text-align: center;
-    margin-top: 80px;
+    margin-top: 60px;
     color: #5f6368;
     font-size: 0.8rem;
 }
 
+/* Mobile Responsive: Switch to Stack */
 @media (max-width: 600px) {
     .title {
         font-size: 36px;
     }
 
-    .itemName {
-        font-size: 1.6rem;
-    }
-
-    .itemContent {
-        padding: 24px;
+    .bigCard {
+        height: auto;
+        padding: 32px 24px;
     }
 
     .bigPrice {
         font-size: 3.5rem;
+    }
+
+    .itemCard {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .itemImageContainer {
+        width: 100%;
+        height: 200px;
+        border-right: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .itemContent {
+        padding: 24px;
+        height: auto;
     }
 }
