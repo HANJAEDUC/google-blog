@@ -62,12 +62,12 @@ export default function PricesClient({ initialItems }: Props) {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1 className={styles.title}>German Prices</h1>
-                <p className={styles.subtitle}>Exchange Rates & Living Costs</p>
+                <h1 className={styles.title}>Deutsche Preise</h1>
+                {/* Subtitle removed per user request */}
             </header>
 
-            {/* Big Exchange Rate Card */}
-            <div className={styles.exchangeSection}>
+            <div className={styles.mainStack}>
+                {/* Big Exchange Rate Card (Same width as items) */}
                 <div className={styles.bigCard}>
                     <h2 className={styles.bigTitle}>
                         <span style={{ fontSize: '1.4em' }}>💶</span>
@@ -84,19 +84,15 @@ export default function PricesClient({ initialItems }: Props) {
                                 <span className={styles.bigUnit}>원</span>
                             </div>
                             <div className={styles.bigChange}>
-                                {rates.eur_krw.change} (오늘 변동)
+                                {rates.eur_krw.change}
                             </div>
                         </>
                     ) : (
                         <div>Unavailable</div>
                     )}
                 </div>
-            </div>
 
-            {/* Price Items List (Vertical Stack) */}
-            <h3 className={styles.listSectionTitle}>Warenkorb (Items)</h3>
-
-            <div className={styles.itemList}>
+                {/* Price Items List (Vertical, Wide) */}
                 {initialItems.map((item, index) => (
                     <div key={index} className={styles.itemCard}>
                         {/* Index Indicator */}
@@ -116,7 +112,7 @@ export default function PricesClient({ initialItems }: Props) {
                             </div>
                         )}
 
-                        {/* Card Content (Mimicking Word Card Structure) */}
+                        {/* Card Content */}
                         <div className={styles.itemContent}>
                             <div className={styles.itemHeader}>
                                 <h3 className={styles.itemName}>{item.item}</h3>
@@ -137,13 +133,13 @@ export default function PricesClient({ initialItems }: Props) {
                         </div>
                     </div>
                 ))}
-            </div>
 
-            {initialItems.length === 0 && (
-                <div className={styles.emptyState}>
-                    <p>No price data found in Sheet 2.</p>
-                </div>
-            )}
+                {initialItems.length === 0 && (
+                    <div className={styles.emptyState}>
+                        <p>No price data found in Sheet 2.</p>
+                    </div>
+                )}
+            </div>
 
             <footer className={styles.footer}>
                 <p>* Live exchange rate updates every 10 minutes</p>

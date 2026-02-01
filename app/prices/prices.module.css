@@ -1,51 +1,49 @@
 .container {
-    max-width: 800px;
-    /* Reduced width for vertical list focus */
+    max-width: 720px;
     margin: 0 auto;
-    padding: 40px 24px;
+    padding: 64px 24px;
+    /* Matched Words layout (64px) */
 }
 
 .header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 64px;
+    /* Matched Words layout (64px) */
 }
 
 .title {
     font-size: 48px;
     font-weight: 500;
-    margin-bottom: 8px;
+    margin-bottom: 16px;
+    /* Matched Words layout */
     color: var(--md-sys-color-on-surface);
 }
 
-.subtitle {
-    font-size: 18px;
-    color: var(--md-sys-color-on-surface-variant);
-}
-
-/* Big Exchange Rate Card */
-.exchangeSection {
+/*** Unified Vertical Stack ***/
+.mainStack {
     display: flex;
-    justify-content: center;
-    margin-bottom: 60px;
+    flex-direction: column;
+    gap: 32px;
+    width: 100%;
 }
 
+/*** Big Exchange Rate Card ***/
 .bigCard {
-    background: var(--md-sys-color-surface);
-    border-radius: var(--border-radius-lg);
-    padding: 40px;
-    border: 1px solid var(--md-sys-color-outline);
-    border-color: rgba(255, 255, 255, 0.1);
-    text-align: center;
+    background: #1E1F20;
+    border-radius: 12px;
     position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: var(--elevation-1);
+    padding: 40px 24px;
+    text-align: center;
     overflow: hidden;
     width: 100%;
-    max-width: 500px;
-    box-shadow: var(--elevation-3);
-    transition: transform 0.2s;
+    transition: transform 0.2s ease;
 }
 
 .bigCard:hover {
     transform: translateY(-2px);
+    box-shadow: var(--elevation-2);
 }
 
 .bigCard::before {
@@ -54,8 +52,9 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 6px;
+    height: 4px;
     background: #4285F4;
+    /* Primary Blue */
 }
 
 .bigTitle {
@@ -74,7 +73,7 @@
     align-items: baseline;
     justify-content: center;
     gap: 12px;
-    margin-bottom: 20px;
+    margin-bottom: 16px;
 }
 
 .bigPrice {
@@ -102,24 +101,9 @@
     font-weight: 500;
 }
 
-/* List Layout (Single Column, Wide Cards) */
-.listSectionTitle {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 32px;
-    color: var(--md-sys-color-on-surface);
-}
-
-.itemList {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    width: 100%;
-}
-
+/*** Item List Cards ***/
 .itemCard {
     background: #1E1F20;
-    /* Dark card background */
     border-radius: 12px;
     position: relative;
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -127,9 +111,16 @@
     flex-direction: column;
     overflow: hidden;
     box-shadow: var(--elevation-1);
+    width: 100%;
+    transition: all 0.3s ease;
 }
 
-/* Accent Line like Word Card */
+.itemCard:hover {
+    transform: translateY(-4px);
+    border-color: var(--md-sys-color-primary);
+    box-shadow: var(--elevation-2);
+}
+
 .itemCard::before {
     content: '';
     position: absolute;
@@ -138,10 +129,9 @@
     right: 0;
     height: 4px;
     background: #8AB4F8;
-    /* Blue accent */
+    /* Light Blue accent */
 }
 
-/* Index Number */
 .itemIndex {
     position: absolute;
     top: 16px;
@@ -149,9 +139,9 @@
     font-size: 0.8rem;
     color: var(--md-sys-color-on-surface-variant);
     opacity: 0.7;
+    z-index: 10;
 }
 
-/*** Image Styles ***/
 .itemImageContainer {
     width: 100%;
     height: 250px;
@@ -186,7 +176,6 @@
 .itemName {
     margin: 0;
     font-size: 2rem;
-    /* Big title */
     font-weight: 500;
     color: var(--md-sys-color-on-surface);
 }
@@ -194,11 +183,9 @@
 .itemCategory {
     font-size: 0.9rem;
     color: #8AB4F8;
-    /* Accent color text */
     font-family: var(--font-outfit);
 }
 
-/* Price Section (Like Meaning in Word Card) */
 .priceRow {
     display: flex;
     align-items: center;
@@ -216,11 +203,9 @@
 .convertedPrice {
     font-size: 1.4rem;
     color: var(--md-sys-color-on-surface-variant);
-    /* Muted for KRW */
     font-family: var(--font-outfit);
 }
 
-/* Description Box (Like Example Box) */
 .descriptionBox {
     background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
@@ -233,7 +218,12 @@
     color: var(--md-sys-color-on-surface-variant);
     margin: 0;
     line-height: 1.6;
-    font-style: italic;
+}
+
+.emptyState {
+    text-align: center;
+    padding: 60px;
+    color: var(--md-sys-color-on-surface-variant);
 }
 
 .footer {
@@ -254,5 +244,9 @@
 
     .itemContent {
         padding: 24px;
+    }
+
+    .bigPrice {
+        font-size: 3.5rem;
     }
 }
