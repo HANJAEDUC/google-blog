@@ -151,8 +151,7 @@
     /* Blend with card background */
     overflow: hidden;
     position: relative;
-    border-left: 1px solid rgba(255, 255, 255, 0.05);
-    /* Border on left */
+    /* border-left removed */
     border-right: none;
     flex-shrink: 0;
     padding: 16px;
