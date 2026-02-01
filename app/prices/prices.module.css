@@ -39,7 +39,6 @@
     overflow: hidden;
     width: 100%;
     max-width: 500px;
-    /* Big and centered */
     box-shadow: var(--elevation-3);
     transition: transform 0.2s;
 }
@@ -56,7 +55,6 @@
     right: 0;
     height: 6px;
     background: #4285F4;
-    /* Blue for KRW */
 }
 
 .bigTitle {
@@ -110,7 +108,6 @@
     color: var(--md-sys-color-on-surface);
     padding-left: 8px;
     border-left: 4px solid var(--md-sys-color-tertiary);
-    /* Yellow accent */
 }
 
 .itemGrid {
@@ -123,17 +120,50 @@
 .itemCard {
     background: var(--md-sys-color-surface);
     border-radius: var(--border-radius-lg);
-    padding: 24px;
     border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    /* Smoother transition */
+    overflow: hidden;
+    /* For image zoom */
+    padding: 0;
+    /* Padding moved to content */
 }
 
 .itemCard:hover {
     transform: translateY(-4px);
     border-color: var(--md-sys-color-primary);
     box-shadow: var(--elevation-2);
+}
+
+/*** Image Styles ***/
+.itemImageContainer {
+    width: 100%;
+    height: 220px;
+    /* Fixed height for consistency */
+    position: relative;
+    background: #1e1e1e;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.itemImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.itemCard:hover .itemImage {
+    transform: scale(1.08);
+}
+
+.itemContent {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .itemHeader {
@@ -210,11 +240,7 @@
         font-size: 36px;
     }
 
-    .bigPrice {
-        font-size: 3.5rem;
-    }
-
-    .bigCard {
-        padding: 24px;
+    .itemImageContainer {
+        height: 180px;
     }
 }

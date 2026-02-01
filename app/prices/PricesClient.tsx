@@ -18,6 +18,7 @@ export interface PriceItem {
     price: string;
     description: string;
     category: string;
+    image?: string;
 }
 
 interface Props {
@@ -65,7 +66,7 @@ export default function PricesClient({ initialItems }: Props) {
                 <p className={styles.subtitle}>Exchange Rates (EUR)</p>
             </header>
 
-            {/* Big Exchange Rate Card (Restored Design) */}
+            {/* Big Exchange Rate Card */}
             <div className={styles.exchangeSection}>
                 <div className={styles.bigCard}>
                     <h2 className={styles.bigTitle}>
@@ -92,28 +93,43 @@ export default function PricesClient({ initialItems }: Props) {
                 </div>
             </div>
 
-            {/* Price Items List (Sheet 2) */}
+            {/* Price Items List */}
             <h3 className={styles.listSectionTitle}>German Living Costs</h3>
 
             <div className={styles.itemGrid}>
                 {initialItems.map((item, index) => (
                     <div key={index} className={styles.itemCard}>
-                        <div className={styles.itemHeader}>
-                            <h3 className={styles.itemName}>{item.item}</h3>
-                            <span className={styles.itemCategory}>{item.category}</span>
+                        {/* Image Section */}
+                        {item.image && (
+                            <div className={styles.itemImageContainer}>
+                                <img
+                                    src={item.image}
+                                    alt={item.item}
+                                    className={styles.itemImage}
+                                    loading="lazy"
+                                />
+                            </div>
+                        )}
+
+                        {/* Content Section */}
+                        <div className={styles.itemContent}>
+                            <div className={styles.itemHeader}>
+                                <h3 className={styles.itemName}>{item.item}</h3>
+                                <span className={styles.itemCategory}>{item.category}</span>
+                            </div>
+                            <div className={styles.priceRow}>
+                                <span className={styles.itemPrice}>{item.price} €</span>
+                                <span className={styles.convertedPrice}>≈ {getConvertedPrice(item.price)} 원</span>
+                            </div>
+                            <p className={styles.itemDescription}>{item.description}</p>
                         </div>
-                        <div className={styles.priceRow}>
-                            <span className={styles.itemPrice}>{item.price} €</span>
-                            <span className={styles.convertedPrice}>≈ {getConvertedPrice(item.price)} 원</span>
-                        </div>
-                        <p className={styles.itemDescription}>{item.description}</p>
                     </div>
                 ))}
             </div>
 
             {initialItems.length === 0 && (
                 <div className={styles.emptyState}>
-                    <p>No price data found.</p>
+                    <p>No price data found in Sheet 2.</p>
                 </div>
             )}
 
