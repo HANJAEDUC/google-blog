@@ -2,76 +2,57 @@
 import { NextResponse } from 'next/server';
 import * as cheerio from 'cheerio';
 
-export const revalidate = 0; // Don't cache
+export const revalidate = 0;
+
+async function fetchWithDecoding(url: string) {
+    const res = await fetch(url, {
+        headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+    });
+    const buffer = await res.arrayBuffer();
+    // Use TextDecoder to handle EUC-KR encoding used by Naver Finance
+    const decoder = new TextDecoder('euc-kr');
+    return decoder.decode(buffer);
+}
 
 export async function GET() {
+    const results = {
+        eur_krw: { price: '0', change: '0', rate: '0' },
+        eur_usd: { price: '0', change: '0', rate: '0' }
+    };
+
     try {
-        const response = await fetch('https://finance.naver.com/marketindex/exchangeList.naver', {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        // 1. EUR -> KRW (Domestic Exchange List)
+        const htmlKRW = await fetchWithDecoding('https://finance.naver.com/marketindex/exchangeList.naver');
+        const $krw = cheerio.load(htmlKRW);
+
+        $krw('tr').each((_, el) => {
+            const title = $krw(el).find('.tit').text().trim();
+            // Search for 'EUR' or '유럽연합'
+            if (title.toUpperCase().includes('EUR') || title.includes('유럽연합')) {
+                results.eur_krw.price = $krw(el).find('.sale').text().trim();
+                // Naver often puts blind text for 'Rise/Fall' + number
+                results.eur_krw.change = $krw(el).find('.change').text().trim();
             }
         });
 
-        const html = await response.text();
-        const $ = cheerio.load(html);
+        // 2. EUR -> USD (International Market)
+        const htmlUSD = await fetchWithDecoding('https://finance.naver.com/marketindex/worldExchangeList.naver?key=exchange&label=exchange');
+        const $usd = cheerio.load(htmlUSD);
 
-        const results = {
-            eur_krw: { price: '0', change: '0', rate: '0' },
-            eur_usd: { price: '0', change: '0', rate: '0' }
-        };
-
-        // Parse list items
-        $('tr').each((i, el) => {
-            const title = $(el).find('.tit').text().trim();
-
-            if (title.includes('유럽연합 EUR')) {
-                results.eur_krw = {
-                    price: $(el).find('.sale').text().trim(),
-                    change: $(el).find('.change').text().trim(), // fluctuations not directly available in class, just text
-                    rate: ''
-                };
-            }
-
-            // EUR/USD might be int 'worldExchangeList' URL, let's check marketindex main page for better data if needed
-            // But actually, finance.naver.com/marketindex/ has a compact list.
-        });
-
-        // Let's try parsing the main marketindex page which is better structured
-        const mainResponse = await fetch('https://finance.naver.com/marketindex/');
-        const mainHtml = await mainResponse.text();
-        const $main = cheerio.load(mainHtml);
-
-        // 1. EUR / KRW
-        // The data is usually in a list with ids
-        /*
-          EUR/KRW is usually accessed via direct script values or specific elements.
-          Let's look for the specific iframe or list.
-        */
-
-        // Easier approach: Use the mobile site or specific JSON api if possible, but scraping HTML is standard for Naver.
-        // Let's rely on the exchangeList.naver page for EUR/KRW.
-
-        // For EUR/USD, it's in the 'International Market' section.
-        // Let's try a different source for EUR/USD if Naver is tricky, OR parse the world exchange list.
-
-        const worldResponse = await fetch('https://finance.naver.com/marketindex/worldExchangeList.naver?key=exchange&label=exchange');
-        const worldHtml = await worldResponse.text();
-        const $world = cheerio.load(worldHtml);
-
-        $world('tr').each((i, el) => {
-            const title = $world(el).find('.tit').text().trim();
-            if (title.includes('유로/달러') || title.toUpperCase().includes('EUR/USD') || title.includes('EURUSD')) {
-                results.eur_usd = {
-                    price: $world(el).find('.sale').text().trim(),
-                    change: $world(el).find('.point').text().trim(),
-                    rate: ''
-                };
+        $usd('tr').each((_, el) => {
+            const title = $usd(el).find('.tit').text().trim();
+            // Search for 'Euro to Dollar' or EUR/USD
+            if ((title.includes('유로') && title.includes('달러')) || title.replace(/\s/g, '').includes('EUR/USD')) {
+                results.eur_usd.price = $usd(el).find('.sale').text().trim();
+                results.eur_usd.change = $usd(el).find('.point').text().trim() || $usd(el).find('.change').text().trim();
             }
         });
 
         return NextResponse.json(results);
     } catch (error) {
         console.error('Exchange rate fetch error:', error);
-        return NextResponse.json({ error: 'Failed to fetch rates' }, { status: 500 });
+        return NextResponse.json(results);
     }
 }
