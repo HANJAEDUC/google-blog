@@ -91,6 +91,11 @@ export default function PricesClient({ initialItems }: Props) {
                     ) : (
                         <div>Unavailable</div>
                     )}
+
+                    <div className={styles.bigCardFooter}>
+                        <div>naver.com</div>
+                        <div>Live exchange rate updates every 10 minutes</div>
+                    </div>
                 </div>
 
                 {/* Price Items List */}
@@ -153,9 +158,7 @@ export default function PricesClient({ initialItems }: Props) {
                 )}
             </div>
 
-            <footer className={styles.footer}>
-                <p>* Live exchange rate updates every 10 minutes</p>
-            </footer>
+
         </div>
     );
 }

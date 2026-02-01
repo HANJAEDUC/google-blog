@@ -38,7 +38,7 @@
 /*** Big Exchange Rate Card ***/
 .bigCard {
     composes: cardBase;
-    padding: 40px 24px;
+    padding: 40px 24px 72px 24px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -101,7 +101,19 @@
     background: rgba(var(--md-sys-color-primary), 0.1);
     padding: 6px 16px;
     border-radius: 99px;
+    border-radius: 99px;
     font-weight: 500;
+}
+
+.bigCardFooter {
+    position: absolute;
+    bottom: 16px;
+    left: 24px;
+    font-size: 0.75rem;
+    color: var(--md-sys-color-on-surface-variant);
+    opacity: 0.6;
+    text-align: left;
+    line-height: 1.4;
 }
 
 /*** Item List Cards (Image on Right) ***/
