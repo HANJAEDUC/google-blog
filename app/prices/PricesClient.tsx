@@ -15,7 +15,18 @@ interface Rates {
     eur_usd: PriceData;
 }
 
-export default function PricesClient() {
+export interface PriceItem {
+    item: string;
+    price: string;
+    description: string;
+    category: string;
+}
+
+interface Props {
+    initialItems: PriceItem[];
+}
+
+export default function PricesClient({ initialItems }: Props) {
     const [rates, setRates] = useState<Rates | null>(null);
     const [loading, setLoading] = useState(true);
     const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
