@@ -154,6 +154,8 @@
     /* Border on left */
     border-right: none;
     flex-shrink: 0;
+    padding: 16px;
+    /* Added padding to prevent touching edges */
 }
 
 .itemImageContainer.noImage {
@@ -163,7 +165,10 @@
 .itemImage {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    /* Changed to contain to see full image */
+    border-radius: 8px;
+    /* Added radius */
     transition: transform 0.5s ease;
 }
 
@@ -261,13 +266,18 @@
 
     .itemImageContainer {
         width: 100%;
-        height: 220px;
+        height: auto;
+        /* Allow height to adjust based on content if needed, though fixed height is often better for layout stability. Let's try minimal fixed height or aspect ratio. */
+        min-height: 250px;
+        /* Ensure enough height for the image */
         border-left: none;
         border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        padding: 12px;
+        /* Slightly less padding on mobile */
     }
 
     .itemIndex {
-        left: auto;
         right: 20px;
+        left: auto;
     }
 }

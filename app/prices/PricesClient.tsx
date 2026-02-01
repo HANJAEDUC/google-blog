@@ -102,13 +102,15 @@ export default function PricesClient({ initialItems }: Props) {
                         {/* Image Section (Now on Right due to flex-row-reverse in CSS) */}
                         {item.image && (
                             <div className={styles.itemImageContainer}>
-                                <img
-                                    src={item.image}
-                                    alt={item.item}
-                                    className={styles.itemImage}
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer"
-                                />
+                                <a href={item.image} target="_blank" rel="noopener noreferrer" style={{ display: 'block', width: '100%', height: '100%' }}>
+                                    <img
+                                        src={item.image}
+                                        alt={item.item}
+                                        className={styles.itemImage}
+                                        loading="lazy"
+                                        referrerPolicy="no-referrer"
+                                    />
+                                </a>
                             </div>
                         )}
 
