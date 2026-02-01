@@ -29,7 +29,6 @@ interface Props {
 export default function PricesClient({ initialItems }: Props) {
     const [rates, setRates] = useState<Rates | null>(null);
     const [loading, setLoading] = useState(true);
-    const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
     const fetchRates = async () => {
         try {
@@ -38,7 +37,6 @@ export default function PricesClient({ initialItems }: Props) {
             if (res.ok) {
                 const data = await res.json();
                 setRates(data);
-                setLastUpdated(new Date());
             }
         } catch (error) {
             console.error(error);
@@ -53,66 +51,70 @@ export default function PricesClient({ initialItems }: Props) {
         return () => clearInterval(interval);
     }, []);
 
-    const formatPrice = (price: string) => {
-        return price; // Already formatted by Naver usually
+    // Calculate converted Price
+    const getConvertedPrice = (euroPrice: string) => {
+        if (!rates || !rates.eur_krw.price) return '...';
+        // Clean strings: '1,719.50' -> 1719.50
+        const rate = parseFloat(rates.eur_krw.price.replace(/,/g, ''));
+        const price = parseFloat(euroPrice.replace(/,/g, ''));
+        if (isNaN(rate) || isNaN(price)) return '...';
+
+        const krw = price * rate;
+        // Format: 12,345
+        return krw.toLocaleString('ko-KR', { maximumFractionDigits: 0 });
     };
 
     return (
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>German Prices</h1>
-                <p className={styles.subtitle}>Exchange Rates (EUR)</p>
-                {lastUpdated && (
-                    <p style={{ fontSize: '0.8rem', color: '#9aa0a6', marginTop: '10px' }}>
-                        Last updated: {lastUpdated.toLocaleTimeString()}
-                    </p>
-                )}
+                <p className={styles.subtitle}>Living Costs in Germany</p>
+
+                {/* Exchange Rate Banner */}
+                <div className={styles.rateBanner}>
+                    {loading && !rates ? (
+                        <span>Loading Exchange Rate...</span>
+                    ) : rates ? (
+                        <div className={styles.rateContent}>
+                            <span className={styles.rateLabel}>Current Exchange Rate:</span>
+                            <div className={styles.rateGroup}>
+                                <strong className={styles.rateValue}>1 EUR = {rates.eur_krw.price} KRW</strong>
+                                <span className={styles.rateChange}>({rates.eur_krw.change})</span>
+                            </div>
+                        </div>
+                    ) : (
+                        <span>Exchange Rate Unavailable</span>
+                    )}
+                </div>
             </header>
 
-            <div className={styles.grid}>
-                {loading && !rates ? (
-                    <div className={styles.card} style={{ textAlign: 'center', opacity: 0.7 }}>
-                        <h2>Loading rates...</h2>
-                    </div>
-                ) : rates ? (
-                    <>
-                        {/* EUR -> KRW */}
-                        <div className={styles.card} data-type="KRW">
-                            <h2 className={styles.currencyTitle}>
-                                <span style={{ fontSize: '1.5em', marginRight: '8px' }}>💶</span>
-                                EUR ➔ <span style={{ fontSize: '1.5em', marginLeft: '8px' }}>🇰🇷</span> KRW
-                            </h2>
-                            <div className={styles.priceContainer}>
-                                <span className={styles.price}>{rates.eur_krw.price}</span>
-                                <span className={styles.unit}>원</span>
-                            </div>
-                            <p className={styles.change}>{rates.eur_krw.change} (오늘 변동)</p>
+            {/* Price Items Grid */}
+            <div className={styles.itemGrid}>
+                {initialItems.map((item, index) => (
+                    <div key={index} className={styles.itemCard}>
+                        <div className={styles.itemHeader}>
+                            <h3 className={styles.itemName}>{item.item}</h3>
+                            <span className={styles.itemCategory}>{item.category}</span>
                         </div>
-
-                        {/* EUR -> USD */}
-                        <div className={styles.card} data-type="USD">
-                            <h2 className={styles.currencyTitle}>
-                                <span style={{ fontSize: '1.5em', marginRight: '8px' }}>💶</span>
-                                EUR ➔ <span style={{ fontSize: '1.5em', marginLeft: '8px' }}>🇺🇸</span> USD
-                            </h2>
-                            <div className={styles.priceContainer}>
-                                <span className={styles.price}>{rates.eur_usd.price}</span>
-                                <span className={styles.unit}>$</span>
-                            </div>
-                            <p className={styles.change}>{rates.eur_usd.change} (Today)</p>
+                        <div className={styles.priceRow}>
+                            <span className={styles.itemPrice}>{item.price} €</span>
+                            <span className={styles.convertedPrice}>≈ {getConvertedPrice(item.price)} 원</span>
                         </div>
-                    </>
-                ) : (
-                    <div className={styles.card}>
-                        <p>Failed to load data.</p>
+                        <p className={styles.itemDescription}>{item.description}</p>
                     </div>
-                )}
+                ))}
             </div>
 
-            <div style={{ textAlign: 'center', marginTop: '40px', color: '#5f6368', fontSize: '0.8rem' }}>
-                <p>* Live data from Naver Finance</p>
-                <p>* Updates every 10 minutes</p>
-            </div>
+            {initialItems.length === 0 && (
+                <div className={styles.emptyState}>
+                    <p>No price data found.</p>
+                    <p style={{ fontSize: '0.8em', marginTop: '8px' }}>Please update the Google Sheet GID in code.</p>
+                </div>
+            )}
+
+            <footer className={styles.footer}>
+                <p>* Exchange rate updates every 10 minutes via Naver Finance</p>
+            </footer>
         </div>
     );
 }
