@@ -131,6 +131,15 @@ export default function PricesClient({ initialItems }: Props) {
                                     <p className={styles.itemDescription}>{item.description}</p>
                                 </div>
                             )}
+
+                            {/* Aldi Logo Link */}
+                            <a href="https://www.aldi-sued.de/" target="_blank" rel="noopener noreferrer">
+                                <img
+                                    src="https://drive.google.com/thumbnail?id=1Q5XjjVkDxD6wgCjZEhuMtpao2KCsfXGR&sz=w100"
+                                    alt="Aldi Süd"
+                                    className={styles.brandLogo}
+                                />
+                            </a>
                         </div>
                     </div>
                 ))}
