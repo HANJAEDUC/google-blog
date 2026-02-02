@@ -96,6 +96,35 @@
   display: none;
 }
 
+/* Intermediate breakpoint for narrow desktop/tablet (e.g. Portrait Monitor) */
+@media (max-width: 1000px) {
+  .inner {
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 8px;
+  }
+
+  .logo {
+    position: static; /* Let logo stack naturally */
+    left: auto;
+    margin-bottom: 4px;
+    justify-content: center; /* Center logo */
+  }
+
+  .links {
+    margin: 0;
+    gap: 16px; /* Tighten gap */
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping if really tight */
+  }
+
+  .link {
+    font-size: 0.9rem; /* Slightly smaller text */
+    padding: 6px 10px;
+  }
+}
+
+
 /* Mobile Responsive */
 @media (max-width: 768px) {
   .inner {
