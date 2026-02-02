@@ -68,6 +68,8 @@
   max-width: 600px;
   /* Matches the words grid width */
   padding-left: 0;
+  justify-content: center; /* Center items horizontally */
+  margin: 0 auto; /* Center the container itself */
 }
 
 .link {
