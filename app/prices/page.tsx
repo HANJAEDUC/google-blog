@@ -37,10 +37,10 @@ export default async function PricesPage() {
             });
 
             items = (parseResult.data as any[]).map(row => {
-                let name = row['내용'] || row.item || '';
+                let name = row['제목'] || row['내용'] || row.item || '';
                 let price = row['GermanPrices'] || row.price || '0';
                 // Try to find image in standard columns OR '그림' column
-                let rawImage = row['이미지'] || row['Image'] || row['image'] || row['그림'] || '';
+                let rawImage = row['설명사진'] || row['이미지'] || row['Image'] || row['image'] || row['그림'] || '';
 
                 // SMART FIX: If 'name' (Content column) looks like a URL, treat it as Image
                 // This handles the user case where link was put in Content column
@@ -56,10 +56,10 @@ export default async function PricesPage() {
                     // Default category to empty as requested
                     category: row['카테고리'] || row.category || '',
                     image: formatImageUrl(rawImage),
-                    // '링크' column is now the Logo Image
-                    link: formatImageUrl(row['링크'] || row.link),
-                    // '사이트' column is the Target URL
-                    site: row['사이트'] || row.site || undefined,
+                    // '링크' column is now the Logo Image, added '로고추가'
+                    link: formatImageUrl(row['로고추가'] || row['링크'] || row.link),
+                    // '사이트' column is the Target URL, added '로고사이트'
+                    site: row['로고사이트'] || row['사이트'] || row.site || undefined,
                 };
             }).filter(i => {
                 // Updated Filter: Allow if Price matches non-zero OR Name exists
