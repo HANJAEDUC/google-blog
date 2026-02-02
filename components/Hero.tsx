@@ -10,7 +10,11 @@ export default function Hero() {
   useEffect(() => {
     // Toggle image every 8 seconds
     const interval = setInterval(() => {
-      setCurrentImage(prev => prev === 'german' ? 'japanese' : 'german');
+      setCurrentImage(prev => {
+        if (prev === 'german') return 'japanese';
+        if (prev === 'japanese') return 'prices';
+        return 'german';
+      });
     }, 8000);
     return () => clearInterval(interval);
   }, []);
@@ -48,6 +52,24 @@ export default function Hero() {
             <Image
               src="/hero-japanese.png"
               alt="Japanese Vocabulary"
+              width={500}
+              height={500}
+              className={styles.image} // Reusing same class
+              priority
+            />
+          </div>
+
+          {/* German Prices Image */}
+          <div
+            style={{
+              position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+              opacity: currentImage === 'prices' ? 1 : 0,
+              transition: 'opacity 2s ease-in-out'
+            }}
+          >
+            <Image
+              src="/hero-prices.png"
+              alt="German Prices"
               width={500}
               height={500}
               className={styles.image} // Reusing same class
