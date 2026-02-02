@@ -63,6 +63,8 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.links}>
+            <Link href="/words" className={styles.link}>GermanWords</Link>
+            <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
             <Link href="/prices" className={styles.link}>GermanPrices</Link>
             <DualClock />
             <a
