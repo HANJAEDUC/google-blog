@@ -122,7 +122,8 @@
     display: flex;
     flex-direction: row-reverse;
     /* Image on RIGHT */
-    height: 250px;
+    min-height: 250px; /* Changed from fixed height to min-height */
+    height: auto;      /* Allow expansion */
     align-items: stretch;
 }
 
@@ -145,11 +146,9 @@
 
 .itemIndex {
     position: absolute;
-    top: 16px;
+    top: 24px;   /* Increased space */
     right: auto;
-    /* Reset right */
-    left: 20px;
-    /* Move index to Left since Image is on Right */
+    left: 32px;  /* Aligned with content padding */
     font-size: 0.8rem;
     color: var(--md-sys-color-on-surface-variant);
     opacity: 0.7;
@@ -158,16 +157,13 @@
 
 .itemImageContainer {
     width: 250px;
-    height: 100%;
+    /* height: 100%; Removed 100% to fill flex parent naturally */
     background: inherit;
-    /* Blend with card background */
     overflow: hidden;
     position: relative;
-    /* border-left removed */
     border-right: none;
     flex-shrink: 0;
     padding: 16px;
-    /* Added padding to prevent touching edges */
 }
 
 .itemImageContainer.noImage {
@@ -178,9 +174,7 @@
     width: 100%;
     height: 100%;
     object-fit: contain;
-    /* Changed to contain to see full image */
     border-radius: 8px;
-    /* Added radius */
     transition: transform 0.5s ease;
 }
 
@@ -190,13 +184,13 @@
 
 .itemContent {
     padding: 32px;
+    padding-top: 56px; /* Increased top padding to avoid overlap with Index */
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; /* Vertically center content if short */
     position: relative;
     text-align: left;
-    /* Keep text left aligned */
 }
 
 .itemHeader {
@@ -211,6 +205,7 @@
     font-size: 1.8rem;
     font-weight: 600;
     color: var(--md-sys-color-on-surface);
+    line-height: 1.3;
 }
 
 .itemCategory {
@@ -245,21 +240,20 @@
     font-size: 0.85rem;
     color: #9aa0a6;
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
     white-space: pre-wrap;
-
+    margin-bottom: 16px; /* Spacing for logo below */
 }
 
+/* Updated Brand Logo - No longer absolute */
 .brandLogo {
-    position: absolute;
-    bottom: 24px;
-    left: 32px;
-    /* Move to bottom-left */
+    display: block; /* Ensures it sits on its own line */
     width: 32px;
     height: 32px;
     object-fit: contain;
     opacity: 0.8;
     transition: opacity 0.2s;
+    margin-top: auto; /* Push to bottom if flex container has height, or just sit below text */
 }
 
 .brandLogo:hover {

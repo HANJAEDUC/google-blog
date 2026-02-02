@@ -133,7 +133,7 @@ export default function PricesClient({ initialItems }: Props) {
 
                             {item.description && (
                                 <div className={styles.descriptionBox}>
-                                    <p className={styles.itemDescription}>{item.description}</p>
+                                    <p className={styles.itemDescription}>{item.description.replace(/\\n/g, '\n')}</p>
                                 </div>
                             )}
 
