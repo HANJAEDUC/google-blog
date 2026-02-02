@@ -63,6 +63,13 @@ export default function Navbar() {
           </Link>
 
           <div className={styles.links}>
+            <a
+              href="mailto:hanjaeduc@gmail.com?subject=Daily Words Feedback"
+              className={styles.iconLink}
+              aria-label="Send Feedback"
+            >
+              <IoMailOutline size={22} />
+            </a>
             <Link href="/words" className={styles.link}>GermanWords</Link>
             <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
             <Link href="/prices" className={styles.link}>GermanPrices</Link>
