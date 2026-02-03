@@ -106,6 +106,17 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
 
             // Add User Location Marker (Blue Dot)
             if (userLoc) {
+                // Subtle 10km Radius Circle
+                L.circle([userLoc.lat, userLoc.lng], {
+                    radius: 10000, // 10km
+                    color: "#4285F4",
+                    weight: 1,
+                    opacity: 0.3,
+                    fillColor: "#4285F4",
+                    fillOpacity: 0.05,
+                    interactive: false
+                }).addTo(map);
+
                 const userMarker = L.circleMarker([userLoc.lat, userLoc.lng], {
                     radius: 8,
                     fillColor: "#4285F4",
