@@ -145,9 +145,9 @@ export interface GasStation {
 
 export async function getGasPrices(): Promise<GasStation[]> {
     const API_KEY = 'f8b86ac2-0d3a-4a16-be41-32ac79e1448f';
-    const LAT = 52.521;
-    const LNG = 13.438;
-    const RAD = 5;
+    const LAT = 50.2529;
+    const LNG = 8.6349;
+    const RAD = 3;
     const URL = `https://creativecommons.tankerkoenig.de/json/list.php?lat=${LAT}&lng=${LNG}&rad=${RAD}&sort=dist&type=all&apikey=${API_KEY}`;
 
     try {

@@ -105,7 +105,7 @@ export default function PricesClient({ initialItems, initialRates, initialGasSta
                 {/* Gas Price Card */}
                 {initialGasStations && initialGasStations.length > 0 && (
                     <div className={styles.gasCard}>
-                        <h2 className={styles.gasTitle}>⛽ Spritpreis-Monitor (Berlin)</h2>
+                        <h2 className={styles.gasTitle}>⛽ Spritpreis-Monitor (Friedrichsdorf)</h2>
                         <div className={styles.gasGrid}>
                             {['diesel', 'e5', 'e10'].map((type) => {
                                 const cheapest = [...initialGasStations]
