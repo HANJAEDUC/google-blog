@@ -129,9 +129,9 @@
 .iconLink::after {
   content: attr(data-email);
   position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
+  top: 50%;
+  right: 100%; /* Show to the left */
+  transform: translateY(-50%) translateX(-8px);
   background: #1e1f20;
   color: var(--md-sys-color-primary);
   padding: 4px 10px;
@@ -142,7 +142,6 @@
   opacity: 0;
   visibility: hidden;
   transition: all 0.1s ease;
-  /* Faster appearance */
   pointer-events: none;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   border: 1px solid var(--md-sys-color-outline-variant);
@@ -152,14 +151,11 @@
 .iconLink:hover::after {
   opacity: 1;
   visibility: visible;
-  transform: translateX(-50%) translateY(0);
+  transform: translateY(-50%) translateX(-4px); /* Slight slide in effect */
 }
 
-/* Fix jitter: Apply overflow visible only when really needed and ensure no layout shift */
-.navbar:has(.iconLink:hover),
-.scrollContainer:has(.iconLink:hover) {
-  overflow: visible !important;
-}
+/* Remove the overflow override to prevent layout shifts */
+/* .navbar:has(.iconLink:hover) ... removed */
 
 /* Navigation Arrows */
 .navArrow {
