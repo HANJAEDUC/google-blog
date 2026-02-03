@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './prices.module.css';
 import { Rates, PriceItem, GasStation } from '@/lib/data';
+import { IoSearch, IoLocation, IoClose } from 'react-icons/io5';
 
 /* Client-side fetch removed in favor of SSR/ISR */
 
@@ -19,6 +20,12 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
     const [priceItems, setPriceItems] = useState<PriceItem[]>(initialItems);
     const [itemsLoading, setItemsLoading] = useState(false);
 
+    // Nearby Gas States
+    const [nearbyStations, setNearbyStations] = useState<GasStation[]>([]);
+    const [isSearchingNearby, setIsSearchingNearby] = useState(false);
+    const [showMap, setShowMap] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     // Fetch Exchange Rate (Client update loop only)
     const fetchRates = async () => {
         try {
@@ -34,6 +41,99 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
             // setRateLoading(false);
         }
     };
+
+    const findNearbyGas = async () => {
+        if (!navigator.geolocation) {
+            setError("Geolocation is not supported by your browser");
+            return;
+        }
+
+        setIsSearchingNearby(true);
+        setError(null);
+
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            try {
+                const res = await fetch(`/api/gas-prices?lat=${latitude}&lng=${longitude}&rad=10`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.ok && data.stations) {
+                        setNearbyStations(data.stations);
+                        setShowMap(true);
+                    } else {
+                        setError("주변 주유소를 찾을 수 없습니다.");
+                    }
+                } else {
+                    setError("데이터를 가져오는데 실패했습니다.");
+                }
+            } catch (err) {
+                setError("네트워크 오류가 발생했습니다.");
+            } finally {
+                setIsSearchingNearby(false);
+            }
+        }, (err) => {
+            setError("위치 정보 권한이 거부되었습니다.");
+            setIsSearchingNearby(false);
+        });
+    };
+
+    // Leaflet Map Logic
+    useEffect(() => {
+        if (!showMap || nearbyStations.length === 0) return;
+
+        // Load Leaflet CSS
+        if (!document.getElementById('leaflet-css')) {
+            const link = document.createElement('link');
+            link.id = 'leaflet-css';
+            link.rel = 'stylesheet';
+            link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+            document.head.appendChild(link);
+        }
+
+        // Load Leaflet JS
+        const initMap = () => {
+            const L = (window as any).L;
+            if (!L) return;
+
+            const map = L.map('gas-map').setView([nearbyStations[0].lat, nearbyStations[0].lng], 12);
+
+            // Dark Mode Tiles (CartoDB Dark Matter)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+            }).addTo(map);
+
+            nearbyStations.forEach(s => {
+                if (s.diesel > 0 || s.e10 > 0) {
+                    const marker = L.marker([s.lat, s.lng]).addTo(map);
+                    marker.bindPopup(`
+                        <div style="color: #000; font-family: sans-serif;">
+                            <strong>${s.brand || s.name}</strong><br/>
+                            Diesel: ${s.diesel.toFixed(3)}€<br/>
+                            E10: ${s.e10.toFixed(3)}€
+                        </div>
+                    `);
+                }
+            });
+
+            return map;
+        };
+
+        let mapInstance: any;
+        if (!(window as any).L) {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+            script.onload = () => {
+                mapInstance = initMap();
+            };
+            document.head.appendChild(script);
+        } else {
+            mapInstance = initMap();
+        }
+
+        return () => {
+            if (mapInstance) mapInstance.remove();
+        };
+    }, [showMap, nearbyStations]);
 
     // Client refetch loop
     useEffect(() => {
@@ -100,6 +200,52 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                         <div>Live exchange rate updates every 10 minutes</div>
                     </div>
                 </div>
+
+                {/* Nearby Gas Finder Section */}
+                <div className={styles.actionSection}>
+                    <button
+                        className={styles.nearbyButton}
+                        onClick={findNearbyGas}
+                        disabled={isSearchingNearby}
+                    >
+                        {isSearchingNearby ? (
+                            "Searching..."
+                        ) : (
+                            <>
+                                <IoLocation size={20} />
+                                주변 주유소 찾기 (10km)
+                            </>
+                        )}
+                    </button>
+                    {error && <div className={styles.errorText}>{error}</div>}
+                </div>
+
+                {/* Map Overlay/Modal */}
+                {showMap && (
+                    <div className={styles.mapOverlay}>
+                        <div className={styles.mapContainer}>
+                            <div className={styles.mapHeader}>
+                                <h3>주변 주유소 (10km)</h3>
+                                <button className={styles.closeMap} onClick={() => setShowMap(false)}>
+                                    <IoClose size={24} />
+                                </button>
+                            </div>
+                            <div id="gas-map" className={styles.mapElement}></div>
+                            <div className={styles.mapListings}>
+                                {nearbyStations.map((s, idx) => (
+                                    <div key={idx} className={styles.mapListingItem}>
+                                        <div className={styles.listingBrand}>{s.brand || s.name}</div>
+                                        <div className={styles.listingPrice}>
+                                            <span>Diesel: {s.diesel.toFixed(3)}€</span>
+                                            <span>E10: {s.e10.toFixed(3)}€</span>
+                                        </div>
+                                        <div className={styles.listingDist}>{(s.dist * 1).toFixed(1)} km</div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Loading State for Items */}
                 {itemsLoading && priceItems.length === 0 && (
