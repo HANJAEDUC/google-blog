@@ -102,7 +102,7 @@
 }
 
 /* Responsive Visibility */
-.mobileOnly {
+.mobileOnly, .mobileFixedMail {
   display: none;
 }
 
@@ -111,10 +111,20 @@
     display: none;
   }
   
-  .mobileOnly {
-    display: flex; /* Restore flex for button */
+  /* Fixed Mail Button for Mobile */
+  .mobileFixedMail {
+    display: flex;
+    position: absolute;
+    right: 16px; /* Safe distance from edge */
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2000; /* Highest priority */
+    background: rgba(30, 31, 32, 0.9); /* Slight background to cover anything below */
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.1);
   }
 }
+
 
 .iconLink::after {
   content: attr(data-email);

@@ -76,19 +76,6 @@ export default function Navbar() {
             >
               <IoMailOutline size={22} />
             </a>
-
-            {/* Mobile: Button for clean touch handling */}
-            <button
-               className={`${styles.iconLink} ${styles.mobileOnly}`}
-               aria-label="Send Feedback"
-               onClick={(e) => {
-                   e.preventDefault();
-                   e.stopPropagation();
-                   window.location.href = "mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement";
-               }}
-            >
-               <IoMailOutline size={22} />
-            </button>
           </div>
         </div>
       </div>
@@ -102,6 +89,19 @@ export default function Navbar() {
           <IoChevronForward size={20} />
         </button>
       )}
+
+      {/* Mobile: Fixed Mail Button (Outside Scroll Container) */}
+      <button
+          className={`${styles.iconLink} ${styles.mobileFixedMail}`}
+          aria-label="Send Feedback"
+          onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              window.location.href = "mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement";
+          }}
+      >
+          <IoMailOutline size={24} />
+      </button>
     </nav>
   );
 }
