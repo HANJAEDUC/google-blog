@@ -127,6 +127,19 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                             E10: ${s.e10.toFixed(3)}€
                         </div>
                     `);
+
+                    // Scroll list item into view when marker is clicked
+                    marker.on('click', () => {
+                        const element = document.getElementById(`station-${s.id}`);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Optional: briefly highlight the item
+                            element.style.backgroundColor = 'rgba(66, 133, 244, 0.15)';
+                            setTimeout(() => {
+                                element.style.backgroundColor = 'transparent';
+                            }, 1500);
+                        }
+                    });
                 }
             });
 
@@ -316,7 +329,12 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                             <div id="gas-map" className={styles.mapElement}></div>
                             <div className={styles.mapListings}>
                                 {nearbyStations.map((s, idx) => (
-                                    <div key={idx} className={styles.mapListingItem}>
+                                    <div
+                                        key={idx}
+                                        id={`station-${s.id}`}
+                                        className={styles.mapListingItem}
+                                        style={{ transition: 'background-color 0.5s ease' }}
+                                    >
                                         <div className={styles.listingInfo}>
                                             <div className={styles.listingBrand}>{s.brand || s.name}</div>
                                             <div className={styles.listingPrice}>
