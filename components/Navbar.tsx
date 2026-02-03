@@ -3,7 +3,7 @@
 import { useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './Navbar.module.css';
-import { IoChevronBack, IoChevronForward } from 'react-icons/io5';
+import { IoChevronBack, IoChevronForward, IoMailOutline } from 'react-icons/io5';
 import DualClock from './DualClock';
 
 export default function Navbar() {
@@ -28,58 +28,67 @@ export default function Navbar() {
 
   const scroll = (direction: 'left' | 'right') => {
     if (scrollRef.current) {
-        const scrollAmount = 300;
-        scrollRef.current.scrollBy({ 
-            left: direction === 'left' ? -scrollAmount : scrollAmount, 
-            behavior: 'smooth' 
-        });
+      const scrollAmount = 300;
+      scrollRef.current.scrollBy({
+        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
     <nav className={styles.navbar}>
       {canScrollLeft && (
-        <button 
-            className={`${styles.navArrow} ${styles.leftArrow}`} 
-            onClick={() => scroll('left')}
-            aria-label="Scroll left"
+        <button
+          className={`${styles.navArrow} ${styles.leftArrow}`}
+          onClick={() => scroll('left')}
+          aria-label="Scroll left"
         >
-            <IoChevronBack size={20} />
+          <IoChevronBack size={20} />
         </button>
       )}
 
       {/* Scrollable Container */}
       <div className={styles.scrollContainer} ref={scrollRef} onScroll={checkScroll}>
-          <div className={styles.inner}>
-            <Link href="/" className={styles.logo}>
-                <div style={{ display: 'flex', alignItems: 'center', letterSpacing: '-0.5px' }}>
-                    <span style={{ color: '#4285F4' }}>D</span>
-                    <span style={{ color: '#EA4335' }}>a</span>
-                    <span style={{ color: '#FBBC04' }}>i</span>
-                    <span style={{ color: '#4285F4' }}>l</span>
-                    <span style={{ color: '#34A853' }}>y</span>
-                </div>
-                <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '0px', letterSpacing: '-0.5px' }}>words</span>
-            </Link>
-
-            <div className={styles.links}>
-                <Link href="/words" className={styles.link}>GermanWords</Link>
-                <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
-                <Link href="/prices" className={styles.link}>GermanPrices</Link>
-                <DualClock />
+        <div className={styles.inner}>
+          <Link href="/" className={styles.logo}>
+            <div style={{ display: 'flex', alignItems: 'center', letterSpacing: '-0.5px' }}>
+              <span style={{ color: '#4285F4' }}>D</span>
+              <span style={{ color: '#EA4335' }}>a</span>
+              <span style={{ color: '#FBBC04' }}>i</span>
+              <span style={{ color: '#4285F4' }}>l</span>
+              <span style={{ color: '#34A853' }}>y</span>
             </div>
+            <span style={{ color: 'var(--md-sys-color-on-surface)', fontWeight: 400, marginLeft: '0px', letterSpacing: '-0.5px' }}>words</span>
+          </Link>
+
+          <div className={styles.links}>
+            <Link href="/words" className={styles.link}>GermanWords</Link>
+            <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
+            <Link href="/prices" className={styles.link}>GermanPrices</Link>
+            <DualClock />
+            <a
+              href="mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement"
+              className={styles.iconLink}
+              aria-label="Send Feedback"
+              data-email="hanjaeduc@gmail.com"
+            >
+              <IoMailOutline size={22} />
+            </a>
+          </div>
         </div>
       </div>
 
       {canScrollRight && (
-        <button 
-            className={`${styles.navArrow} ${styles.rightArrow}`} 
-            onClick={() => scroll('right')}
-            aria-label="Scroll right"
+        <button
+          className={`${styles.navArrow} ${styles.rightArrow}`}
+          onClick={() => scroll('right')}
+          aria-label="Scroll right"
         >
-            <IoChevronForward size={20} />
+          <IoChevronForward size={20} />
         </button>
       )}
     </nav>
   );
 }
+

@@ -2,68 +2,35 @@
 
 import { useEffect, useState } from 'react';
 import styles from './prices.module.css';
-import Papa from 'papaparse';
+import { Rates, PriceItem, GasStation } from '@/lib/data';
+import { IoSearch, IoLocation, IoClose, IoNavigate } from 'react-icons/io5';
 
-interface PriceData {
-    price: string;
-    change: string;
+/* Client-side fetch removed in favor of SSR/ISR */
+
+interface Props {
+    initialItems: PriceItem[];
+    initialRates: Rates;
 }
 
-interface Rates {
-    eur_krw: PriceData;
-}
-
-export interface PriceItem {
-    item: string;
-    price: string;
-    description: string;
-    category: string;
-    image?: string;
-    link?: string; // Logo Image
-    site?: string; // Target Link
-}
-
-/* Constants for Client-side fetching */
-const SHEET_ID = 'e/2PACX-1vS-L3a9lSp_MK1Gdmkl3PJK0lugAMmOYVnmqMuCmDdTGjLky0k_EFUFLJ-2TR9hIxKHpjWer_98r1wk';
-const GID_SHEET_2 = '1278793502';
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?gid=${GID_SHEET_2}&single=true&output=csv`;
-
-function formatImageUrl(url: string | undefined): string | undefined {
-    if (!url) return undefined;
-    const trimmed = url.trim();
-    if (!trimmed) return undefined;
-
-    if (trimmed.includes('drive.google.com')) {
-        const idMatch = trimmed.match(/\/d\/(.+?)(\/|$)/);
-        if (idMatch && idMatch[1]) {
-            return `https://drive.google.com/thumbnail?id=${idMatch[1]}&sz=w1000`;
-        }
-    }
-    return trimmed;
-}
-
-function getSafeValue(row: any, ...keys: string[]): string {
-    const rowKeys = Object.keys(row);
-    for (const key of keys) {
-        if (row[key] !== undefined && row[key] !== '' && row[key] !== null) return row[key];
-        const found = rowKeys.find(k => k.trim() === key);
-        if (found && row[found]) return row[found];
-    }
-    return '';
-}
-
-export default function PricesClient() {
+export default function PricesClient({ initialItems, initialRates }: Props) {
     // State
-    const [rates, setRates] = useState<Rates | null>(null);
-    const [rateLoading, setRateLoading] = useState(true);
-    
-    const [priceItems, setPriceItems] = useState<PriceItem[]>([]);
-    const [itemsLoading, setItemsLoading] = useState(true);
+    const [rates, setRates] = useState<Rates | null>(initialRates);
+    const [rateLoading, setRateLoading] = useState(false);
 
-    // Fetch Exchange Rate
+    const [priceItems, setPriceItems] = useState<PriceItem[]>(initialItems);
+    const [itemsLoading, setItemsLoading] = useState(false);
+
+    // Nearby Gas States
+    const [nearbyStations, setNearbyStations] = useState<GasStation[]>([]);
+    const [userLoc, setUserLoc] = useState<{ lat: number, lng: number } | null>(null);
+    const [isSearchingNearby, setIsSearchingNearby] = useState(false);
+    const [showMap, setShowMap] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch Exchange Rate (Client update loop only)
     const fetchRates = async () => {
         try {
-            setRateLoading(true);
+            // setRateLoading(true); // Don't show loading on background update
             const res = await fetch('/api/exchange-rate');
             if (res.ok) {
                 const data = await res.json();
@@ -72,66 +39,149 @@ export default function PricesClient() {
         } catch (error) {
             console.error(error);
         } finally {
-            setRateLoading(false);
+            // setRateLoading(false);
         }
     };
 
-    // Fetch CSV Data (Client Side)
-    const fetchCsvData = async () => {
-        try {
-            setItemsLoading(true);
-            const response = await fetch(CSV_URL);
-            if (response.ok) {
-                const csvText = await response.text();
-                const parseResult = Papa.parse(csvText, {
-                    header: true,
-                    skipEmptyLines: true,
-                });
+    const findNearbyGas = async () => {
+        if (!navigator.geolocation) {
+            setError("Geolocation is not supported by your browser");
+            return;
+        }
 
-                const items = (parseResult.data as any[]).map(row => {
-                    let name = getSafeValue(row, '제목', '내용', 'item');
-                    let price = getSafeValue(row, 'GermanPrices', 'price') || '0';
-                    let rawImage = getSafeValue(row, '설명사진', '이미지', 'Image', 'image', '그림');
+        setIsSearchingNearby(true);
+        setError(null);
 
-                    // If 'name' looks like URL, treat as Image
-                    if (name.trim().startsWith('http')) {
-                        if (!rawImage) rawImage = name;
-                        name = ''; 
+        navigator.geolocation.getCurrentPosition(async (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLoc({ lat: latitude, lng: longitude });
+            try {
+                const res = await fetch(`/api/gas-prices?lat=${latitude}&lng=${longitude}&rad=10`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.ok && data.stations) {
+                        setNearbyStations(data.stations);
+                        setShowMap(true);
+                    } else {
+                        setError("주변 주유소를 찾을 수 없습니다.");
                     }
-
-                    return {
-                        item: name,
-                        price: price,
-                        description: getSafeValue(row, '설명', 'description'),
-                        category: getSafeValue(row, '카테고리', 'category'),
-                        image: formatImageUrl(rawImage),
-                        link: formatImageUrl(getSafeValue(row, '로고추가', '링크', 'link')),
-                        site: getSafeValue(row, '로고사이트', '사이트', 'site') || undefined,
-                    };
-                }).filter(i => {
-                    return (i.price && i.price !== '0' && i.price.trim() !== '') || (i.item && i.item !== '' && i.item !== 'Unknown');
-                });
-                
-                setPriceItems(items);
+                } else {
+                    setError("데이터를 가져오는데 실패했습니다.");
+                }
+            } catch (err) {
+                setError("네트워크 오류가 발생했습니다.");
+            } finally {
+                setIsSearchingNearby(false);
             }
-        } catch (error) {
-            console.error("Failed to fetch CSV", error);
-        } finally {
-            setItemsLoading(false);
-        }
+        }, (err) => {
+            setError("위치 정보 권한이 거부되었습니다.");
+            setIsSearchingNearby(false);
+        });
     };
 
+    // Leaflet Map Logic
     useEffect(() => {
-        fetchRates();
-        fetchCsvData();
+        if (!showMap || nearbyStations.length === 0) return;
 
-        const rateInterval = setInterval(fetchRates, 10 * 60 * 1000); // 10 mins
-        // CSV refresh every 5 min
-        const csvInterval = setInterval(fetchCsvData, 5 * 60 * 1000); 
+        // Load Leaflet CSS
+        if (!document.getElementById('leaflet-css')) {
+            const link = document.createElement('link');
+            link.id = 'leaflet-css';
+            link.rel = 'stylesheet';
+            link.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
+            document.head.appendChild(link);
+        }
+
+        // Load Leaflet JS
+        const initMap = () => {
+            const L = (window as any).L;
+            if (!L) return;
+
+            const map = L.map('gas-map').setView([nearbyStations[0].lat, nearbyStations[0].lng], 12);
+
+            // Dark Mode Tiles (CartoDB Dark Matter)
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
+            }).addTo(map);
+
+            // Add User Location Marker (Blue Dot)
+            if (userLoc) {
+                // Subtle 10km Radius Circle
+                L.circle([userLoc.lat, userLoc.lng], {
+                    radius: 10000, // 10km
+                    color: "#4285F4",
+                    weight: 1,
+                    opacity: 0.3,
+                    fillColor: "#4285F4",
+                    fillOpacity: 0.05,
+                    interactive: false
+                }).addTo(map);
+
+                const userMarker = L.circleMarker([userLoc.lat, userLoc.lng], {
+                    radius: 8,
+                    fillColor: "#4285F4",
+                    color: "white",
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 1
+                }).addTo(map);
+                userMarker.bindPopup("내 위치");
+            }
+
+            nearbyStations.forEach(s => {
+                if (s.diesel > 0 || s.e10 > 0) {
+                    const marker = L.marker([s.lat, s.lng]).addTo(map);
+                    marker.bindPopup(`
+                        <div style="color: #000; font-family: sans-serif;">
+                            <strong>${s.brand || s.name}</strong><br/>
+                            Diesel: ${s.diesel.toFixed(3)}€<br/>
+                            E10: ${s.e10.toFixed(3)}€
+                        </div>
+                    `);
+
+                    // Scroll list item into view when marker is clicked
+                    marker.on('click', () => {
+                        const element = document.getElementById(`station-${s.id}`);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            // Optional: briefly highlight the item
+                            element.style.backgroundColor = 'rgba(66, 133, 244, 0.15)';
+                            setTimeout(() => {
+                                element.style.backgroundColor = 'transparent';
+                            }, 1500);
+                        }
+                    });
+                }
+            });
+
+            return map;
+        };
+
+        let mapInstance: any;
+        if (!(window as any).L) {
+            const script = document.createElement('script');
+            script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
+            script.onload = () => {
+                mapInstance = initMap();
+            };
+            document.head.appendChild(script);
+        } else {
+            mapInstance = initMap();
+        }
+
+        return () => {
+            if (mapInstance) mapInstance.remove();
+        };
+    }, [showMap, nearbyStations]);
+
+    // Client refetch loop
+    useEffect(() => {
+        const rateInterval = setInterval(fetchRates, 5 * 60 * 1000); // 5 mins
+        // Note: CSV refresh is now handled by revalidating the page (5 mins) or manual reload.
+        // We removed client-side CSV fetching to rely on ISR cache consistency.
 
         return () => {
             clearInterval(rateInterval);
-            clearInterval(csvInterval);
         };
     }, []);
 
@@ -154,16 +204,16 @@ export default function PricesClient() {
                 {/* Big Exchange Rate Card */}
                 <div className={styles.bigCard}>
                     <h2 className={styles.bigTitle}>
-                        <img 
-                            src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg" 
-                            alt="EU" 
-                            style={{ width: '28px', height: 'auto', borderRadius: '4px' }} 
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Flag_of_Europe.svg"
+                            alt="EU"
+                            style={{ width: '28px', height: 'auto', borderRadius: '4px' }}
                         />
                         EUR ➔
-                        <img 
-                            src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg" 
-                            alt="KRW" 
-                            style={{ width: '28px', height: 'auto', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }} 
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/0/09/Flag_of_South_Korea.svg"
+                            alt="KRW"
+                            style={{ width: '28px', height: 'auto', borderRadius: '4px', border: '1px solid rgba(255,255,255,0.1)' }}
                         />
                         KRW
                     </h2>
@@ -186,69 +236,140 @@ export default function PricesClient() {
 
                     <div className={styles.bigCardFooter}>
                         <div>naver.com</div>
-                        <div>Live exchange rate updates every 10 minutes</div>
+                        <div>Live updates every 5 minutes</div>
                     </div>
                 </div>
 
                 {/* Loading State for Items */}
                 {itemsLoading && priceItems.length === 0 && (
-                     <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5 }}>
+                    <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5 }}>
                         Loading prices...
-                     </div>
+                    </div>
                 )}
 
                 {/* Price Items List */}
-                {priceItems.map((item, index) => (
-                    <div key={index} className={styles.itemCard}>
-                        {/* Index Indicator */}
-                        <div className={styles.itemIndex}>
-                            {index + 1} / {priceItems.length}
-                        </div>
+                {priceItems.map((item, index) => {
+                    const isGasDiesel = item.item === '주유 (디젤)';
 
-                        {/* Image Section (Right) */}
-                        {item.image && (
-                            <div className={styles.itemImageContainer}>
-                                <img
-                                    src={item.image}
-                                    alt={item.item}
-                                    className={styles.itemImage}
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer"
-                                />
-                            </div>
-                        )}
-
-                        {/* Card Content (Left) */}
-                        <div className={styles.itemContent}>
-                            <div className={styles.itemHeader}>
-                                <h3 className={styles.itemName}>{item.item}</h3>
-                                {item.category && <span className={styles.itemCategory}>{item.category}</span>}
-                            </div>
-
-                            <div className={styles.priceRow}>
-                                <span className={styles.itemPrice}>{item.price} €</span>
-                                <span className={styles.convertedPrice}>{getConvertedPrice(item.price)} 원</span>
-                            </div>
-
-                            {item.description && (
-                                <div className={styles.descriptionBox}>
-                                    <p className={styles.itemDescription}>{item.description.replace(/\\n/g, '\n')}</p>
+                    return (
+                        <div key={index} style={{ display: 'contents' }}>
+                            {/* Insert Nearby Gas Finder Button right before '주유 (디젤)' */}
+                            {isGasDiesel && (
+                                <div className={styles.actionSection}>
+                                    <button
+                                        className={styles.nearbyButton}
+                                        onClick={findNearbyGas}
+                                        disabled={isSearchingNearby}
+                                    >
+                                        {isSearchingNearby ? (
+                                            "Searching..."
+                                        ) : (
+                                            <>
+                                                <IoLocation size={20} />
+                                                Find Nearby Gas Stations (10km)
+                                            </>
+                                        )}
+                                    </button>
+                                    {error && <div className={styles.errorText}>{error}</div>}
                                 </div>
                             )}
 
-                            {/* Logo Link */}
-                            {item.site && item.link && (
-                                <a href={item.site} target="_blank" rel="noopener noreferrer">
-                                    <img
-                                        src={item.link}
-                                        alt="Store Link"
-                                        className={styles.brandLogo}
-                                    />
-                                </a>
-                            )}
+                            <div className={styles.itemCard}>
+                                {/* Index Indicator */}
+                                <div className={styles.itemIndex}>
+                                    {index + 1} / {priceItems.length}
+                                </div>
+
+                                {/* Image Section (Right) */}
+                                {item.image && (
+                                    <div className={styles.itemImageContainer}>
+                                        <img
+                                            src={item.image}
+                                            alt={item.item}
+                                            className={styles.itemImage}
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer"
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Card Content (Left) */}
+                                <div className={styles.itemContent}>
+                                    <div className={styles.itemHeader}>
+                                        <h3 className={styles.itemName}>{item.item}</h3>
+                                        {item.category && <span className={styles.itemCategory}>{item.category}</span>}
+                                    </div>
+
+                                    <div className={styles.priceRow}>
+                                        <span className={styles.itemPrice}>{item.price} €</span>
+                                        <span className={styles.convertedPrice}>{getConvertedPrice(item.price)} 원</span>
+                                    </div>
+
+                                    {item.description && (
+                                        <div className={styles.descriptionBox}>
+                                            <p className={styles.itemDescription}>{item.description.replace(/\\n/g, '\n')}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Logo Link */}
+                                    {item.site && item.link && (
+                                        <a href={item.site} target="_blank" rel="noopener noreferrer">
+                                            <img
+                                                src={item.link}
+                                                alt="Store Link"
+                                                className={styles.brandLogo}
+                                            />
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
+
+                {/* Map Overlay/Modal */}
+                {showMap && (
+                    <div className={styles.mapOverlay}>
+                        <div className={styles.mapContainer}>
+                            <div className={styles.mapHeader}>
+                                <h3>Nearby Gas Stations (10km)</h3>
+                                <button className={styles.closeMap} onClick={() => setShowMap(false)}>
+                                    <IoClose size={24} />
+                                </button>
+                            </div>
+                            <div id="gas-map" className={styles.mapElement}></div>
+                            <div className={styles.mapListings}>
+                                {nearbyStations.map((s, idx) => (
+                                    <div
+                                        key={idx}
+                                        id={`station-${s.id}`}
+                                        className={styles.mapListingItem}
+                                        style={{ transition: 'background-color 0.5s ease' }}
+                                    >
+                                        <div className={styles.listingInfo}>
+                                            <div className={styles.listingBrand}>{s.brand || s.name}</div>
+                                            <div className={styles.listingPrice}>
+                                                <span>Diesel: {s.diesel.toFixed(3)}€</span>
+                                                <span>E10: {s.e10.toFixed(3)}€</span>
+                                            </div>
+                                            <div className={styles.listingDist}>{(s.dist * 1).toFixed(1)} km</div>
+                                        </div>
+                                        <a
+                                            href={`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={styles.navigateButton}
+                                            title="Get Directions"
+                                        >
+                                            <IoNavigate size={18} />
+                                            <span>Directions</span>
+                                        </a>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
-                ))}
+                )}
 
                 {!itemsLoading && priceItems.length === 0 && (
                     <div className={styles.emptyState}>

@@ -122,8 +122,10 @@
     display: flex;
     flex-direction: row-reverse;
     /* Image on RIGHT */
-    min-height: 250px; /* Changed from fixed height to min-height */
-    height: auto;      /* Allow expansion */
+    min-height: 250px;
+    /* Changed from fixed height to min-height */
+    height: auto;
+    /* Allow expansion */
     align-items: stretch;
 }
 
@@ -146,9 +148,11 @@
 
 .itemIndex {
     position: absolute;
-    top: 24px;   /* Increased space */
+    top: 24px;
+    /* Increased space */
     right: auto;
-    left: 32px;  /* Aligned with content padding */
+    left: 32px;
+    /* Aligned with content padding */
     font-size: 0.8rem;
     color: var(--md-sys-color-on-surface-variant);
     opacity: 0.7;
@@ -184,11 +188,13 @@
 
 .itemContent {
     padding: 32px;
-    padding-top: 56px; /* Increased top padding to avoid overlap with Index */
+    padding-top: 56px;
+    /* Increased top padding to avoid overlap with Index */
     flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Vertically center content if short */
+    justify-content: center;
+    /* Vertically center content if short */
     position: relative;
     text-align: left;
 }
@@ -242,18 +248,21 @@
     margin: 0;
     line-height: 0.8;
     white-space: pre-wrap;
-    margin-bottom: 16px; /* Spacing for logo below */
+    margin-bottom: 16px;
+    /* Spacing for logo below */
 }
 
 /* Updated Brand Logo - No longer absolute */
 .brandLogo {
-    display: block; /* Ensures it sits on its own line */
+    display: block;
+    /* Ensures it sits on its own line */
     width: 32px;
     height: 32px;
     object-fit: contain;
     opacity: 0.8;
     transition: opacity 0.2s;
-    margin-top: auto; /* Push to bottom if flex container has height, or just sit below text */
+    margin-top: auto;
+    /* Push to bottom if flex container has height, or just sit below text */
 }
 
 .brandLogo:hover {
@@ -300,9 +309,310 @@
         right: 20px;
         left: auto;
     }
+}
 
-    .itemContent {
-        padding-bottom: 72px;
-        /* Prevent description description overlap with logo */
+
+/*** Skeleton Loading ***/
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(90deg,
+            rgba(255, 255, 255, 0.05) 25%,
+            rgba(255, 255, 255, 0.1) 50%,
+            rgba(255, 255, 255, 0.05) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
+}
+
+.skeletonTitle {
+    width: 60%;
+    height: 48px;
+    margin: 0 auto 64px;
+    border-radius: 8px;
+}
+
+.skeletonBigCard {
+    height: 250px;
+    /* Approximate height of big card */
+}
+
+.skeletonItem {
+    height: 250px;
+}
+
+/*** Gas Price Card ***/
+.gasCard {
+    composes: cardBase;
+    padding: 24px;
+    margin-bottom: 0;
+}
+
+.gasCard::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: #FBBC04;
+    /* Yellow for gas/fuel */
+}
+
+.gasTitle {
+    font-size: 1.25rem;
+    font-weight: 500;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 20px;
+}
+
+.gasGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.gasItem {
+    background: rgba(255, 255, 255, 0.03);
+    padding: 16px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.gasType {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+}
+
+.gasPrice {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 4px;
+}
+
+.gasStationName {
+    font-size: 0.7rem;
+    color: var(--md-sys-color-on-surface-variant);
+    opacity: 0.7;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 8px;
+}
+
+.convertedGasPrice {
+    font-size: 0.9rem;
+    color: #8AB4F8;
+    font-weight: 500;
+}
+
+@media (max-width: 600px) {
+    .gasGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/*** Nearby Gas Finder Stylings ***/
+.actionSection {
+    margin: 24px 0 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+}
+
+.nearbyButton {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #4285F4;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 99px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+}
+
+.nearbyButton:hover:not(:disabled) {
+    background: #3367D6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
+}
+
+.nearbyButton:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.nearbyButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #5f6368;
+}
+
+.errorText {
+    color: #f28b82;
+    font-size: 0.85rem;
+}
+
+.mapOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(8px);
+}
+
+.mapContainer {
+    background: #1e1f20;
+    width: 100%;
+    max-width: 900px;
+    height: 90vh;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+}
+
+.mapHeader {
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mapHeader h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 500;
+}
+
+.closeMap {
+    background: transparent;
+    border: none;
+    color: var(--md-sys-color-on-surface-variant);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.closeMap:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.mapElement {
+    flex-grow: 1;
+    min-height: 300px;
+    background: #000;
+}
+
+.mapListings {
+    height: 200px;
+    overflow-y: auto;
+    background: #1e1f20;
+    padding: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mapListingItem {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.listingInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex-grow: 1;
+}
+
+.listingBrand {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--md-sys-color-on-surface);
+}
+
+.listingPrice {
+    display: flex;
+    gap: 16px;
+    font-family: var(--font-outfit);
+    font-size: 0.9rem;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.listingDist {
+    font-size: 0.8rem;
+    color: #4285F4;
+    font-weight: 600;
+}
+
+.navigateButton {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--md-sys-color-on-surface);
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.navigateButton:hover {
+    background: #4285F4;
+    color: white;
+    border-color: #4285F4;
+    transform: translateX(2px);
+}
+
+@media (max-width: 600px) {
+    .mapContainer {
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+    }
+
+    .mapListingItem {
+        padding: 16px;
+    }
+
+    .listingPrice {
+        gap: 8px;
     }
 }
