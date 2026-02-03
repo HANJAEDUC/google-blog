@@ -231,7 +231,7 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                         <div key={index} style={{ display: 'contents' }}>
                             {/* Insert Nearby Gas Finder Button right before '주유 (디젤)' */}
                             {isGasDiesel && (
-                                <div className={styles.actionSection} style={{ marginBottom: '24px' }}>
+                                <div className={styles.actionSection}>
                                     <button
                                         className={styles.nearbyButton}
                                         onClick={findNearbyGas}

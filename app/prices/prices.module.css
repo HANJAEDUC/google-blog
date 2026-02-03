@@ -427,11 +427,12 @@
 
 /*** Nearby Gas Finder Stylings ***/
 .actionSection {
-    margin: 32px 0;
+    margin: 24px 0 32px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     gap: 12px;
+    width: 100%;
 }
 
 .nearbyButton {
