@@ -113,6 +113,41 @@
   background: var(--md-sys-color-surface-variant);
 }
 
+.iconLink::after {
+  content: attr(data-email);
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  background: #1e1f20;
+  color: var(--md-sys-color-primary);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.1s ease;
+  /* Faster appearance */
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border: 1px solid var(--md-sys-color-outline-variant);
+  z-index: 10000;
+}
+
+.iconLink:hover::after {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Fix jitter: Apply overflow visible only when really needed and ensure no layout shift */
+.navbar:has(.iconLink:hover),
+.scrollContainer:has(.iconLink:hover) {
+  overflow: visible !important;
+}
+
 /* Navigation Arrows */
 .navArrow {
   position: absolute;
