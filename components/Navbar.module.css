@@ -201,7 +201,7 @@
 /* Mobile Responsive Adjustments */
 @media (max-width: 768px) {
   .inner {
-    padding: 0 54px;
+    padding: 0 100px 0 24px; /* Right padding 100px to avoid fixed Mail button overlap */
     gap: 16px;
   }
 

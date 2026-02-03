@@ -52,33 +52,29 @@
 
 @media (max-width: 768px) {
     .clockContainer {
-        display: flex;
-        margin-left: 8px;
-        padding-left: 8px;
-        gap: 8px;
-        height: auto;
+        margin-left: 12px;
+        padding-left: 12px;
+        gap: 12px;
     }
 
     .clockGroup {
-        flex-direction: column;
-        gap: 0;
+        flex-direction: row; /* Keep in one line */
+        gap: 4px;
+        white-space: nowrap;
     }
 
     .time {
-        font-size: 0.75rem;
+        font-size: 0.85rem;
     }
 
     .temp {
-        font-size: 0.6rem;
-        /* Show temp on mobile */
+        font-size: 0.75rem;
+        margin-left: 2px;
     }
 
     .flagIcon {
-        width: 16px;
-        margin-right: 0;
-        /* Stacked vertically in mobile, remove right margin if needed or keep for side alignment? 
-                          Wait, clockGroup is flex-direction: column on mobile.
-                          Let's verify clockGroup layout. */
-        margin-bottom: 2px;
+        width: 18px;
+        margin-right: 2px;
+        margin-bottom: 0;
     }
 }
