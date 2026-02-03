@@ -219,11 +219,16 @@
 
 /* Pronunciation Line - Inline with German word */
 .pronunciationInline {
-  font-size: 18px; /* Matches Translation */
+  font-size: 14px; /* Matches Example text size */
   color: var(--md-sys-color-on-surface-variant);
-  margin-left: 40px; /* Large gap from German word */
+  margin-left: 24px; /* Slightly reduced gap because box has padding */
   font-weight: 500;
   vertical-align: middle;
+  background-color: var(--md-sys-color-surface-variant); /* Dark mode background */
+  padding: 4px 12px;
+  border-radius: 12px; /* Rounded pill shape */
+  display: inline-block; /* Ensure padding works correctly */
+  line-height: normal;
 }
 
 .playAllButton {
