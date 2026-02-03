@@ -217,6 +217,15 @@
   background: #A142F4;
 }
 
+/* Pronunciation Line - Matches Translation style */
+.pronunciationLine {
+  font-size: 18px; /* Same as translation */
+  color: var(--md-sys-color-on-surface-variant); /* Same color as translation */
+  margin-bottom: 8px; /* Small gap to translation */
+  font-weight: 500;
+  line-height: 1.4;
+}
+
 .playAllButton {
   margin-top: 24px;
   background-color: var(--md-sys-color-primary);
