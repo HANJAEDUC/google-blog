@@ -219,10 +219,10 @@
 
 /* Pronunciation Line - Inline with German word */
 .pronunciationInline {
-  font-size: 14px; /* Matches Example text size */
+  font-size: 12px; /* Smaller, subtle */
   color: var(--md-sys-color-on-surface-variant);
   margin-left: 40px; /* Large gap from German word */
-  font-weight: 500;
+  font-weight: 400; /* Regular weight */
   vertical-align: middle;
 }
 
