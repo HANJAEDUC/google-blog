@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './prices.module.css';
 import { Rates, PriceItem, GasStation } from '@/lib/data';
-import { IoSearch, IoLocation, IoClose } from 'react-icons/io5';
+import { IoSearch, IoLocation, IoClose, IoNavigate } from 'react-icons/io5';
 
 /* Client-side fetch removed in favor of SSR/ISR */
 
@@ -22,6 +22,7 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
 
     // Nearby Gas States
     const [nearbyStations, setNearbyStations] = useState<GasStation[]>([]);
+    const [userLoc, setUserLoc] = useState<{ lat: number, lng: number } | null>(null);
     const [isSearchingNearby, setIsSearchingNearby] = useState(false);
     const [showMap, setShowMap] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -53,6 +54,7 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
 
         navigator.geolocation.getCurrentPosition(async (position) => {
             const { latitude, longitude } = position.coords;
+            setUserLoc({ lat: latitude, lng: longitude });
             try {
                 const res = await fetch(`/api/gas-prices?lat=${latitude}&lng=${longitude}&rad=10`);
                 if (res.ok) {
@@ -101,6 +103,19 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
             }).addTo(map);
+
+            // Add User Location Marker (Blue Dot)
+            if (userLoc) {
+                const userMarker = L.circleMarker([userLoc.lat, userLoc.lng], {
+                    radius: 8,
+                    fillColor: "#4285F4",
+                    color: "white",
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 1
+                }).addTo(map);
+                userMarker.bindPopup("내 위치");
+            }
 
             nearbyStations.forEach(s => {
                 if (s.diesel > 0 || s.e10 > 0) {
@@ -234,12 +249,24 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                             <div className={styles.mapListings}>
                                 {nearbyStations.map((s, idx) => (
                                     <div key={idx} className={styles.mapListingItem}>
-                                        <div className={styles.listingBrand}>{s.brand || s.name}</div>
-                                        <div className={styles.listingPrice}>
-                                            <span>Diesel: {s.diesel.toFixed(3)}€</span>
-                                            <span>E10: {s.e10.toFixed(3)}€</span>
+                                        <div className={styles.listingInfo}>
+                                            <div className={styles.listingBrand}>{s.brand || s.name}</div>
+                                            <div className={styles.listingPrice}>
+                                                <span>Diesel: {s.diesel.toFixed(3)}€</span>
+                                                <span>E10: {s.e10.toFixed(3)}€</span>
+                                            </div>
+                                            <div className={styles.listingDist}>{(s.dist * 1).toFixed(1)} km</div>
                                         </div>
-                                        <div className={styles.listingDist}>{(s.dist * 1).toFixed(1)} km</div>
+                                        <a
+                                            href={`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={styles.navigateButton}
+                                            title="Get Directions"
+                                        >
+                                            <IoNavigate size={18} />
+                                            <span>길찾기</span>
+                                        </a>
                                     </div>
                                 ))}
                             </div>
