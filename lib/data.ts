@@ -87,7 +87,7 @@ export async function getExchangeRate(): Promise<Rates> {
     return results;
 }
 
-export async function getPricesFromSheet(): Promise<PriceItem[]> {
+export async function getPricesFromSheet(gasStations?: GasStation[]): Promise<PriceItem[]> {
     try {
         const response = await fetch(CSV_URL, { next: { revalidate: 300 } }); // Cache for 5 minutes
         if (!response.ok) return [];
@@ -98,10 +98,22 @@ export async function getPricesFromSheet(): Promise<PriceItem[]> {
             skipEmptyLines: true,
         });
 
+        // Find the Aral station if it exists in the fetched gas data
+        const aralStation = gasStations?.find(s => s.id === 'e20128ef-1cc7-44c1-bb7e-b3d09f467b14');
+
         const items = (parseResult.data as any[]).map(row => {
             let name = getSafeValue(row, '제목', '내용', 'item');
             let price = getSafeValue(row, 'GermanPrices', 'price') || '0';
             let rawImage = getSafeValue(row, '설명사진', '이미지', 'Image', 'image', '그림');
+
+            // Inject real-time gas prices if names match
+            if (aralStation) {
+                if (name === '주유 (디젤)') {
+                    price = aralStation.diesel.toString();
+                } else if (name === '주유 (E10 휘발유)') {
+                    price = aralStation.e10.toString();
+                }
+            }
 
             // If 'name' looks like URL, treat as Image
             if (name.trim().startsWith('http')) {
@@ -145,17 +157,27 @@ export interface GasStation {
 
 export async function getGasPrices(): Promise<GasStation[]> {
     const API_KEY = 'f8b86ac2-0d3a-4a16-be41-32ac79e1448f';
-    const LAT = 50.2529;
-    const LNG = 8.6349;
-    const RAD = 3;
-    const URL = `https://creativecommons.tankerkoenig.de/json/list.php?lat=${LAT}&lng=${LNG}&rad=${RAD}&sort=dist&type=all&apikey=${API_KEY}`;
+    // Aral Friedrichsdorf ID directly or coordinates
+    const URL = `https://creativecommons.tankerkoenig.de/json/prices.php?ids=e20128ef-1cc7-44c1-bb7e-b3d09f467b14&apikey=${API_KEY}`;
 
     try {
-        const res = await fetch(URL, { next: { revalidate: 300 } }); // Cache for 5 minutes
+        const res = await fetch(URL, { next: { revalidate: 300 } });
         if (!res.ok) return [];
         const data = await res.json();
-        if (data.ok && data.stations) {
-            return data.stations;
+        if (data.ok && data.prices) {
+            // Transform prices.php output to match our GasStation interface (simplified)
+            const priceInfo = data.prices['e20128ef-1cc7-44c1-bb7e-b3d09f467b14'];
+            if (priceInfo && priceInfo.status === 'open') {
+                return [{
+                    id: 'e20128ef-1cc7-44c1-bb7e-b3d09f467b14',
+                    diesel: priceInfo.diesel,
+                    e5: priceInfo.e5,
+                    e10: priceInfo.e10,
+                    isOpen: true,
+                    name: 'Aral Friedrichsdorf',
+                    brand: 'ARAL'
+                } as any];
+            }
         }
         return [];
     } catch (error) {

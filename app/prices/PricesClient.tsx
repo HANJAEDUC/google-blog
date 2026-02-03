@@ -9,10 +9,9 @@ import { Rates, PriceItem, GasStation } from '@/lib/data';
 interface Props {
     initialItems: PriceItem[];
     initialRates: Rates;
-    initialGasStations: GasStation[];
 }
 
-export default function PricesClient({ initialItems, initialRates, initialGasStations }: Props) {
+export default function PricesClient({ initialItems, initialRates }: Props) {
     // State
     const [rates, setRates] = useState<Rates | null>(initialRates);
     const [rateLoading, setRateLoading] = useState(false);
@@ -101,35 +100,6 @@ export default function PricesClient({ initialItems, initialRates, initialGasSta
                         <div>Live exchange rate updates every 10 minutes</div>
                     </div>
                 </div>
-
-                {/* Gas Price Card */}
-                {initialGasStations && initialGasStations.length > 0 && (
-                    <div className={styles.gasCard}>
-                        <h2 className={styles.gasTitle}>⛽ Spritpreis-Monitor (Friedrichsdorf)</h2>
-                        <div className={styles.gasGrid}>
-                            {['diesel', 'e5', 'e10'].map((type) => {
-                                const cheapest = [...initialGasStations]
-                                    .filter(s => (s as any)[type] > 0)
-                                    .sort((a, b) => (a as any)[type] - (b as any)[type])[0];
-
-                                if (!cheapest) return null;
-
-                                return (
-                                    <div key={type} className={styles.gasItem}>
-                                        <div className={styles.gasType}>{type.toUpperCase()}</div>
-                                        <div className={styles.gasPrice}>{(cheapest as any)[type].toFixed(3)} €</div>
-                                        <div className={styles.gasStationName}>{cheapest.brand || cheapest.name}</div>
-                                        <div className={styles.convertedGasPrice}>{getConvertedPrice((cheapest as any)[type].toString())} 원</div>
-                                    </div>
-                                );
-                            })}
-                        </div>
-                        <div className={styles.bigCardFooter} style={{ borderTop: 'none', padding: '10px 0 0' }}>
-                            <div>tankerkoenig.de</div>
-                            <div>Real-time prices from 5km radius</div>
-                        </div>
-                    </div>
-                )}
 
                 {/* Loading State for Items */}
                 {itemsLoading && priceItems.length === 0 && (

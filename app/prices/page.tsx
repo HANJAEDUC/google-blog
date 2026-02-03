@@ -4,9 +4,9 @@ import { getPricesFromSheet, getExchangeRate, getGasPrices } from '@/lib/data';
 export const revalidate = 300; // Revalidate every 5 minutes
 
 export default async function PricesPage() {
-    const prices = await getPricesFromSheet();
-    const rates = await getExchangeRate();
     const gasStations = await getGasPrices();
+    const prices = await getPricesFromSheet(gasStations);
+    const rates = await getExchangeRate();
 
-    return <PricesClient initialItems={prices} initialRates={rates} initialGasStations={gasStations} />;
+    return <PricesClient initialItems={prices} initialRates={rates} />;
 }
