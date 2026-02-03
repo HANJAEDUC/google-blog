@@ -216,31 +216,99 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                     </div>
                 </div>
 
-                {/* Nearby Gas Finder Section */}
-                <div className={styles.actionSection}>
-                    <button
-                        className={styles.nearbyButton}
-                        onClick={findNearbyGas}
-                        disabled={isSearchingNearby}
-                    >
-                        {isSearchingNearby ? (
-                            "Searching..."
-                        ) : (
-                            <>
-                                <IoLocation size={20} />
-                                주변 주유소 찾기 (10km)
-                            </>
-                        )}
-                    </button>
-                    {error && <div className={styles.errorText}>{error}</div>}
-                </div>
+                {/* Loading State for Items */}
+                {itemsLoading && priceItems.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5 }}>
+                        Loading prices...
+                    </div>
+                )}
+
+                {/* Price Items List */}
+                {priceItems.map((item, index) => {
+                    const isGasDiesel = item.item === '주유 (디젤)';
+
+                    return (
+                        <div key={index} style={{ display: 'contents' }}>
+                            {/* Insert Nearby Gas Finder Button right before '주유 (디젤)' */}
+                            {isGasDiesel && (
+                                <div className={styles.actionSection} style={{ marginBottom: '24px' }}>
+                                    <button
+                                        className={styles.nearbyButton}
+                                        onClick={findNearbyGas}
+                                        disabled={isSearchingNearby}
+                                    >
+                                        {isSearchingNearby ? (
+                                            "Searching..."
+                                        ) : (
+                                            <>
+                                                <IoLocation size={20} />
+                                                Find Nearby Gas Stations (10km)
+                                            </>
+                                        )}
+                                    </button>
+                                    {error && <div className={styles.errorText}>{error}</div>}
+                                </div>
+                            )}
+
+                            <div className={styles.itemCard}>
+                                {/* Index Indicator */}
+                                <div className={styles.itemIndex}>
+                                    {index + 1} / {priceItems.length}
+                                </div>
+
+                                {/* Image Section (Right) */}
+                                {item.image && (
+                                    <div className={styles.itemImageContainer}>
+                                        <img
+                                            src={item.image}
+                                            alt={item.item}
+                                            className={styles.itemImage}
+                                            loading="lazy"
+                                            referrerPolicy="no-referrer"
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Card Content (Left) */}
+                                <div className={styles.itemContent}>
+                                    <div className={styles.itemHeader}>
+                                        <h3 className={styles.itemName}>{item.item}</h3>
+                                        {item.category && <span className={styles.itemCategory}>{item.category}</span>}
+                                    </div>
+
+                                    <div className={styles.priceRow}>
+                                        <span className={styles.itemPrice}>{item.price} €</span>
+                                        <span className={styles.convertedPrice}>{getConvertedPrice(item.price)} 원</span>
+                                    </div>
+
+                                    {item.description && (
+                                        <div className={styles.descriptionBox}>
+                                            <p className={styles.itemDescription}>{item.description.replace(/\\n/g, '\n')}</p>
+                                        </div>
+                                    )}
+
+                                    {/* Logo Link */}
+                                    {item.site && item.link && (
+                                        <a href={item.site} target="_blank" rel="noopener noreferrer">
+                                            <img
+                                                src={item.link}
+                                                alt="Store Link"
+                                                className={styles.brandLogo}
+                                            />
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    );
+                })}
 
                 {/* Map Overlay/Modal */}
                 {showMap && (
                     <div className={styles.mapOverlay}>
                         <div className={styles.mapContainer}>
                             <div className={styles.mapHeader}>
-                                <h3>주변 주유소 (10km)</h3>
+                                <h3>Nearby Gas Stations (10km)</h3>
                                 <button className={styles.closeMap} onClick={() => setShowMap(false)}>
                                     <IoClose size={24} />
                                 </button>
@@ -265,7 +333,7 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                                             title="Get Directions"
                                         >
                                             <IoNavigate size={18} />
-                                            <span>길찾기</span>
+                                            <span>Directions</span>
                                         </a>
                                     </div>
                                 ))}
