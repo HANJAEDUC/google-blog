@@ -67,19 +67,28 @@ export default function Navbar() {
             <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
             <Link href="/prices" className={styles.link}>GermanPrices</Link>
             <DualClock />
+            {/* Desktop: Anchor tag for hover effect */}
             <a
               href="mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement"
-              className={styles.iconLink}
+              className={`${styles.iconLink} ${styles.desktopOnly}`}
               aria-label="Send Feedback"
               data-email="hanjaeduc@gmail.com"
-              onClick={(e) => {
-                  console.log('Mail button clicked');
-                  // e.preventDefault(); // Uncomment to test if this stops the redirect
-                  e.stopPropagation();
-              }}
             >
               <IoMailOutline size={22} />
             </a>
+
+            {/* Mobile: Button for clean touch handling */}
+            <button
+               className={`${styles.iconLink} ${styles.mobileOnly}`}
+               aria-label="Send Feedback"
+               onClick={(e) => {
+                   e.preventDefault();
+                   e.stopPropagation();
+                   window.location.href = "mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement";
+               }}
+            >
+               <IoMailOutline size={22} />
+            </button>
           </div>
         </div>
       </div>

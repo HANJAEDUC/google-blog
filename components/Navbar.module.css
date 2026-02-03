@@ -89,11 +89,31 @@
   border-radius: 50%;
   transition: all 0.2s;
   position: relative;
+  /* Button Reset */
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .iconLink:hover {
   color: var(--md-sys-color-primary);
   background: var(--md-sys-color-surface-variant);
+}
+
+/* Responsive Visibility */
+.mobileOnly {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .desktopOnly {
+    display: none;
+  }
+  
+  .mobileOnly {
+    display: flex; /* Restore flex for button */
+  }
 }
 
 .iconLink::after {
