@@ -216,6 +216,6 @@
   }
 
   .rightArrow {
-    right: 4px;
+    right: 60px; /* Move to left of the Mail button (16px + 30px + padding) */
   }
 }
