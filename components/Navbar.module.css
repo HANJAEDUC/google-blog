@@ -22,6 +22,9 @@
   -ms-overflow-style: none;
   /* IE */
   display: flex;
+  /* Hack: Add bottom padding to allow tooltip to show without triggering vertical scrollbar */
+  padding-bottom: 40px;
+  margin-bottom: -40px;
   /* Ensure content centers if it fits, but scrolls if it overflows */
   /* Using margin: auto on inner child is safer for this behavior */
 }
@@ -129,9 +132,9 @@
 .iconLink::after {
   content: attr(data-email);
   position: absolute;
-  top: 50%;
-  right: 100%; /* Show to the left */
-  transform: translateY(-50%) translateX(-8px);
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
   background: #1e1f20;
   color: var(--md-sys-color-primary);
   padding: 4px 10px;
@@ -151,7 +154,7 @@
 .iconLink:hover::after {
   opacity: 1;
   visibility: visible;
-  transform: translateY(-50%) translateX(-4px); /* Slight slide in effect */
+  transform: translateX(-50%) translateY(0);
 }
 
 /* Remove the overflow override to prevent layout shifts */
