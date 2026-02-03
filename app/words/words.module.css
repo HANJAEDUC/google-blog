@@ -127,7 +127,8 @@
   border-radius: var(--border-radius-sm);
   font-size: var(--word-secondary-font-size);
   color: var(--md-sys-color-on-surface-variant);
-  font-style: italic;
+  font-style: normal;
+  /* Removed italic for cleaner look */
   line-height: 1.5;
   cursor: pointer;
   transition: background-color 0.2s;
@@ -138,9 +139,6 @@
   /* Slightly darker on hover */
 }
 
-.example:active {
-  transform: scale(0.99);
-}
 
 /* Base tag style */
 .partOfSpeech {
@@ -220,11 +218,16 @@
 
 /* Pronunciation Line - Inline with German word */
 .pronunciationInline {
-  font-size: 18px; /* Same size as Translation */
+  font-size: var(--word-secondary-font-size);
+  /* Matches the base size of example text */
+  font-weight: 400;
   color: var(--md-sys-color-on-surface-variant);
-  margin-left: 40px; /* Large gap from German word */
-  font-weight: 400; /* Regular weight */
+  /* Changed from blue to match example meaning */
+  margin-left: 20px;
+  /* Increased spacing */
   vertical-align: middle;
+  opacity: 0.7;
+  /* Matches example meaning opacity */
 }
 
 .playAllButton {

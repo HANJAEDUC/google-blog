@@ -316,7 +316,7 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
                                         title="Click to listen"
                                     >
                                         <p style={{ marginBottom: 4 }}>{ex.sentence}</p>
-                                        <p style={{ opacity: 0.7, fontStyle: 'normal', fontSize: '0.9em' }}>{ex.meaning}</p>
+                                        <p style={{ opacity: 0.7 }}>{ex.meaning}</p>
                                     </div>
                                 ))}
                             </div>
