@@ -72,6 +72,11 @@ export default function Navbar() {
               className={styles.iconLink}
               aria-label="Send Feedback"
               data-email="hanjaeduc@gmail.com"
+              onClick={(e) => {
+                  console.log('Mail button clicked');
+                  // e.preventDefault(); // Uncomment to test if this stops the redirect
+                  e.stopPropagation();
+              }}
             >
               <IoMailOutline size={22} />
             </a>
