@@ -290,15 +290,13 @@ export default function WordsClient({ initialVocabulary }: WordsClientProps) {
                             title="Click to listen"
                         >
                             {word.german}
+                            {word.pronunciation && !word.pronunciation.startsWith('#') && (
+                                <span className={styles.pronunciationInline}>
+                                    {word.pronunciation}
+                                    {word.ipa && <span style={{ opacity: 0.8, marginLeft: '8px', fontWeight: 400, fontFamily: 'Arial, sans-serif' }}>{word.ipa}</span>}
+                                </span>
+                            )}
                         </h2>
-                        
-                        {/* Pronunciation moved here, same style as translation */}
-                        {word.pronunciation && !word.pronunciation.startsWith('#') && (
-                            <p className={styles.pronunciationLine}>
-                                {word.pronunciation}
-                                {word.ipa && <span style={{ opacity: 0.8, marginLeft: '8px', fontWeight: 400, fontFamily: 'Arial, sans-serif' }}>{word.ipa}</span>}
-                            </p>
-                        )}
 
                         <p className={styles.translation}>{word.korean}</p>
 

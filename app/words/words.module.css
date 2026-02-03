@@ -217,13 +217,13 @@
   background: #A142F4;
 }
 
-/* Pronunciation Line - Matches Translation style */
-.pronunciationLine {
-  font-size: 18px; /* Same as translation */
-  color: var(--md-sys-color-on-surface-variant); /* Same color as translation */
-  margin-bottom: 8px; /* Small gap to translation */
+/* Pronunciation Line - Inline with German word */
+.pronunciationInline {
+  font-size: 18px; /* Matches Translation */
+  color: var(--md-sys-color-on-surface-variant);
+  margin-left: 40px; /* Large gap from German word */
   font-weight: 500;
-  line-height: 1.4;
+  vertical-align: middle;
 }
 
 .playAllButton {
