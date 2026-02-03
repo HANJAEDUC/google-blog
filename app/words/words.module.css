@@ -46,6 +46,7 @@
 }
 
 /* Specific color accents for top border */
+/* Specific color accents for top border */
 .card::before {
   content: "";
   position: absolute;
@@ -57,26 +58,37 @@
   opacity: 0.8;
 }
 
-.card[data-part="Noun"]::before {
+/* Noun (Blue) */
+.card[data-part^="Noun"]::before,
+.card[data-part^="명사"]::before {
   background: #4285F4;
 }
 
-/* Blue */
-.card[data-part="Verb"]::before {
+/* Verb (Red) */
+.card[data-part^="Verb"]::before,
+.card[data-part^="동사"]::before {
   background: #EA4335;
 }
 
-/* Red */
-.card[data-part="Adjective"]::before {
+/* Adjective (Yellow) */
+.card[data-part^="Adjective"]::before,
+.card[data-part^="형용사"]::before {
   background: #FBBC04;
 }
 
-/* Yellow */
-.card[data-part="Adverb"]::before {
+/* Adverb (Green) */
+.card[data-part^="Adverb"]::before,
+.card[data-part^="부사"]::before {
   background: #34A853;
 }
 
-/* Green */
+/* Modal Verb / Auxiliary Verb (Purple) */
+.card[data-part^="Modal"]::before,
+.card[data-part^="Auxiliary"]::before,
+.card[data-part^="조동사"]::before {
+  background: #A142F4;
+}
+
 
 .card:hover {
   transform: translateY(-2px);
@@ -171,93 +183,38 @@
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Match tag color to border color - English */
-.card[data-part="Noun"] .partOfSpeech {
+/* Tag Colors - Unified Logic (Starts With) */
+
+/* Noun (Blue) */
+.card[data-part^="Noun"] .partOfSpeech,
+.card[data-part^="명사"] .partOfSpeech {
   background: #4285F4;
 }
 
-.card[data-part="Verb"] .partOfSpeech {
+/* Verb (Red) */
+.card[data-part^="Verb"] .partOfSpeech,
+.card[data-part^="동사"] .partOfSpeech {
   background: #EA4335;
 }
 
-.card[data-part="Adjective"] .partOfSpeech {
+/* Adjective (Yellow) */
+.card[data-part^="Adjective"] .partOfSpeech,
+.card[data-part^="형용사"] .partOfSpeech {
   background: #FBBC04;
   color: #3c4043;
 }
 
-.card[data-part="Adverb"] .partOfSpeech {
+/* Adverb (Green) */
+.card[data-part^="Adverb"] .partOfSpeech,
+.card[data-part^="부사"] .partOfSpeech {
   background: #34A853;
 }
 
-/* Match tag color to border color - Korean */
-.card[data-part="명사"] .partOfSpeech {
-  background: #4285F4;
-}
-
-.card[data-part="동사"] .partOfSpeech {
-  background: #EA4335;
-}
-
-.card[data-part="형용사"] .partOfSpeech {
-  background: #FBBC04;
-  color: #3c4043;
-}
-
-/* Dark text for yellow */
-.card[data-part="부사"] .partOfSpeech {
-  background: #34A853;
-}
-
-.pronunciationInline {
-  font-size: 14px;
-  /* Matches the base size of example text */
-  font-weight: 400;
-  color: #8ab4f8;
-  /* Hardcoded light blue for visibility in dark mode */
-  margin-left: 20px;
-  /* Increased spacing */
-  vertical-align: middle;
-  opacity: 0.8;
-  /* Slightly reduced opacity to match the 'secondary' feel of the example meaning */
-}
-
-/* Card Top Border - English */
-.card[data-part="Noun"]::before {
-  background: #4285F4;
-}
-
-/* Blue */
-.card[data-part="Verb"]::before {
-  background: #EA4335;
-}
-
-/* Red */
-.card[data-part="Adjective"]::before {
-  background: #FBBC04;
-}
-
-/* Yellow */
-.card[data-part="Adverb"]::before {
-  background: #34A853;
-}
-
-/* Green */
-
-/* Card Top Border - Korean */
-.card[data-part="명사"]::before {
-  background: #4285F4;
-}
-
-.card[data-part="동사"]::before {
-  background: #EA4335;
-}
-
-.card[data-part="형용사"]::before {
-  background: #FBBC04;
-}
-
-.card[data-part="부사"]::before {
-  background: #34A853;
+/* Modal Verb (Purple) */
+.card[data-part^="Modal"] .partOfSpeech,
+.card[data-part^="Auxiliary"] .partOfSpeech,
+.card[data-part^="조동사"] .partOfSpeech {
+  background: #A142F4;
 }
 
 .playAllButton {
