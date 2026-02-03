@@ -71,7 +71,7 @@ export default function Navbar() {
               href="mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement"
               className={styles.iconLink}
               aria-label="Send Feedback"
-              data-email="hanjaeduc@gmail.com"
+              title="hanjaeduc@gmail.com"
             >
               <IoMailOutline size={22} />
             </a>
