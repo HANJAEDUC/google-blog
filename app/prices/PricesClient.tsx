@@ -360,66 +360,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                     </div>
                 )}
 
-                {/* Loading State for Items */}
-                {itemsLoading && priceItems.length === 0 && (
-                    <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5 }}>
-                        Loading prices...
-                    </div>
-                )}
-
-                {/* Price Items List */}
-                {priceItems.map((item, index) => (
-                    <div key={index} className={styles.itemCard}>
-                        {/* Index Indicator */}
-                        <div className={styles.itemIndex}>
-                            {index + 1} / {priceItems.length}
-                        </div>
-
-                        {/* Image Section (Right) */}
-                        {item.image && (
-                            <div className={styles.itemImageContainer}>
-                                <img
-                                    src={item.image}
-                                    alt={item.item}
-                                    className={styles.itemImage}
-                                    loading="lazy"
-                                    referrerPolicy="no-referrer"
-                                />
-                            </div>
-                        )}
-
-                        {/* Card Content (Left) */}
-                        <div className={styles.itemContent}>
-                            <div className={styles.itemHeader}>
-                                <h3 className={styles.itemName}>{item.item}</h3>
-                                {item.category && <span className={styles.itemCategory}>{item.category}</span>}
-                            </div>
-
-                            <div className={styles.priceRow}>
-                                <span className={styles.itemPrice}>{item.price} €</span>
-                                <span className={styles.convertedPrice}>{getConvertedPrice(item.price)} 원</span>
-                            </div>
-
-                            {item.description && (
-                                <div className={styles.descriptionBox}>
-                                    <p className={styles.itemDescription}>{item.description.replace(/\\n/g, '\n')}</p>
-                                </div>
-                            )}
-
-                            {/* Logo Link */}
-                            {item.site && item.link && (
-                                <a href={item.site} target="_blank" rel="noopener noreferrer">
-                                    <img
-                                        src={item.link}
-                                        alt="Store Link"
-                                        className={styles.brandLogo}
-                                    />
-                                </a>
-                            )}
-                        </div>
-                    </div>
-                ))}
-
                 {!itemsLoading && priceItems.length === 0 && (
                     <div className={styles.emptyState}>
                         <p>No price data found.</p>
