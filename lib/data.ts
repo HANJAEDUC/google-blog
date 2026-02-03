@@ -128,3 +128,38 @@ export async function getPricesFromSheet(): Promise<PriceItem[]> {
         return [];
     }
 }
+export interface GasStation {
+    id: string;
+    name: string;
+    brand: string;
+    street: string;
+    place: string;
+    lat: number;
+    lng: number;
+    dist: number;
+    diesel: number;
+    e5: number;
+    e10: number;
+    isOpen: boolean;
+}
+
+export async function getGasPrices(): Promise<GasStation[]> {
+    const API_KEY = 'f8b86ac2-0d3a-4a16-be41-32ac79e1448f';
+    const LAT = 52.521;
+    const LNG = 13.438;
+    const RAD = 5;
+    const URL = `https://creativecommons.tankerkoenig.de/json/list.php?lat=${LAT}&lng=${LNG}&rad=${RAD}&sort=dist&type=all&apikey=${API_KEY}`;
+
+    try {
+        const res = await fetch(URL, { next: { revalidate: 300 } }); // Cache for 5 minutes
+        if (!res.ok) return [];
+        const data = await res.json();
+        if (data.ok && data.stations) {
+            return data.stations;
+        }
+        return [];
+    } catch (error) {
+        console.error('Gas prices fetch error:', error);
+        return [];
+    }
+}
