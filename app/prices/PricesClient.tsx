@@ -152,7 +152,7 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
 
     // Client refetch loop
     useEffect(() => {
-        const rateInterval = setInterval(fetchRates, 10 * 60 * 1000); // 10 mins
+        const rateInterval = setInterval(fetchRates, 5 * 60 * 1000); // 5 mins
         // Note: CSV refresh is now handled by revalidating the page (5 mins) or manual reload.
         // We removed client-side CSV fetching to rely on ISR cache consistency.
 
@@ -212,7 +212,7 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
 
                     <div className={styles.bigCardFooter}>
                         <div>naver.com</div>
-                        <div>Live exchange rate updates every 10 minutes</div>
+                        <div>Live updates every 5 minutes</div>
                     </div>
                 </div>
 
