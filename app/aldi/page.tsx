@@ -87,7 +87,7 @@ export default async function AldiPage() {
                 </div>
 
                 {item.link && (
-                  <a href={item.link} target="_blank" rel="noopener noreferrer" className={styles.linkButton}>
+                  <a href={item.link} className={styles.linkButton}>
                     View on Aldi
                   </a>
                 )}
