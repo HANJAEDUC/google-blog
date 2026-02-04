@@ -27,6 +27,33 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
     const [showMap, setShowMap] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    // Aldi Crawl State
+    const [isCrawling, setIsCrawling] = useState(false);
+    const [aldiProducts, setAldiProducts] = useState<any[]>([]);
+    const [crawlError, setCrawlError] = useState<string | null>(null);
+
+    const handleCrawlAldi = async () => {
+        setIsCrawling(true);
+        setCrawlError(null);
+        setAldiProducts([]);
+        
+        try {
+            const res = await fetch('/api/crawl-aldi', { method: 'POST' });
+            const data = await res.json();
+            
+            if (data.success && Array.isArray(data.products)) {
+                setAldiProducts(data.products);
+            } else {
+                setCrawlError('Failed to fetch data or no products found.');
+            }
+        } catch (err) {
+            console.error(err);
+            setCrawlError('Network error while crawling.');
+        } finally {
+            setIsCrawling(false);
+        }
+    };
+
     // Fetch Exchange Rate (Client update loop only)
     const fetchRates = async () => {
         try {
@@ -198,6 +225,38 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
         <div className={styles.container}>
             <header className={styles.header}>
                 <h1 className={styles.title}>Deutsche Preise</h1>
+                <div style={{ marginLeft: 'auto', display: 'flex', gap: '10px' }}>
+                    <button 
+                        onClick={handleCrawlAldi}
+                        disabled={isCrawling}
+                        style={{
+                            padding: '8px 16px',
+                            backgroundColor: isCrawling ? '#666' : '#E30613', // Aldi Red
+                            color: 'white',
+                            borderRadius: '6px',
+                            border: 'none',
+                            fontWeight: 'bold',
+                            fontSize: '0.9rem',
+                            cursor: isCrawling ? 'wait' : 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px'
+                        }}
+                    >
+                        {isCrawling ? '가져오는 중...' : '주간 세일 (Wochenangebote)'}
+                    </button>
+                    <a href="/aldi" style={{
+                        padding: '8px 16px',
+                        backgroundColor: '#002878',
+                        color: 'white',
+                        borderRadius: '6px',
+                        textDecoration: 'none',
+                        fontWeight: 'bold',
+                        fontSize: '0.9rem',
+                    }}>
+                        Static Link
+                    </a>
+                </div>
             </header>
 
             <div className={styles.mainStack}>
@@ -234,11 +293,70 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                         <div>Unavailable</div>
                     )}
 
-                    <div className={styles.bigCardFooter}>
+                <div className={styles.bigCardFooter}>
                         <div>naver.com</div>
                         <div>Live updates every 5 minutes</div>
                     </div>
                 </div>
+
+                {/* Aldi Crawl Results */}
+                {crawlError && (
+                    <div style={{ color: 'red', textAlign: 'center', margin: '20px 0' }}>
+                        {crawlError}
+                    </div>
+                )}
+
+                {aldiProducts.length > 0 && (
+                    <div className={styles.aldiSection}>
+                         <h2 style={{ margin: '20px 0', borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>
+                            Aldi Live Results ({aldiProducts.length})
+                        </h2>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '20px' }}>
+                            {aldiProducts.map((p, i) => (
+                                <div key={i} style={{ 
+                                    border: '1px solid #eee', 
+                                    borderRadius: '8px', 
+                                    overflow: 'hidden', 
+                                    backgroundColor: '#fff',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}>
+                                    {p.imageUrl && (
+                                        <div style={{ height: '150px', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                            <img src={p.imageUrl} alt={p.title} style={{ maxWidth: '100%', maxHeight: '100%' }} />
+                                        </div>
+                                    )}
+                                    <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+                                        {p.brand && <div style={{ fontSize: '0.8rem', color: '#666' }}>{p.brand}</div>}
+                                        <div style={{ fontWeight: 'bold', margin: '4px 0', fontSize: '0.95rem', flex: 1 }}>{p.title}</div>
+                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '8px' }}>
+                                            <div style={{ color: '#E30613', fontWeight: 'bold', fontSize: '1.1rem' }}>{p.price}</div>
+                                            {p.originalPrice && (
+                                                <div style={{ textDecoration: 'line-through', color: '#999', fontSize: '0.8rem' }}>
+                                                    {p.originalPrice}
+                                                </div>
+                                            )}
+                                        </div>
+                                        {p.link && (
+                                            <a href={p.link} target="_blank" rel="noopener noreferrer" style={{
+                                                marginTop: '10px',
+                                                fontSize: '0.8rem',
+                                                color: '#002878',
+                                                textDecoration: 'none',
+                                                border: '1px solid #eee',
+                                                textAlign: 'center',
+                                                padding: '6px',
+                                                borderRadius: '4px'
+                                            }}>
+                                                View on Site
+                                            </a>
+                                        )}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Loading State for Items */}
                 {itemsLoading && priceItems.length === 0 && (
