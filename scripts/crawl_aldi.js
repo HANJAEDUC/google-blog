@@ -129,13 +129,31 @@ const path = require('path');
         }
     }
 
+    // Extract Offer Period Date
+    let offerPeriod = "";
+    try {
+        offerPeriod = await page.evaluate(() => {
+            const text = document.body.innerText;
+            const matches = text.match(/(Mo|Do|Sa)\.?\s+\d{2}\.\d{2}\.?\s*[–-]\s*(Sa|Mo)\.?\s+\d{2}\.\d{2}\.?/gi);
+            return matches ? matches[0] : "";
+        });
+        console.log(`Found offer period: ${offerPeriod}`);
+    } catch (e) {
+        console.log('Could not find offer period.');
+    }
+
     const products = allProducts;
 
     console.log(`Found ${products.length} products.`);
 
-    // Save to file
+    // Save to file with metadata
     const outputPath = path.resolve(__dirname, 'aldi_offers.json');
-    fs.writeFileSync(outputPath, JSON.stringify(products, null, 2));
+    const outputData = {
+        offerPeriod,
+        lastUpdated: new Date().toISOString(),
+        products
+    };
+    fs.writeFileSync(outputPath, JSON.stringify(outputData, null, 2));
     console.log(`Data saved to ${outputPath}`);
 
     await browser.close();

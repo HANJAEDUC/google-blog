@@ -61,7 +61,8 @@
 .imageWrapper {
   position: relative;
   width: 100%;
-  padding-top: 75%; /* 4:3 Aspect Ratio */
+  padding-top: 75%;
+  /* 4:3 Aspect Ratio */
   background-color: #fff;
   overflow: hidden;
 }
@@ -115,7 +116,8 @@
 .price {
   font-size: 1.5rem;
   font-weight: 800;
-  color: #dc2626; /* Aldi Red-ish */
+  color: #dc2626;
+  /* Aldi Red-ish */
 }
 
 .originalPrice {
@@ -129,7 +131,8 @@
   width: 100%;
   padding: 10px;
   margin-top: 16px;
-  background-color: #002878; /* Aldi Blue */
+  background-color: #002878;
+  /* Aldi Blue */
   color: white;
   text-align: center;
   text-decoration: none;
@@ -143,8 +146,8 @@
 }
 
 .emptyState {
-    text-align: center;
-    padding: 60px;
-    font-size: 1.2rem;
-    color: #666;
+  text-align: center;
+  padding: 60px;
+  font-size: 1.2rem;
+  color: #666;
 }

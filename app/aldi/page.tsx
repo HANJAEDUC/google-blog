@@ -18,22 +18,32 @@ export const revalidate = 60; // Revalidate every minute? Or just static is fine
 
 export default async function AldiPage() {
   let products: AldiProduct[] = [];
-  
+  let offerPeriod = "";
+
   try {
     const filePath = path.join(process.cwd(), 'scripts', 'aldi_offers.json');
     if (fs.existsSync(filePath)) {
       const fileContent = fs.readFileSync(filePath, 'utf-8');
-      products = JSON.parse(fileContent);
+      const data = JSON.parse(fileContent);
+      if (Array.isArray(data)) {
+        products = data;
+      } else {
+        products = data.products || [];
+        offerPeriod = data.offerPeriod || "";
+      }
     }
   } catch (error) {
     console.error("Error reading Aldi data:", error);
   }
 
+  // Use the scraped date if available, otherwise use a default
+  const displayDate = offerPeriod || "Mo. 02.02. – Sa. 07.02.";
+
   return (
     <div className={styles.container}>
       <header className={styles.header}>
         <div>
-          <h1 className={styles.title}>Aldi Süd Offers</h1>
+          <h1 className={styles.title}>Aldi Süd Offers ({displayDate})</h1>
           <p style={{ color: '#666' }}>Crawler Results</p>
         </div>
         <Link href="/prices" className={styles.backButton}>
@@ -53,9 +63,9 @@ export default async function AldiPage() {
             <div key={index} className={styles.card}>
               <div className={styles.imageWrapper}>
                 {item.imageUrl ? (
-                  <img 
-                    src={item.imageUrl} 
-                    alt={item.title || 'Product Image'} 
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title || 'Product Image'}
                     className={styles.image}
                     loading="lazy"
                   />
@@ -68,7 +78,7 @@ export default async function AldiPage() {
               <div className={styles.content}>
                 {item.brand && <div className={styles.brand}>{item.brand}</div>}
                 <div className={styles.productTitle}>{item.title}</div>
-                
+
                 <div className={styles.priceContainer}>
                   <div className={styles.price}>{item.price}</div>
                   {item.originalPrice && (
@@ -77,9 +87,9 @@ export default async function AldiPage() {
                 </div>
 
                 {item.link && (
-                    <a href={item.link} target="_blank" rel="noopener noreferrer" className={styles.linkButton}>
-                        View on Aldi
-                    </a>
+                  <a href={item.link} target="_blank" rel="noopener noreferrer" className={styles.linkButton}>
+                    View on Aldi
+                  </a>
                 )}
               </div>
             </div>
