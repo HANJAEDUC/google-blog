@@ -15,131 +15,121 @@ const path = require('path');
 
     const url = 'https://www.aldi-sued.de/angebote';
     console.log(`Navigating to ${url}...`);
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
     // Handle Cookie Consent
     try {
-        const cookieButton = await page.waitForSelector('button::-p-text(Alle bestätigen)', { timeout: 5000 });
+        const cookieButton = await page.waitForSelector('button::-p-text(Alle bestätigen)', { timeout: 10000 });
         if (cookieButton) {
             console.log('Accepting cookies...');
             await cookieButton.click();
-            await new Promise(r => setTimeout(r, 2000)); // Wait for banner to disappear
+            await new Promise(r => setTimeout(r, 2000));
         }
     } catch (e) {
-        console.log('Cookie banner not found or click failed.');
+        console.log('Cookie banner not found or already accepted.');
     }
 
-    // Try to click "Alle anzeigen" to get full list
+    // Navigate to full list
     try {
         console.log('Looking for "Alle anzeigen" link...');
-        // Look for the link that points to weekly offers/Top-Deals. 
-        // Based on analysis, it is often simply "Alle anzeigen" text.
-        const showAllLink = await page.waitForSelector('a::-p-text(Alle anzeigen)', { timeout: 5000 });
-        
+        const showAllLink = await page.waitForSelector('a[aria-label^="Alle anzeigen"], a.product-teaser-list__link-content', { timeout: 10000 });
         if (showAllLink) {
-            console.log('Found "Alle anzeigen", navigating to full list...');
             await Promise.all([
-                page.waitForNavigation({ waitUntil: 'networkidle2' }),
+                page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 }),
                 showAllLink.click()
             ]);
-            console.log('Navigated to full offers page.');
-        } else {
-            console.log('"Alle anzeigen" link not found, staying on main page.');
+            console.log('Navigated to: ' + page.url());
         }
     } catch (e) {
-        console.log('Could not navigate to full list (link not found or timeout):', e.message);
+        console.log('Using current page for offers.');
     }
 
-    // Scroll to load lazy-loaded images
-    console.log('Scrolling to load content...');
-    await page.evaluate(async () => {
-        await new Promise((resolve) => {
-            let totalHeight = 0;
-            const distance = 100;
-            const timer = setInterval(() => {
-                const scrollHeight = document.body.scrollHeight;
-                window.scrollBy(0, distance);
-                totalHeight += distance;
+    let allProducts = [];
+    let hasNextPage = true;
+    let currentPage = 1;
 
-                if (totalHeight >= scrollHeight - window.innerHeight || totalHeight > 10000) { // Limit scroll to avoid infinite loops if any
-                    clearInterval(timer);
-                    resolve();
-                }
-            }, 100);
+    while (hasNextPage) {
+        console.log(`Processing Page ${currentPage}...`);
+
+        // Scroll to load lazy-loaded images on current page
+        await page.evaluate(async () => {
+            await new Promise((resolve) => {
+                let totalHeight = 0;
+                const distance = 250;
+                const timer = setInterval(() => {
+                    const scrollHeight = document.body.scrollHeight;
+                    window.scrollBy(0, distance);
+                    totalHeight += distance;
+                    if (totalHeight >= scrollHeight - window.innerHeight || totalHeight > 15000) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 100);
+            });
         });
-    });
 
-    // Wait a bit for final lazy loads
-    await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 2000));
 
-    console.log('Extracting product data...');
-    const products = await page.evaluate(() => {
-        const items = Array.from(document.querySelectorAll('a.product-tile__link'));
-        
-        return items.map(item => {
-            // Helper to get text safely
-            const getText = (selector) => {
-                const el = item.querySelector(selector);
-                return el ? el.innerText.trim() : null;
-            };
+        const pageProducts = await page.evaluate(() => {
+            const items = Array.from(document.querySelectorAll('a.product-tile__link'));
+            return items.map(item => {
+                const brand = (item.querySelector('.product-tile__brandname p') || item.querySelector('[data-test="product-tile__brandname"] p') || item.querySelectorAll('p')[0])?.innerText.trim();
+                const title = (item.querySelector('.product-tile__name p') || item.querySelector('[data-test="product-tile__name"] p') || item.querySelectorAll('p')[1])?.innerText.trim();
 
-            // Helper to get attribute safely
-            const getAttr = (selector, attr) => {
-                const el = item.querySelector(selector);
-                return el ? el.getAttribute(attr) : null;
-            };
+                const getPrice = () => {
+                    const discounted = item.querySelector('.base-price__discounted')?.innerText.trim();
+                    const regular = item.querySelector('.base-price__regular')?.innerText.trim();
+                    const main = item.querySelector('.price__main')?.innerText.trim();
+                    return discounted || main || regular || "";
+                };
 
-            // Structure analysis based on observation
-            // Brand is usually the first p, Title the second p
-            const pTags = item.querySelectorAll('p');
-            const brand = pTags[0] ? pTags[0].innerText.trim() : null;
-            const title = pTags[1] ? pTags[1].innerText.trim() : null;
+                const price = getPrice();
+                const originalPrice = (item.querySelector('del') || item.querySelector('.base-price__regular:has(+ .base-price__discounted)'))?.innerText.trim();
 
-            // Price analysis
-            // Current price often in <ins> or just .price__main
-            let price = getText('ins');
-            if (!price) {
-                // Try finding any element with price format like 1,99 €
-                // Taking a broader text approach if struct isn't standard
-                const allText = item.innerText;
-                const priceMatch = allText.match(/\d+,\d{2}\s*€/);
-                if (priceMatch) price = priceMatch[0];
-            }
-            
-            // Original price in <del>
-            const originalPrice = getText('del');
-
-            // Image
-            // Try src, then data-src
-            let imageUrl = getAttr('img', 'src');
-            if (imageUrl && imageUrl.startsWith('data:')) { // If it's a placeholder base64
-                const dataSrc = getAttr('img', 'data-src') || getAttr('img', 'data-srcset');
-                if (dataSrc) {
-                   imageUrl = dataSrc.split(' ')[0]; // Take first if srcset
+                let imageUrl = item.querySelector('img')?.src;
+                if (imageUrl && imageUrl.startsWith('data:')) {
+                    imageUrl = item.querySelector('img')?.getAttribute('data-src') || item.querySelector('img')?.getAttribute('data-srcset')?.split(' ')[0];
                 }
-            }
-            
-            // Ensure absolute URL for image
-            if (imageUrl && !imageUrl.startsWith('http')) {
-                imageUrl = new URL(imageUrl, window.location.href).href;
-            }
+                if (imageUrl && !imageUrl.startsWith('http')) {
+                    imageUrl = new URL(imageUrl, window.location.href).href;
+                }
 
-            // Link to product
-            let link = item.getAttribute('href');
-            if (link && !link.startsWith('http')) {
-                link = new URL(link, window.location.href).href;
-            }
+                const link = item.href;
 
-            return {
-                brand,
-                title,
-                price,
-                originalPrice,
-                imageUrl,
-                link
-            };
-        }).filter(p => p.title && p.price); // Filter out empty or navigational tiles
-    });
+                return { brand, title, price, originalPrice, imageUrl, link };
+            }).filter(p => p.title && p.price && p.price !== "0" && p.price !== "");
+        });
+
+        allProducts = allProducts.concat(pageProducts);
+        console.log(`Captured ${pageProducts.length} products from page ${currentPage}. Total: ${allProducts.length}`);
+
+        // Try to go to next page
+        try {
+            const nextLinkText = (currentPage + 1).toString();
+            // Look for pagination link with next number
+            const nextLink = await page.evaluateHandle((text) => {
+                const links = Array.from(document.querySelectorAll('.base-pagination a, .base-pagination button'));
+                return links.find(l => l.innerText.trim() === text);
+            }, nextLinkText);
+
+            if (nextLink.asElement()) {
+                console.log(`Moving to Page ${currentPage + 1}...`);
+                await Promise.all([
+                    page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 }),
+                    nextLink.asElement().click()
+                ]);
+                currentPage++;
+            } else {
+                hasNextPage = false;
+                console.log('No more pages found.');
+            }
+        } catch (err) {
+            console.log('Pagination error or finished:', err.message);
+            hasNextPage = false;
+        }
+    }
+
+    const products = allProducts;
 
     console.log(`Found ${products.length} products.`);
 

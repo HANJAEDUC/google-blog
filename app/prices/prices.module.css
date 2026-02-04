@@ -467,6 +467,34 @@
     background: #5f6368;
 }
 
+.aldiButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #E30613; /* Aldi Red */
+    color: white;
+    padding: 12px 24px;
+    border-radius: 99px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(227, 6, 19, 0.3);
+    text-decoration: none;
+    width: fit-content;
+}
+
+.aldiButton:hover {
+    background: #c20510;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(227, 6, 19, 0.4);
+    color: white;
+}
+
+.aldiButton:active {
+    transform: translateY(0);
+}
+
 .errorText {
     color: #f28b82;
     font-size: 0.85rem;
