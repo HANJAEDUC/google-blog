@@ -3,9 +3,7 @@
 import { useEffect, useState } from 'react';
 import styles from './prices.module.css';
 import { Rates, PriceItem, GasStation } from '@/lib/data';
-import { IoSearch, IoLocation, IoClose, IoNavigate, IoCart } from 'react-icons/io5';
-
-/* Client-side fetch removed in favor of SSR/ISR */
+import { IoSearch, IoLocation, IoClose, IoNavigate, IoCart, IoArrowBack } from 'react-icons/io5';
 
 interface Props {
     initialItems: PriceItem[];
@@ -27,12 +25,9 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
     const [showMap, setShowMap] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-
-
     // Fetch Exchange Rate (Client update loop only)
     const fetchRates = async () => {
         try {
-            // setRateLoading(true); // Don't show loading on background update
             const res = await fetch('/api/exchange-rate');
             if (res.ok) {
                 const data = await res.json();
@@ -40,8 +35,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
             }
         } catch (error) {
             console.error(error);
-        } finally {
-            // setRateLoading(false);
         }
     };
 
@@ -85,7 +78,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
     useEffect(() => {
         if (!showMap || nearbyStations.length === 0) return;
 
-        // Load Leaflet CSS
         if (!document.getElementById('leaflet-css')) {
             const link = document.createElement('link');
             link.id = 'leaflet-css';
@@ -94,23 +86,19 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
             document.head.appendChild(link);
         }
 
-        // Load Leaflet JS
         const initMap = () => {
             const L = (window as any).L;
             if (!L) return;
 
             const map = L.map('gas-map').setView([nearbyStations[0].lat, nearbyStations[0].lng], 12);
 
-            // Dark Mode Tiles (CartoDB Dark Matter)
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
                 attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
             }).addTo(map);
 
-            // Add User Location Marker (Blue Dot)
             if (userLoc) {
-                // Subtle 10km Radius Circle
                 L.circle([userLoc.lat, userLoc.lng], {
-                    radius: 10000, // 10km
+                    radius: 10000,
                     color: "#4285F4",
                     weight: 1,
                     opacity: 0.3,
@@ -141,12 +129,10 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                         </div>
                     `);
 
-                    // Scroll list item into view when marker is clicked
                     marker.on('click', () => {
                         const element = document.getElementById(`station-${s.id}`);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                            // Optional: briefly highlight the item
                             element.style.backgroundColor = 'rgba(66, 133, 244, 0.15)';
                             setTimeout(() => {
                                 element.style.backgroundColor = 'transparent';
@@ -176,15 +162,9 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
         };
     }, [showMap, nearbyStations]);
 
-    // Client refetch loop
     useEffect(() => {
-        const rateInterval = setInterval(fetchRates, 5 * 60 * 1000); // 5 mins
-        // Note: CSV refresh is now handled by revalidating the page (5 mins) or manual reload.
-        // We removed client-side CSV fetching to rely on ISR cache consistency.
-
-        return () => {
-            clearInterval(rateInterval);
-        };
+        const rateInterval = setInterval(fetchRates, 5 * 60 * 1000);
+        return () => clearInterval(rateInterval);
     }, []);
 
     const getConvertedPrice = (euroPrice: string) => {
@@ -192,7 +172,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
         const rate = parseFloat(rates.eur_krw.price.replace(/,/g, ''));
         const price = parseFloat(euroPrice.replace(/,/g, ''));
         if (isNaN(rate) || isNaN(price)) return '...';
-        // Korean specific formatting
         return (price * rate).toLocaleString('ko-KR', { maximumFractionDigits: 0 });
     };
 
@@ -203,7 +182,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
             </header>
 
             <div className={styles.mainStack}>
-                {/* Big Exchange Rate Card */}
                 <div className={styles.bigCard}>
                     <h2 className={styles.bigTitle}>
                         <img
@@ -242,22 +220,36 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                     </div>
                 </div>
 
+                {/* Naver Real-time Buttons */}
+                <div className={styles.naverButtonsRow}>
+                    <a
+                        className={styles.naverRateButton}
+                        href="https://m.search.naver.com/search.naver?query=EUR+KRW"
+                    >
+                        <IoSearch size={18} />
+                        Real-time NAVER EUR Rate
+                    </a>
+                    <a
+                        className={styles.naverRateButton}
+                        href="https://m.search.naver.com/search.naver?query=USD+KRW"
+                    >
+                        <IoSearch size={18} />
+                        Real-time NAVER USD Rate
+                    </a>
+                </div>
 
-                {/* Loading State for Items */}
                 {itemsLoading && priceItems.length === 0 && (
                     <div style={{ textAlign: 'center', padding: '60px', opacity: 0.5 }}>
                         Loading prices...
                     </div>
                 )}
 
-                {/* Price Items List */}
                 {priceItems.map((item, index) => {
                     const isGasDiesel = item.item === '주유 (디젤)';
                     const isBottledWater = item.item === '생수';
 
                     return (
                         <div key={index} style={{ display: 'contents' }}>
-                            {/* Insert Nearby Gas Finder Button right before '주유 (디젤)' */}
                             {isGasDiesel && (
                                 <div className={styles.actionSection}>
                                     <button
@@ -291,12 +283,10 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                             )}
 
                             <div className={styles.itemCard}>
-                                {/* Index Indicator */}
                                 <div className={styles.itemIndex}>
                                     {index + 1} / {priceItems.length}
                                 </div>
 
-                                {/* Image Section (Right) */}
                                 {item.image && (
                                     <div className={styles.itemImageContainer}>
                                         <img
@@ -309,7 +299,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                                     </div>
                                 )}
 
-                                {/* Card Content (Left) */}
                                 <div className={styles.itemContent}>
                                     <div className={styles.itemHeader}>
                                         <h3 className={styles.itemName}>{item.item}</h3>
@@ -327,7 +316,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                                         </div>
                                     )}
 
-                                    {/* Logo Link */}
                                     {item.site && item.link && (
                                         <a href={item.site} target="_blank" rel="noopener noreferrer">
                                             <img
@@ -343,7 +331,6 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
                     );
                 })}
 
-                {/* Map Overlay/Modal */}
                 {showMap && (
                     <div className={styles.mapOverlay}>
                         <div className={styles.mapContainer}>

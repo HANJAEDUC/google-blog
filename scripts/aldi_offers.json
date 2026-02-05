@@ -1,6 +1,6 @@
 {
   "offerPeriod": "",
-  "lastUpdated": "2026-02-04T21:48:54.598Z",
+  "lastUpdated": "2026-02-05T06:16:54.497Z",
   "products": [
     {
       "brand": "NATUR LIEBLINGE",
@@ -60,6 +60,13 @@
       "price": "3,79 €",
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7e2ebac8-5710-4726-ab45-2b91198640fb/Halbes%20Hhnchen%20gewrzt%20750%20g",
       "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-halbes-haehnchen-gewuerzt-750-g-000000000000212909"
+    },
+    {
+      "brand": "MEINE METZGEREI",
+      "title": "Frisches Schweinefilet",
+      "price": "4,25 €¹/0.5 kg",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3dc49827-1a8b-45c7-8ddb-96c89c13571c/Frisches%20Schweinefilet",
+      "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-frisches-schweinefilet-000000000000364685"
     },
     {
       "brand": "BIO",
