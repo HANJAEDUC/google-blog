@@ -763,3 +763,11 @@
         gap: 8px;
     }
 }
+
+@media (min-width: 601px) {
+    .nearbyButton,
+    .aldiButton,
+    .naverRateButton {
+        width: 60%;
+    }
+}
