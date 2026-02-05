@@ -758,4 +758,8 @@
     .listingPrice {
         gap: 8px;
     }
+
+    .naverButtonsRow {
+        flex-direction: column;
+    }
 }
