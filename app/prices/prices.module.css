@@ -438,6 +438,7 @@
 .nearbyButton {
     display: flex;
     align-items: center;
+    justify-content: flex-start; /* Ensure left alignment */
     gap: 8px;
     background: #4285F4;
     color: white;
@@ -449,6 +450,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    width: 100%; /* Full width to match others */
 }
 
 .nearbyButton:hover:not(:disabled) {
@@ -468,8 +470,9 @@
 }
 
 .aldiButton {
-    display: inline-flex;
+    display: flex; /* Changed from inline-flex to flex */
     align-items: center;
+    justify-content: flex-start; /* Ensure left alignment */
     gap: 8px;
     background: #4285F4; /* Changed from Red to Google Blue */
     color: white;
@@ -481,7 +484,7 @@
     transition: all 0.2s ease;
     box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3); /* Blue shadow */
     text-decoration: none;
-    width: fit-content;
+    width: 100%; /* Changed from fit-content to 100% */
 }
 
 .aldiButton:hover {
@@ -500,36 +503,37 @@
     font-size: 0.85rem;
 }
 
-/*** Naver Rate Buttons ***/
 /* Shared Action Section styling for Naver row to match .actionSection */
 .naverButtonsRow {
     display: flex;
-    gap: 16px;
-    margin: 24px 0 32px; /* Matches .actionSection margin */
+    flex-direction: column; /* Stack vertically for all screens */
+    align-items: flex-start; /* Align to left to match Find Nearby */
+    gap: 12px;
+    margin: 24px 0 32px;
     width: 100%;
 }
 
 .naverRateButton {
-    flex: 1;
-    display: flex;
+    display: flex; /* Changed from inline-flex to flex */
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start; /* Align icon to left */
     gap: 8px;
-    background: #4285F4; /* Changed from Green to Google Blue */
+    background: #4285F4;
     color: white;
     border: none;
-    padding: 12px 24px; /* Increased padding to match nearbyButton */
+    padding: 12px 24px;
     border-radius: 99px;
-    font-size: 1rem; /* Increased font size to match nearbyButton */
+    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3); /* Blue shadow */
-    text-decoration: none; /* Ensure link underline is removed */
+    box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+    text-decoration: none;
+    width: 100%; /* Full width */
 }
 
 .naverRateButton:hover {
-    background: #3367D6; /* Darker Blue */
+    background: #3367D6;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(66, 133, 244, 0.4);
 }
@@ -757,9 +761,5 @@
 
     .listingPrice {
         gap: 8px;
-    }
-
-    .naverButtonsRow {
-        flex-direction: column;
     }
 }
