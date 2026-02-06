@@ -248,8 +248,7 @@
     margin: 0;
     line-height: 0.8;
     white-space: pre-wrap;
-    word-break: keep-all;
-    overflow-wrap: break-word;
+    word-break: break-word;
     margin-bottom: 16px;
     /* Spacing for logo below */
 }
