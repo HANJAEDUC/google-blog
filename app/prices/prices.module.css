@@ -246,9 +246,10 @@
     font-size: 0.85rem;
     color: #9aa0a6;
     margin: 0;
-    line-height: 0.8;
+    line-height: 1.6;
     white-space: pre-wrap;
     word-break: keep-all;
+    overflow-wrap: break-word;
     margin-bottom: 16px;
     /* Spacing for logo below */
 }
