@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# scripts output
+scripts/*.log
+scripts/shuffled_words.json
+scripts/aldi_offers.json

@@ -1,5 +1,7 @@
 import WordsClient, { Word, WordExample } from './WordsClient';
 import Papa from 'papaparse';
+import fs from 'fs';
+import path from 'path';
 
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS-L3a9lSp_MK1Gdmkl3PJK0lugAMmOYVnmqMuCmDdTGjLky0k_EFUFLJ-2TR9hIxKHpjWer_98r1wk/pub?gid=0&single=true&output=csv';
 
@@ -8,6 +10,29 @@ export const revalidate = 300;
 
 export default async function WordsPage() {
   try {
+    // Try to use shuffled words JSON first
+    const shuffledPath = path.join(process.cwd(), 'scripts/shuffled_words.json');
+
+    if (fs.existsSync(shuffledPath)) {
+      try {
+        const stats = fs.statSync(shuffledPath);
+        const ageHours = (Date.now() - stats.mtimeMs) / (1000 * 60 * 60);
+
+        // Use shuffled data if less than 1 hour old (hybrid strategy)
+        if (ageHours < 1) {
+          const shuffledData = JSON.parse(fs.readFileSync(shuffledPath, 'utf-8'));
+          console.log(`Using shuffled words (${ageHours.toFixed(1)}h old, ${shuffledData.length} words)`);
+          return <WordsClient initialVocabulary={shuffledData} />;
+        } else {
+          console.log(`JSON is ${ageHours.toFixed(1)}h old, fetching fresh data and re-shuffling...`);
+        }
+      } catch (error) {
+        console.warn('Failed to read shuffled words, falling back to CSV:', error);
+      }
+    }
+
+    // Fallback to CSV fetch (original implementation)
+    console.log('Fetching words from Google Sheets CSV...');
     const response = await fetch(SHEET_URL);
     if (!response.ok) {
       throw new Error(`Failed to fetch CSV: ${response.statusText}`);
@@ -64,6 +89,31 @@ export default async function WordsPage() {
         });
       }
     });
+
+    // Shuffle words (preserve first word "die Liebe")
+    if (words.length > 0) {
+      const firstWord = words[0];
+      const remainingWords = words.slice(1);
+
+      // Fisher-Yates shuffle
+      for (let i = remainingWords.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [remainingWords[i], remainingWords[j]] = [remainingWords[j], remainingWords[i]];
+      }
+
+      const shuffledWords = [firstWord, ...remainingWords];
+
+      // Save to JSON file for future use
+      try {
+        const shuffledPath = path.join(process.cwd(), 'scripts/shuffled_words.json');
+        fs.writeFileSync(shuffledPath, JSON.stringify(shuffledWords, null, 2), 'utf-8');
+        console.log(`✓ Auto-saved shuffled words to JSON (${shuffledWords.length} words)`);
+      } catch (error) {
+        console.warn('Failed to save shuffled words:', error);
+      }
+
+      return <WordsClient initialVocabulary={shuffledWords} />;
+    }
 
     return <WordsClient initialVocabulary={words} />;
   } catch (error) {
