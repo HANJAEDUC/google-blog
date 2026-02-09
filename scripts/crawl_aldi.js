@@ -3,17 +3,16 @@ const fs = require('fs');
 const path = require('path');
 
 (async () => {
-    console.log('Starting Aldi Crawler...');
+    console.log('Starting Aldi Crawler (v2)...');
     const browser = await puppeteer.launch({
         headless: "new",
-        args: ['--no-sandbox', '--disable-setuid-sandbox'] // Useful for some environments
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
     const page = await browser.newPage();
-
-    // Set a reasonable viewport
     await page.setViewport({ width: 1280, height: 1024 });
 
-    const url = 'https://www.aldi-sued.de/angebote';
+    // Navigate directly to weekly offers
+    const url = 'https://www.aldi-sued.de/produkte/wochenangebote.html';
     console.log(`Navigating to ${url}...`);
     await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
@@ -26,41 +25,34 @@ const path = require('path');
             await new Promise(r => setTimeout(r, 2000));
         }
     } catch (e) {
-        console.log('Cookie banner not found or already accepted.');
-    }
-
-    // Navigate to full list
-    try {
-        console.log('Looking for "Alle anzeigen" link...');
-        const showAllLink = await page.waitForSelector('a[aria-label^="Alle anzeigen"], a.product-teaser-list__link-content', { timeout: 10000 });
-        if (showAllLink) {
-            await Promise.all([
-                page.waitForNavigation({ waitUntil: 'networkidle2', timeout: 60000 }),
-                showAllLink.click()
-            ]);
-            console.log('Navigated to: ' + page.url());
-        }
-    } catch (e) {
-        console.log('Using current page for offers.');
+        console.log('Cookie banner not found.');
     }
 
     let allProducts = [];
     let hasNextPage = true;
     let currentPage = 1;
+    const maxPages = 5; // Limit to first 5 pages (~150 products) to get only top deals
 
-    while (hasNextPage) {
+    while (hasNextPage && currentPage <= maxPages) {
         console.log(`Processing Page ${currentPage}...`);
 
-        // Scroll to load lazy-loaded images on current page
+        // Wait for product tiles to load
+        try {
+            await page.waitForSelector('.product-tile', { timeout: 15000 });
+        } catch (e) {
+            console.log('No product tiles found.');
+            break;
+        }
+
+        // Scroll to load lazy-loaded content
         await page.evaluate(async () => {
             await new Promise((resolve) => {
                 let totalHeight = 0;
                 const distance = 250;
                 const timer = setInterval(() => {
-                    const scrollHeight = document.body.scrollHeight;
                     window.scrollBy(0, distance);
                     totalHeight += distance;
-                    if (totalHeight >= scrollHeight - window.innerHeight || totalHeight > 15000) {
+                    if (totalHeight >= document.body.scrollHeight - window.innerHeight || totalHeight > 15000) {
                         clearInterval(timer);
                         resolve();
                     }
@@ -68,36 +60,87 @@ const path = require('path');
             });
         });
 
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 3000));
 
+        // Extract products with more flexible approach
         const pageProducts = await page.evaluate(() => {
-            const items = Array.from(document.querySelectorAll('a.product-tile__link'));
+            const items = Array.from(document.querySelectorAll('.product-tile'));
+            
             return items.map(item => {
-                const brand = (item.querySelector('.product-tile__brandname p') || item.querySelector('[data-test="product-tile__brandname"] p') || item.querySelectorAll('p')[0])?.innerText.trim();
-                const title = (item.querySelector('.product-tile__name p') || item.querySelector('[data-test="product-tile__name"] p') || item.querySelectorAll('p')[1])?.innerText.trim();
+                // Try multiple ways to get brand and title
+                const allPTags = item.querySelectorAll('p');
+                let brand = null;
+                let title = null;
+                
+                // Method 1: Try explicit selectors
+                const brandEl1 = item.querySelector('.product-tile__brand p');
+                const titleEl1 = item.querySelector('.product-tile__title p');
+                
+                if (brandEl1) brand = brandEl1.innerText.trim();
+                if (titleEl1) title = titleEl1.innerText.trim();
+                
+                // Method 2: If not found, use first two p tags
+                if (!brand && !title && allPTags.length >= 2) {
+                    brand = allPTags[0]?.innerText.trim() || null;
+                    title = allPTags[1]?.innerText.trim() || null;
+                }
+                
+                // Method 3: Try link text as fallback
+                if (!title) {
+                    const linkEl = item.querySelector('a.product-tile__link');
+                    if (linkEl) {
+                        const ariaLabel = linkEl.getAttribute('aria-label');
+                        if (ariaLabel) title = ariaLabel;
+                    }
+                }
 
-                const getPrice = () => {
-                    const discounted = item.querySelector('.base-price__discounted')?.innerText.trim();
-                    const regular = item.querySelector('.base-price__regular')?.innerText.trim();
-                    const main = item.querySelector('.price__main')?.innerText.trim();
-                    return discounted || main || regular || "";
-                };
+                // Get price - try multiple selectors
+                let price = "";
+                const priceContainer = item.querySelector('.product-tile__price, [class*="price"]');
+                if (priceContainer) {
+                    const priceIns = priceContainer.querySelector('ins');
+                    const priceSpan = priceContainer.querySelector('span:not(.sr-only)');
+                    const priceDiv = priceContainer.querySelector('div');
+                    
+                    if (priceIns) {
+                        price = priceIns.innerText.trim();
+                    } else if (priceSpan) {
+                        price = priceSpan.innerText.trim();
+                    } else if (priceDiv) {
+                        price = priceDiv.innerText.trim();
+                    } else {
+                        price = priceContainer.innerText.trim().split('\\n')[0];
+                    }
+                }
 
-                const price = getPrice();
-                const originalPrice = (item.querySelector('del') || item.querySelector('.base-price__regular:has(+ .base-price__discounted)'))?.innerText.trim();
+                // Get original price
+                const originalPriceDel = item.querySelector('del');
+                const originalPrice = originalPriceDel ? originalPriceDel.innerText.trim() : null;
 
-                let imageUrl = item.querySelector('img')?.src;
+                // Get image
+                const imgEl = item.querySelector('img');
+                let imageUrl = imgEl ? imgEl.src : null;
+                
                 if (imageUrl && imageUrl.startsWith('data:')) {
-                    imageUrl = item.querySelector('img')?.getAttribute('data-src') || item.querySelector('img')?.getAttribute('data-srcset')?.split(' ')[0];
+                    imageUrl = imgEl.getAttribute('data-src') || imgEl.getAttribute('data-srcset')?.split(' ')[0] || null;
                 }
                 if (imageUrl && !imageUrl.startsWith('http')) {
-                    imageUrl = new URL(imageUrl, window.location.href).href;
+                    try {
+                        imageUrl = new URL(imageUrl, window.location.href).href;
+                    } catch (e) {
+                        imageUrl = null;
+                    }
                 }
 
-                const link = item.href;
+                // Get product link
+                const linkEl = item.querySelector('a');
+               const link = linkEl ? linkEl.href : null;
 
                 return { brand, title, price, originalPrice, imageUrl, link };
-            }).filter(p => p.title && p.price && p.price !== "0" && p.price !== "");
+            }).filter(p => {
+                // More lenient filter: accept if has title OR price
+                return (p.title && p.title !== "") || (p.price && p.price !== "" && p.price !== "0");
+            });
         });
 
         allProducts = allProducts.concat(pageProducts);
@@ -106,7 +149,6 @@ const path = require('path');
         // Try to go to next page
         try {
             const nextLinkText = (currentPage + 1).toString();
-            // Look for pagination link with next number
             const nextLink = await page.evaluateHandle((text) => {
                 const links = Array.from(document.querySelectorAll('.base-pagination a, .base-pagination button'));
                 return links.find(l => l.innerText.trim() === text);
@@ -124,34 +166,41 @@ const path = require('path');
                 console.log('No more pages found.');
             }
         } catch (err) {
-            console.log('Pagination error or finished:', err.message);
+            console.log('Pagination finished:', err.message);
             hasNextPage = false;
         }
     }
 
-    // Extract Offer Period Date
+    // Extract Offer Period
     let offerPeriod = "";
     try {
         offerPeriod = await page.evaluate(() => {
             const text = document.body.innerText;
-            const matches = text.match(/(Mo|Do|Sa)\.?\s+\d{2}\.\d{2}\.?\s*[–-]\s*(Sa|Mo)\.?\s+\d{2}\.\d{2}\.?/gi);
-            return matches ? matches[0] : "";
+            // Try multiple patterns for date ranges
+            const patterns = [
+                /(Mo|Di|Mi|Do|Fr|Sa|So),?\s+\d{1,2}\.\d{1,2}\.?\s*[–-]\s*(Mo|Di|Mi|Do|Fr|Sa|So)\.?,?\s+\d{1,2}\.\d{1,2}\.?/gi,
+                /(Mo|Do|Sa)\.?\s+\d{2}\.\d{2}\.?\s*[–-]\s*(Sa|Mo|Do)\.?\s+\d{2}\.\d{2}\.?/gi
+            ];
+            
+            for (const pattern of patterns) {
+                const matches = text.match(pattern);
+                if (matches) return matches[0];
+            }
+            return "";
         });
-        console.log(`Found offer period: ${offerPeriod}`);
+        console.log(`Found offer period: ${offerPeriod || 'Not found'}`);
     } catch (e) {
         console.log('Could not find offer period.');
     }
 
-    const products = allProducts;
+    console.log(`Total found: ${allProducts.length} products.`);
 
-    console.log(`Found ${products.length} products.`);
-
-    // Save to file with metadata
+    // Save to file
     const outputPath = path.resolve(__dirname, 'aldi_offers.json');
     const outputData = {
         offerPeriod,
         lastUpdated: new Date().toISOString(),
-        products
+        products: allProducts
     };
     fs.writeFileSync(outputPath, JSON.stringify(outputData, null, 2));
     console.log(`Data saved to ${outputPath}`);

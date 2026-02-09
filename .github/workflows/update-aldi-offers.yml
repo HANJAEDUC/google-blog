@@ -1,0 +1,58 @@
+name: Update Aldi Offers
+
+on:
+  # 매주 월요일 새벽 2시 (한국시간 10시)에 자동 실행
+  schedule:
+    - cron: '0 2 * * 1'
+  # 수동으로도 실행 가능
+  workflow_dispatch:
+
+jobs:
+  update-offers:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Install Puppeteer dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            chromium-browser \
+            libx11-xcb1 \
+            libxcomposite1 \
+            libxcursor1 \
+            libxdamage1 \
+            libxi6 \
+            libxtst6 \
+            libnss3 \
+            libcups2 \
+            libxss1 \
+            libxrandr2 \
+            libasound2 \
+            libpangocairo-1.0-0 \
+            libatk1.0-0 \
+            libatk-bridge2.0-0 \
+            libgtk-3-0
+            
+      - name: Run Aldi crawler
+        run: node scripts/crawl_aldi.js
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/chromium-browser
+          
+      - name: Commit and push if changes exist
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add scripts/aldi_offers.json
+          git diff --staged --quiet || git commit -m "🤖 Auto-update Aldi offers for $(date +'%Y-%m-%d')"
+          git push
