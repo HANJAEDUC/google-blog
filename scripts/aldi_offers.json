@@ -1,6 +1,6 @@
 {
-  "offerPeriod": "Mo, 9.2. – Sa., 14.2.",
-  "lastUpdated": "2026-02-09T11:15:40.877Z",
+  "offerPeriod": "",
+  "lastUpdated": "2026-02-11T16:38:39.989Z",
   "products": [
     {
       "brand": "APEROL",
@@ -31,7 +31,7 @@
       "title": "Schoko Milch Riegel 200 g",
       "price": "(7,95 €/1 kg)",
       "originalPrice": "2,19 €",
-      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/57584d01-776a-4a7a-9783-01d3f1ccee5f/Schoko%20Milch%20Riegel%20200%20g",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/4d7ae1a5-a164-4568-9315-860056bc09ae/Schoko%20Milch%20Riegel%20200%20g",
       "link": "https://www.aldi-sued.de/produkt/choceur-schoko-milch-riegel-200-g-000000000000194055"
     },
     {
@@ -67,6 +67,14 @@
       "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweine-minutensteaks-400-g-000000000000212000"
     },
     {
+      "brand": "BIO",
+      "title": "Bio Faitrade Limetten",
+      "price": "",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2eba6e43-2ff4-41e0-b123-f53df34c990f/Bio%20Faitrade%20Limetten",
+      "link": "https://www.aldi-sued.de/produkt/bio-bio-faitrade-limetten-000000000000228374"
+    },
+    {
       "brand": "KLEINE SCHÄTZE",
       "title": "Speisekartoffeln Drillinge 1 kg",
       "price": "(1,29 €/1 kg)",
@@ -85,7 +93,7 @@
     {
       "brand": "NATUR LIEBLINGE",
       "title": "Trauben 500 g, hell",
-      "price": "(3,38 €/1 kg)",
+      "price": "(2,98 €/1 kg)",
       "originalPrice": null,
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/65f99e0c-7a65-4d66-b325-4f5a6f455050/Trauben%20500%20g%20hell",
       "link": "https://www.aldi-sued.de/produkt/natur-lieblinge-trauben-500-g-hell-000000000000228798"
@@ -105,6 +113,14 @@
       "originalPrice": null,
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b48db4be-40d8-4c45-925d-1d6d3c7e2900/Champignons%20400%20g%20wei",
       "link": "https://www.aldi-sued.de/produkt/natur-lieblinge-champignons-400-g-weiss-000000000000230334"
+    },
+    {
+      "brand": "BESTES AUS DER REGION",
+      "title": "Äpfel Braeburn 1 kg",
+      "price": "(1,79 €/1 kg)",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/740f4fc3-7bc8-4989-bbb0-b2b8b52a421b/pfel%20Braeburn%201%20kg",
+      "link": "https://www.aldi-sued.de/produkt/bestes-aus-der-region-aepfel-braeburn-1-kg-000000000000458918"
     },
     {
       "brand": "BIO NATURLAND",
@@ -179,6 +195,14 @@
       "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweineschnitzel-xxl-600-g-paniert-000000000000607084"
     },
     {
+      "brand": "BIO NATURLAND",
+      "title": "Bio Pastinaken 400 g",
+      "price": "(3,98 €/1 kg)",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/6b9ef1f4-af6a-43d3-a05f-b4c598f47162/Bio%20Pastinaken%20400%20g",
+      "link": "https://www.aldi-sued.de/produkt/bio-naturland-bio-pastinaken-400-g-000000000000619533"
+    },
+    {
       "brand": "MEINE BACKWELT",
       "title": "Käsetwister",
       "price": "",
@@ -209,30 +233,6 @@
       "originalPrice": "2,79 €",
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/09356462-e88d-458a-a83f-c2b0e5f97b12/MilchMuse%20210%20g%20Erdbeere",
       "link": "https://www.aldi-sued.de/produkt/choceur-milch-maeuse-210-g-erdbeere-000000000155814007"
-    },
-    {
-      "brand": "CHOCEUR",
-      "title": "Choco und Keks 300 g, Cappuccino",
-      "price": "(8,97 €/1 kg)",
-      "originalPrice": null,
-      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/abe6db06-6a81-4a7a-a6ae-0c1aca8e3859/Choco%20und%20Keks%20300%20g%20Cappuccino",
-      "link": "https://www.aldi-sued.de/produkt/choceur-choco-und-keks-300-g-cappuccino-000000000155838001"
-    },
-    {
-      "brand": "CHOCEUR",
-      "title": "Choco und Keks 300 g, Milch",
-      "price": "(8,97 €/1 kg)",
-      "originalPrice": null,
-      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/a35279fe-226c-4e12-844b-140c3a4d120f/Choco%20und%20Keks%20300%20g%20Milch",
-      "link": "https://www.aldi-sued.de/produkt/choceur-choco-und-keks-300-g-milch-000000000155838002"
-    },
-    {
-      "brand": "CHOCEUR",
-      "title": "Choco und Keks 300 g, Black & White",
-      "price": "(8,97 €/1 kg)",
-      "originalPrice": null,
-      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d817bf5e-4f35-4fd3-8e0f-31b6a12e9b7d/Choco%20und%20Keks%20300%20g%20Black%20%20White",
-      "link": "https://www.aldi-sued.de/produkt/choceur-choco-und-keks-300-g-black-white-000000000155838003"
     },
     {
       "brand": "NIVEA",
@@ -421,7 +421,7 @@
     {
       "brand": "MÜLLER",
       "title": "Joghurt mit der Ecke 150 g, Schoko Balls",
-      "price": "(2,60 €/1 kg)",
+      "price": "(2,33 €/1 kg)",
       "originalPrice": "0,89 €",
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/1885d97f-3fe8-4205-b564-f9c2f3b56021/Joghurt%20mit%20der%20Ecke%20150%20g%20Schoko%20Balls",
       "link": "https://www.aldi-sued.de/produkt/mueller-joghurt-mit-der-ecke-150-g-schoko-balls-000000000204989003"
@@ -429,7 +429,7 @@
     {
       "brand": "MÜLLER",
       "title": "Joghurt mit der Ecke 150 g, Schoko Flakes",
-      "price": "(2,60 €/1 kg)",
+      "price": "(2,33 €/1 kg)",
       "originalPrice": "0,89 €",
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/c77f57d8-7d84-4a0c-94ba-f32f84921dd2/Joghurt%20mit%20der%20Ecke%20150%20g%20Schoko%20Flakes",
       "link": "https://www.aldi-sued.de/produkt/mueller-joghurt-mit-der-ecke-150-g-schoko-flakes-000000000204989004"
@@ -437,7 +437,7 @@
     {
       "brand": "MÜLLER",
       "title": "Joghurt mit der Ecke 113 g, Mandel Crunch",
-      "price": "(3,45 €/1 kg)",
+      "price": "(3,10 €/1 kg)",
       "originalPrice": "0,89 €",
       "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/21bff070-29cc-4e08-a7ca-00993f18de11/Joghurt%20mit%20der%20Ecke%20113%20g%20Mandel%20Crunch",
       "link": "https://www.aldi-sued.de/produkt/mueller-joghurt-mit-der-ecke-113-g-mandel-crunch-000000000204989006"
@@ -1103,7 +1103,7 @@
       "title": "Sekt Halbtrocken 3 x 0,2 l",
       "price": "(5,48 €/1 l)",
       "originalPrice": null,
-      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/cadfaa5b-fc42-49c9-a9ad-05c7440df0fa/Sekt%20Halbtrocken%203%20x%2002%20l",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2d436a3e-b5ec-40db-9296-339bde18c278/Sekt%20Halbtrocken%203%20x%2002%20l",
       "link": "https://www.aldi-sued.de/produkt/stolzenfels-sekt-halbtrocken-3-x-0-2-l-000000000000182602"
     },
     {
@@ -1135,7 +1135,7 @@
       "title": "1 l",
       "price": "(2,79 €/1 l)",
       "originalPrice": null,
-      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7f2e82cc-eb6d-4174-8b18-f2c38c2bae8f/Mosel%20QbA%201%20l",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/fb32aa30-2e3e-42ae-b159-ce9b3e053559/Mosel%20QbA%201%20l",
       "link": "https://www.aldi-sued.de/produkt/no-brand-mosel-qba-1-l-000000000000182609"
     },
     {
