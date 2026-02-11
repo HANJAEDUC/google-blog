@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import fs from 'fs';
-import path from 'path';
 import Link from 'next/link';
 import styles from './aldi.module.css';
 import { IoArrowBack, IoRefresh } from 'react-icons/io5';
