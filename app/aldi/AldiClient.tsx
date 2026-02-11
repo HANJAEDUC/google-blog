@@ -1,9 +1,7 @@
-'use client';
-
 import { useState } from 'react';
 import Link from 'next/link';
 import styles from './aldi.module.css';
-import { IoArrowBack, IoRefresh } from 'react-icons/io5';
+import { IoArrowBack } from 'react-icons/io5';
 
 // Type definition for the product
 interface AldiProduct {
@@ -22,36 +20,6 @@ interface AldiData {
 }
 
 export default function AldiClientPage({ initialData }: { initialData: AldiData }) {
-  const [updating, setUpdating] = useState(false);
-  const [updateMessage, setUpdateMessage] = useState('');
-
-  const handleUpdate = async () => {
-    setUpdating(true);
-    setUpdateMessage('크롤링 중...');
-    
-    try {
-      const response = await fetch('/api/crawl-aldi', {
-        method: 'POST',
-      });
-      
-      const result = await response.json();
-      
-      if (result.success) {
-        setUpdateMessage('✅ 업데이트 완료! 페이지를 새로고침하세요.');
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      } else {
-        setUpdateMessage('❌ 업데이트 실패: ' + result.error);
-      }
-    } catch (error) {
-      setUpdateMessage('❌ 오류 발생');
-      console.error('Update error:', error);
-    } finally {
-      setUpdating(false);
-    }
-  };
-
   const { offerPeriod, products } = initialData;
   const displayDate = offerPeriod || "Mo. 02.02. – Sa. 07.02.";
 
@@ -61,28 +29,8 @@ export default function AldiClientPage({ initialData }: { initialData: AldiData 
         <div>
           <h1 className={styles.title}>Aldi Süd Offers ({displayDate})</h1>
           <p style={{ color: '#666' }}>Crawler Results</p>
-          {updateMessage && (
-            <p style={{ 
-              marginTop: '10px', 
-              padding: '8px 12px', 
-              backgroundColor: updateMessage.includes('✅') ? '#d4edda' : '#f8d7da',
-              color: updateMessage.includes('✅') ? '#155724' : '#721c24',
-              borderRadius: '6px',
-              fontSize: '0.9rem'
-            }}>
-              {updateMessage}
-            </p>
-          )}
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button 
-            onClick={handleUpdate}
-            disabled={updating}
-            className={styles.updateButton}
-          >
-            <IoRefresh className={updating ? styles.spinning : ''} />
-            {updating ? '업데이트 중...' : '지금 업데이트'}
-          </button>
           <Link href="/prices" className={styles.backButton}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <IoArrowBack /> Back
