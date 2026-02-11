@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Link from 'next/link';
 import styles from './aldi.module.css';
 import { IoArrowBack } from 'react-icons/io5';
