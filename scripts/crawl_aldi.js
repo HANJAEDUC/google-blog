@@ -94,27 +94,29 @@ const path = require('path');
                     }
                 }
 
-                // Get price - try multiple selectors
+                // Get price - prioritize discounted price, then regular price
                 let price = "";
-                const priceContainer = item.querySelector('.product-tile__price, [class*="price"]');
-                if (priceContainer) {
-                    const priceIns = priceContainer.querySelector('ins');
-                    const priceSpan = priceContainer.querySelector('span:not(.sr-only)');
-                    const priceDiv = priceContainer.querySelector('div');
-                    
-                    if (priceIns) {
-                        price = priceIns.innerText.trim();
-                    } else if (priceSpan) {
-                        price = priceSpan.innerText.trim();
-                    } else if (priceDiv) {
-                        price = priceDiv.innerText.trim();
+                
+                // 1. Try to find discounted price (ins tag)
+                const discountedPrice = item.querySelector('ins.base-price__discounted, ins');
+                if (discountedPrice) {
+                    price = discountedPrice.innerText.trim();
+                } else {
+                    // 2. Try to find regular price (span inside .base-price__regular)
+                    const regularPrice = item.querySelector('.base-price__regular span, .product-tile__price span:not(.sr-only)');
+                    if (regularPrice) {
+                        price = regularPrice.innerText.trim();
                     } else {
-                        price = priceContainer.innerText.trim().split('\\n')[0];
+                        // 3. Fallback to any price container
+                        const priceContainer = item.querySelector('.product-tile__price, [class*="price"]');
+                        if (priceContainer) {
+                            price = priceContainer.innerText.trim().split('\n')[0];
+                        }
                     }
                 }
 
-                // Get original price
-                const originalPriceDel = item.querySelector('del');
+                // Get original price (strikethrough price when on sale)
+                const originalPriceDel = item.querySelector('del, .base-price__was-price del');
                 const originalPrice = originalPriceDel ? originalPriceDel.innerText.trim() : null;
 
                 // Get image
