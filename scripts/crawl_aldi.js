@@ -171,26 +171,32 @@ const path = require('path');
         }
     }
 
-    // Extract Offer Period
+    // Calculate current week's offer period (Monday to Saturday)
     let offerPeriod = "";
     try {
-        offerPeriod = await page.evaluate(() => {
-            const text = document.body.innerText;
-            // Try multiple patterns for date ranges
-            const patterns = [
-                /(Mo|Di|Mi|Do|Fr|Sa|So),?\s+\d{1,2}\.\d{1,2}\.?\s*[–-]\s*(Mo|Di|Mi|Do|Fr|Sa|So)\.?,?\s+\d{1,2}\.\d{1,2}\.?/gi,
-                /(Mo|Do|Sa)\.?\s+\d{2}\.\d{2}\.?\s*[–-]\s*(Sa|Mo|Do)\.?\s+\d{2}\.\d{2}\.?/gi
-            ];
-            
-            for (const pattern of patterns) {
-                const matches = text.match(pattern);
-                if (matches) return matches[0];
-            }
-            return "";
-        });
-        console.log(`Found offer period: ${offerPeriod || 'Not found'}`);
+        const now = new Date();
+        const dayOfWeek = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+        
+        // Calculate Monday of current week
+        const monday = new Date(now);
+        const daysToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
+        monday.setDate(now.getDate() + daysToMonday);
+        
+        // Calculate Saturday of current week
+        const saturday = new Date(monday);
+        saturday.setDate(monday.getDate() + 5);
+        
+        // Format dates as "Mo. DD.MM. – Sa. DD.MM."
+        const formatDate = (date) => {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            return `${day}.${month}.`;
+        };
+        
+        offerPeriod = `Mo. ${formatDate(monday)} – Sa. ${formatDate(saturday)}`;
+        console.log(`Calculated offer period: ${offerPeriod}`);
     } catch (e) {
-        console.log('Could not find offer period.');
+        console.log('Could not calculate offer period:', e.message);
     }
 
     console.log(`Total found: ${allProducts.length} products.`);
