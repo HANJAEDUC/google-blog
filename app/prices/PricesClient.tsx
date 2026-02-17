@@ -8,15 +8,18 @@ import { IoSearch, IoLocation, IoClose, IoNavigate, IoCart, IoArrowBack } from '
 interface Props {
     initialItems: PriceItem[];
     initialRates: Rates;
+    serverTimestamp?: string;
 }
 
-export default function PricesClient({ initialItems, initialRates }: Props) {
+export default function PricesClient({ initialItems, initialRates, serverTimestamp }: Props) {
     // State
     const [rates, setRates] = useState<Rates | null>(initialRates);
     const [rateLoading, setRateLoading] = useState(false);
 
     const [priceItems, setPriceItems] = useState<PriceItem[]>(initialItems);
     const [itemsLoading, setItemsLoading] = useState(false);
+    
+    const [lastUpdated, setLastUpdated] = useState<string>(serverTimestamp || new Date().toISOString());
 
     // Nearby Gas States
     const [nearbyStations, setNearbyStations] = useState<GasStation[]>([]);
@@ -173,6 +176,57 @@ export default function PricesClient({ initialItems, initialRates }: Props) {
         const price = parseFloat(euroPrice.replace(/,/g, ''));
         if (isNaN(rate) || isNaN(price)) return '...';
         return (price * rate).toLocaleString('ko-KR', { maximumFractionDigits: 0 });
+    };
+
+    const formatUpdateTime = (isoString: string) => {
+        const date = new Date(isoString);
+        const now = new Date();
+        const diffMs = now.getTime() - date.getTime();
+        const diffMins = Math.floor(diffMs / 60000);
+        
+        if (diffMins < 1) return 'Just now';
+        if (diffMins < 60) return `${diffMins}분 전`;
+        
+        const diffHours = Math.floor(diffMins / 60);
+        if (diffHours < 24) return `${diffHours}시간 전`;
+        
+        return date.toLocaleString('ko-KR', { 
+            year: 'numeric',
+            month: '2-digit', 
+            day: '2-digit',
+            hour: '2-digit', 
+            minute: '2-digit'
+        });
+    };
+
+    const handleRefresh = async () => {
+        setItemsLoading(true);
+        setRateLoading(true);
+        try {
+            // Force cache bypass by adding timestamp query parameter
+            const timestamp = Date.now();
+            const [ratesRes, itemsRes] = await Promise.all([
+                fetch(`/api/exchange-rate?t=${timestamp}`),
+                fetch(`/api/prices?t=${timestamp}`)
+            ]);
+            
+            if (ratesRes.ok) {
+                const ratesData = await ratesRes.json();
+                setRates(ratesData);
+            }
+            
+            if (itemsRes.ok) {
+                const itemsData = await itemsRes.json();
+                setPriceItems(itemsData);
+            }
+            
+            setLastUpdated(new Date().toISOString());
+        } catch (error) {
+            console.error('Refresh failed:', error);
+        } finally {
+            setItemsLoading(false);
+            setRateLoading(false);
+        }
     };
 
     return (

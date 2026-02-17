@@ -7,6 +7,7 @@ export default async function PricesPage() {
     const gasStations = await getGasPrices();
     const prices = await getPricesFromSheet(gasStations);
     const rates = await getExchangeRate();
+    const serverTimestamp = new Date().toISOString();
 
-    return <PricesClient initialItems={prices} initialRates={rates} />;
+    return <PricesClient initialItems={prices} initialRates={rates} serverTimestamp={serverTimestamp} />;
 }
