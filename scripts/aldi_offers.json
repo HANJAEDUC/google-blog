@@ -1,5 +1,1206 @@
 {
-  "offerPeriod": "",
-  "lastUpdated": "2026-02-22T06:00:19.644Z",
-  "products": []
+  "offerPeriod": "Mo. 23.02. – Sa. 28.02.",
+  "lastUpdated": "2026-02-23T05:10:25.996Z",
+  "products": [
+    {
+      "brand": "MEINE BACKWELT",
+      "title": "Berliner / Krapfen Mehrfrucht",
+      "price": "0,45 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/cffa4eae-1da1-45be-97e4-79336f4ffd54/Berliner%20%20Krapfen%20Mehrfrucht",
+      "link": "https://www.aldi-sued.de/produkt/meine-backwelt-berliner-krapfen-mehrfrucht-000000000000187303"
+    },
+    {
+      "brand": "COPPENRATH",
+      "title": "Unsere Goldstücke Aufbackbrötchen 450 g",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7d9ea065-a37d-4a57-819c-406f64b7f5be/Unsere%20Goldstcke%20Aufbackbrtchen%20450%20g",
+      "link": "https://www.aldi-sued.de/produkt/coppenrath-unsere-goldstuecke-aufbackbroetchen-450-g-000000000000191513"
+    },
+    {
+      "brand": "CONDITOREI COPPENRATH & WIESE",
+      "title": "Aufback-Dinkelbrötchen 420 g",
+      "price": "3,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/5da804d4-1d47-4e98-a613-5599497fc7c3/AufbackDinkelbrtchen%20420%20g",
+      "link": "https://www.aldi-sued.de/produkt/conditorei-coppenrath-wiese-aufback-dinkelbroetchen-420-g-000000000000191892"
+    },
+    {
+      "brand": "FERRERO",
+      "title": "Hanuta Haselnuss-Schnitte 220 g",
+      "price": "3,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/16c92f10-0a1a-409a-aac5-c5c7ff8e2920/Hanuta%20HaselnussSchnitte%20220%20g",
+      "link": "https://www.aldi-sued.de/produkt/ferrero-hanuta-haselnuss-schnitte-220-g-000000000000194330"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "H-Sahne 200 g",
+      "price": "0,89 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/f5719376-49a5-47a7-b102-05cf0ffdb033/HSahne%20200%20g",
+      "link": "https://www.aldi-sued.de/produkt/milsani-h-sahne-200-g-000000000000202672"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Kaffeesahne Kännchen 12% 200 g",
+      "price": "0,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/31e3083e-7fdc-4cc6-94ae-00459929bdf8/Kaffeesahne%20Knnchen%2012%25%20200%20g",
+      "link": "https://www.aldi-sued.de/produkt/milsani-kaffeesahne-kaennchen-12-200-g-000000000000202679"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Laktosefreie H-Sahne 200 g",
+      "price": "0,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7d2f2099-61cb-4210-9203-183882eefa8e/Laktosefreie%20HSahne%20200%20g",
+      "link": "https://www.aldi-sued.de/produkt/milsani-laktosefreie-h-sahne-200-g-000000000000202732"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Ayran 250 ml",
+      "price": "0,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/0cff26f8-eed0-45b3-b57b-f4c940fb6048/Ayran%20250%20ml",
+      "link": "https://www.aldi-sued.de/produkt/milsani-ayran-250-ml-000000000000203121"
+    },
+    {
+      "brand": "MEINE METZGEREI",
+      "title": "Schweine-Cordon Bleu 500 g",
+      "price": "4,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/c979f08a-c19a-45e3-9b35-a2db4a680bb0/SchweineCordon%20Bleu%20500%20g",
+      "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-schweine-cordon-bleu-500-g-000000000000213409"
+    },
+    {
+      "brand": "VALENSINA",
+      "title": "Orangensaft 1 l",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/f79a1857-1d83-4b05-94ab-40b37eceee3f/Orangensaft%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/valensina-orangensaft-1-l-000000000000297348"
+    },
+    {
+      "brand": "FERRERO",
+      "title": "Hanuta 10 + 1, 242 g",
+      "price": "3,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/f1e94898-836a-4ce5-8d46-bb3860dee514/Hanuta%2010%20%201%20242%20g",
+      "link": "https://www.aldi-sued.de/produkt/ferrero-hanuta-10-1-242-g-000000000000328675"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "H-Milch 1,5 % 1 l, Lactosefrei - fettarm",
+      "price": "1,05 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/794bbd9a-c73b-4220-80e5-bf62023747ee/HMilch%2015%20%25%201%20l%20Lactosefrei%20%20fettarm",
+      "link": "https://www.aldi-sued.de/produkt/milsani-h-milch-1-5-1-l-lactosefrei-fettarm-000000000000329387"
+    },
+    {
+      "brand": "MEINE BACKWELT",
+      "title": "Apfelecke 117 g",
+      "price": "0,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/52282f41-7cb3-4d6b-bc20-0cc91a042116/Apfelecke%20117%20g",
+      "link": "https://www.aldi-sued.de/produkt/meine-backwelt-apfelecke-117-g-000000000000331161"
+    },
+    {
+      "brand": "· FAIR&GUT ·",
+      "title": "Putenschnitzel Wiener Art 500 g",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/5176f492-42fc-4bfa-8cd3-74df54d19abd/Putenschnitzel%20Wiener%20Art%20500%20g",
+      "link": "https://www.aldi-sued.de/produkt/-fair-gut-putenschnitzel-wiener-art-500-g-000000000000341254"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Laktosefreie H-Milch 3,5% 1 l",
+      "price": "1,15 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ad203925-f7e9-4671-8dd6-44bf1447aa16/Laktosefreie%20HMilch%2035%25%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/milsani-laktosefreie-h-milch-3-5-1-l-000000000000434767"
+    },
+    {
+      "brand": "· FAIR&GUT ·",
+      "title": "Schweine Bauchscheiben natur 400 g",
+      "price": "3,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/a0b7a11e-a70c-468c-b775-49a814740a9b/Schweine%20Bauchscheiben%20natur%20400%20g",
+      "link": "https://www.aldi-sued.de/produkt/-fair-gut-schweine-bauchscheiben-natur-400-g-000000000000461258"
+    },
+    {
+      "brand": "FUNNY FRISCH",
+      "title": "Chipsfrisch Ungarisch 150 g",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/18e8f6cd-7fe8-45d2-95b1-b3be66f81470/Chipsfrisch%20Ungarisch%20150%20g",
+      "link": "https://www.aldi-sued.de/produkt/funny-frisch-chipsfrisch-ungarisch-150-g-000000000000461415"
+    },
+    {
+      "brand": "· FAIR&GUT ·",
+      "title": "Rind Minutensteaks 320 g",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/91a798bd-7740-4007-9a27-806a62173bb0/Rind%20Minutensteaks%20320%20g",
+      "link": "https://www.aldi-sued.de/produkt/-fair-gut-rind-minutensteaks-320-g-000000000000469773"
+    },
+    {
+      "brand": "BARISSIMO",
+      "title": "Kaffeekapseln Lungo Fortemente 20 Stück",
+      "price": "3,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/16035fb4-d76e-46b5-9507-327737aa41f4/Kaffeekapseln%20Lungo%20Fortemente%2020%20Stck",
+      "link": "https://www.aldi-sued.de/produkt/barissimo-kaffeekapseln-lungo-fortemente-20-stueck-000000000000486384"
+    },
+    {
+      "brand": "KOKETT",
+      "title": "Toilettenpapier 4-lagig, 10 x 200 Blatt",
+      "price": "4,95 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2d1dad44-7f6c-45d4-9176-5755364dee52/Toilettenpapier%204lagig%2010%20x%20200%20Blatt",
+      "link": "https://www.aldi-sued.de/produkt/kokett-toilettenpapier-4-lagig-10-x-200-blatt-000000000000524817"
+    },
+    {
+      "brand": "BARISSIMO",
+      "title": "Kaffeekapseln Lungo Fortemente 20 Stück",
+      "price": "3,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/6d8a2739-f077-4a98-ae8e-e8214c4dff97/Kaffeekapseln%20Lungo%20Fortemente%2020%20Stck",
+      "link": "https://www.aldi-sued.de/produkt/barissimo-kaffeekapseln-lungo-fortemente-20-stueck-000000000000548527"
+    },
+    {
+      "brand": "BARISSIMO",
+      "title": "Kaffeekapseln Espresso Ristretto 20 Stück",
+      "price": "3,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7cabee81-90e8-4a59-b6b4-a2268ad54c6d/Kaffeekapseln%20Espresso%20Ristretto%2020%20Stck",
+      "link": "https://www.aldi-sued.de/produkt/barissimo-kaffeekapseln-espresso-ristretto-20-stueck-000000000000550125"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Speisequark Magerstufe 500 g, 0,3 %",
+      "price": "0,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/41d01404-5da5-4bcd-868b-b6a538ebf9c5/Speisequark%20Magerstufe%20500%20g%2003%20%25",
+      "link": "https://www.aldi-sued.de/produkt/milsani-speisequark-magerstufe-500-g-0-3-000000000000558481"
+    },
+    {
+      "brand": "CHOCEUR",
+      "title": "Schoko Brezel Vollmilch 140 g",
+      "price": "1,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/f66add94-e6da-497b-b07b-6f0fe39fdeec/Schoko%20Brezel%20Vollmilch%20140%20g",
+      "link": "https://www.aldi-sued.de/produkt/choceur-schoko-brezel-vollmilch-140-g-000000000000593367"
+    },
+    {
+      "brand": "GUT DREI EICHEN",
+      "title": "Genießer Schinken 80 g, Bauernschinken",
+      "price": "1,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3b587b3b-b38e-4290-a806-e79ea5cf13f3/Genieer%20Schinken%2080%20g%20Bauernschinken",
+      "link": "https://www.aldi-sued.de/produkt/gut-drei-eichen-geniesser-schinken-80-g-bauernschinken-000000000202280003"
+    },
+    {
+      "brand": "GUT DREI EICHEN",
+      "title": "Genießer Schinken 80 g, Schwarzwälder Schinken",
+      "price": "1,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/bd9e3b9a-115c-47af-aeb9-af71a29cb96e/Genieer%20Schinken%2080%20g%20Schwarzwlder%20Schinken",
+      "link": "https://www.aldi-sued.de/produkt/gut-drei-eichen-geniesser-schinken-80-g-schwarzwaelder-schinken-000000000202280004"
+    },
+    {
+      "brand": "GUT DREI EICHEN",
+      "title": "Genießer Schinken 80 g, Schinkenspeck",
+      "price": "1,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e3df1361-ba4b-438c-aef4-09ffdb07296b/Genieer%20Schinken%2080%20g%20Schinkenspeck",
+      "link": "https://www.aldi-sued.de/produkt/gut-drei-eichen-geniesser-schinken-80-g-schinkenspeck-000000000202280005"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Käsewürfel 220 g, Gouda & Maasdamer",
+      "price": "2,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d3b3aa55-0577-4d61-83f5-274d75554e23/Ksewrfel%20220%20g%20Gouda%20%20Maasdamer",
+      "link": "https://www.aldi-sued.de/produkt/milsani-kaesewuerfel-220-g-gouda-maasdamer-000000000202655006"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Käsewürfel 220 g, Butterkäse & Edamer",
+      "price": "2,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/61c7b9b8-66a1-4145-99b8-73e563ac01b3/Ksewrfel%20220%20g%20Butterkse%20%20Edamer",
+      "link": "https://www.aldi-sued.de/produkt/milsani-kaesewuerfel-220-g-butterkaese-edamer-000000000202655007"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Sprühsahne 250 ml, fettreduziert",
+      "price": "2,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/24523442-cf89-456e-87cf-99e1791038aa/Sprhsahne%20250%20ml%20fettreduziert",
+      "link": "https://www.aldi-sued.de/produkt/milsani-spruehsahne-250-ml-fettreduziert-000000000202668001"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Sprühsahne 250 ml, Vollfett",
+      "price": "2,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7d3a9356-061a-4c87-97f8-16aee494a121/Sprhsahne%20250%20ml%20Vollfett",
+      "link": "https://www.aldi-sued.de/produkt/milsani-spruehsahne-250-ml-vollfett-000000000202668002"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Haltbarer Schoko-Drink/Kakao fettarm 1,5 % Fett 0,5 l",
+      "price": "0,85 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7386f25b-4151-40ec-81df-3ca16a363800/Haltbarer%20SchokoDrinkKakao%20fettarm%2015%20%25%20Fett%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/milsani-haltbarer-schoko-drink-kakao-fettarm-1-5-fett-0-5-l-000000000202671001"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Haltbarer Schoko-Drink/Kakao 3,5 % Fett 0,5 l",
+      "price": "0,85 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/8a8afb47-fa71-42e9-9428-90f4a960b588/Haltbarer%20SchokoDrinkKakao%2035%20%25%20Fett%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/milsani-haltbarer-schoko-drink-kakao-3-5-fett-0-5-l-000000000202671002"
+    },
+    {
+      "brand": "GUT DREI EICHEN",
+      "title": "Landleberwurst 250 g, Fein",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/86dbc698-dd6b-48bb-9cdc-31c056790e08/Landleberwurst%20250%20g%20Fein",
+      "link": "https://www.aldi-sued.de/produkt/gut-drei-eichen-landleberwurst-250-g-fein-000000000203227005"
+    },
+    {
+      "brand": "GUT DREI EICHEN",
+      "title": "Landleberwurst 250 g, Grob",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/71c65332-63a8-4c11-bfc0-127e714f4c87/Landleberwurst%20250%20g%20Grob",
+      "link": "https://www.aldi-sued.de/produkt/gut-drei-eichen-landleberwurst-250-g-grob-000000000203227006"
+    },
+    {
+      "brand": "GUT DREI EICHEN",
+      "title": "Landleberwurst 250 g, Schnittlauch",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3ac13d1f-f81c-45aa-92c3-15f14b339985/Landleberwurst%20250%20g%20Schnittlauch",
+      "link": "https://www.aldi-sued.de/produkt/gut-drei-eichen-landleberwurst-250-g-schnittlauch-000000000203227007"
+    },
+    {
+      "brand": "GOURMET FINEST CUISINE",
+      "title": "Italienische Salami Spezialitäten 100 g, Salame con Semi di Finocchio",
+      "price": "2,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b4a333f2-4b3c-4403-8c77-95ecf0fd3c9a/Italienische%20Salami%20Spezialitten%20100%20g%20Salame%20con%20Semi%20di%20Finocchio",
+      "link": "https://www.aldi-sued.de/produkt/gourmet-finest-cuisine-italienische-salami-spezialitaeten-100-g-salame-con-semi-di-finocchio-000000000204568001"
+    },
+    {
+      "brand": "GOURMET FINEST CUISINE",
+      "title": "Italienische Salami Spezialitäten 100 g, Salame Nostrano",
+      "price": "2,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d23dcb95-2ceb-4abb-b1a5-024e8faa3b2d/Italienische%20Salami%20Spezialitten%20100%20g%20Salame%20Nostrano",
+      "link": "https://www.aldi-sued.de/produkt/gourmet-finest-cuisine-italienische-salami-spezialitaeten-100-g-salame-nostrano-000000000204568002"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "High Protein Grießpudding 500 g, Classic",
+      "price": "1,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ba94edf9-32da-4987-80c9-ab6fcc71ff87/High%20Protein%20Griepudding%20500%20g%20Classic",
+      "link": "https://www.aldi-sued.de/produkt/milsani-high-protein-griesspudding-500-g-classic-000000000205574001"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "High Protein Grießpudding 500 g, Zimt",
+      "price": "1,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/c8575dfd-9923-4e2d-82ed-7fc3351095ab/High%20Protein%20Griepudding%20500%20g%20Zimt",
+      "link": "https://www.aldi-sued.de/produkt/milsani-high-protein-griesspudding-500-g-zimt-000000000205574002"
+    },
+    {
+      "brand": "FARMER NATURALS",
+      "title": "Studentenfutter 200 g, Klassik",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/773cf530-79ba-499f-9f33-72084a432822/Studentenfutter%20200%20g%20Klassik",
+      "link": "https://www.aldi-sued.de/produkt/farmer-naturals-studentenfutter-200-g-klassik-000000000294157001"
+    },
+    {
+      "brand": "FARMER NATURALS",
+      "title": "Studentenfutter 200 g, Exotic",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ad353512-14a3-4892-8b01-db6281a4488d/Studentenfutter%20200%20g%20Exotic",
+      "link": "https://www.aldi-sued.de/produkt/farmer-naturals-studentenfutter-200-g-exotic-000000000294157002"
+    },
+    {
+      "brand": "UELTJE",
+      "title": "Erdnusskerne 180 g, geröstet und gesalzen",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/13e9de1a-35ef-47c7-9da2-358adf468258/Erdnusskerne%20180%20g%20gerstet%20und%20gesalzen",
+      "link": "https://www.aldi-sued.de/produkt/ueltje-erdnusskerne-180-g-geroestet-und-gesalzen-000000000451425003"
+    },
+    {
+      "brand": "UELTJE",
+      "title": "Erdnusskerne 180 g, geröstet und ungesalzen",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/c2088646-d552-48d7-bd14-52c138240f25/Erdnusskerne%20180%20g%20gerstet%20und%20ungesalzen",
+      "link": "https://www.aldi-sued.de/produkt/ueltje-erdnusskerne-180-g-geroestet-und-ungesalzen-000000000451425004"
+    },
+    {
+      "brand": "UELTJE",
+      "title": "Erdnusskerne 180 g, pikant",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/eabc851c-c05d-496a-97fc-0386673b69ee/Erdnusskerne%20180%20g%20pikant",
+      "link": "https://www.aldi-sued.de/produkt/ueltje-erdnusskerne-180-g-pikant-000000000451425005"
+    },
+    {
+      "brand": "FUNNY FRISCH",
+      "title": "Chipsfrisch 150 g, Gesalzen",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b1a5c7c2-fd33-4812-90d4-d53e874c8910/Chipsfrisch%20150%20g%20Gesalzen",
+      "link": "https://www.aldi-sued.de/produkt/funny-frisch-chipsfrisch-150-g-gesalzen-000000000461487001"
+    },
+    {
+      "brand": "FUNNY FRISCH",
+      "title": "Chipsfrisch 150 g, Sour Cream & Wild Onion",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/77c31398-2ba4-4178-aeb0-6b9509149782/Chipsfrisch%20150%20g%20Sour%20Cream%20%20Wild%20Onion",
+      "link": "https://www.aldi-sued.de/produkt/funny-frisch-chipsfrisch-150-g-sour-cream-wild-onion-000000000461487002"
+    },
+    {
+      "brand": "FUNNY FRISCH",
+      "title": "Chipsfrisch 150 g, Oriental",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d81004b9-cc63-43db-99c4-24e714106d8c/Chipsfrisch%20150%20g%20Oriental",
+      "link": "https://www.aldi-sued.de/produkt/funny-frisch-chipsfrisch-150-g-oriental-000000000461487003"
+    },
+    {
+      "brand": "FUNNY FRISCH",
+      "title": "Chipsfrisch 150 g, Peperoni",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ec6c02c8-78ef-466a-bc44-cf02735f0b9c/Chipsfrisch%20150%20g%20Peperoni",
+      "link": "https://www.aldi-sued.de/produkt/funny-frisch-chipsfrisch-150-g-peperoni-000000000461487004"
+    },
+    {
+      "brand": "WILTMANN",
+      "title": "Genießer Teller, Geflügel 80 g",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d8645437-35d8-4968-9586-dc858cb1ca03/Genieer%20Teller%20Geflgel%2080%20g",
+      "link": "https://www.aldi-sued.de/produkt/wiltmann-geniesser-teller-gefluegel-80-g-000000000534077001"
+    },
+    {
+      "brand": "WILTMANN",
+      "title": "Genießer Teller, Pfeffer 80 g",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/1dcfeabe-98ed-412a-8bc3-263af713f68a/Genieer%20Teller%20Pfeffer%2080%20g",
+      "link": "https://www.aldi-sued.de/produkt/wiltmann-geniesser-teller-pfeffer-80-g-000000000534077002"
+    },
+    {
+      "brand": "WILTMANN",
+      "title": "Genießer Teller, Feinschmecker 80 g",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/9c3746ac-c44f-4c50-87c5-aa57eaacefca/Genieer%20Teller%20Feinschmecker%2080%20g",
+      "link": "https://www.aldi-sued.de/produkt/wiltmann-geniesser-teller-feinschmecker-80-g-000000000534077004"
+    },
+    {
+      "brand": "WILTMANN",
+      "title": "Genießer-Teller, Peperoni 80 g",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/946e3e93-70c6-41d3-96ad-95cd42ba8c2f/GenieerTeller%20Peperoni%2080%20g",
+      "link": "https://www.aldi-sued.de/produkt/wiltmann-geniesser-teller-peperoni-80-g-000000000534077005"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Skyr Frucht 500 g, Erdbeere",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/eca9fc97-9daa-4dd6-a0ba-c6f6f4efe5ee/Skyr%20Frucht%20500%20g%20Erdbeere",
+      "link": "https://www.aldi-sued.de/produkt/milsani-skyr-frucht-500-g-erdbeere-000000000557797001"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Skyr Frucht 500 g, Vanille",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/1d6d53c0-3dc9-4696-b7c9-2a2565d8ffcc/Skyr%20Frucht%20500%20g%20Vanille",
+      "link": "https://www.aldi-sued.de/produkt/milsani-skyr-frucht-500-g-vanille-000000000557797002"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Skyr Frucht 500 g, Kirsche",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/0b6c1efd-4e74-45b2-bd9a-f909c0f710b9/Skyr%20Frucht%20500%20g%20Kirsche",
+      "link": "https://www.aldi-sued.de/produkt/milsani-skyr-frucht-500-g-kirsche-000000000557797003"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Skyr Frucht 500 g, Heidelbeere-Holunder",
+      "price": "1,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/c05ef0c8-43f3-499e-9152-84f1def8718f/Skyr%20Frucht%20500%20g%20HeidelbeereHolunder",
+      "link": "https://www.aldi-sued.de/produkt/milsani-skyr-frucht-500-g-heidelbeere-holunder-000000000557797004"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Weichkäse Minitorte 50 % Fett 150 g, Würzig",
+      "price": "1,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/035bd30d-bf30-41a2-898a-bf614e7e046a/Weichkse%20Minitorte%2050%20%25%20Fett%20150%20g%20Wrzig",
+      "link": "https://www.aldi-sued.de/produkt/milsani-weichkaese-minitorte-50-fett-150-g-wuerzig-000000000585318001"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Weichkäse Minitorte 50 % Fett 150 g, Pfeffer",
+      "price": "1,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/6396a673-5bc2-4cd8-8a5c-d90b5915e5e7/Weichkse%20Minitorte%2050%20%25%20Fett%20150%20g%20Pfeffer",
+      "link": "https://www.aldi-sued.de/produkt/milsani-weichkaese-minitorte-50-fett-150-g-pfeffer-000000000585318002"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Weichkäse Minitorte 50 % Fett 150 g, Natur",
+      "price": "1,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/caf71d69-a529-4db9-b024-1dab3a294551/Weichkse%20Minitorte%2050%20%25%20Fett%20150%20g%20Natur",
+      "link": "https://www.aldi-sued.de/produkt/milsani-weichkaese-minitorte-50-fett-150-g-natur-000000000585318003"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Weichkäse Minitorte 50 % Fett 150 g, Blauschimmel",
+      "price": "1,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ca52ec1c-7dfb-4046-a0da-6e12a9a06e04/Weichkse%20Minitorte%2050%20%25%20Fett%20150%20g%20Blauschimmel",
+      "link": "https://www.aldi-sued.de/produkt/milsani-weichkaese-minitorte-50-fett-150-g-blauschimmel-000000000585318004"
+    },
+    {
+      "brand": "PERWOLL",
+      "title": "Renew Feinwaschmittel 1,35 l, Wolle & Feines",
+      "price": "6,75 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/1332292d-f218-474f-979d-bbffc12f7253/Renew%20Feinwaschmittel%20135%20l%20Wolle%20%20Feines",
+      "link": "https://www.aldi-sued.de/produkt/perwoll-renew-feinwaschmittel-1-35-l-wolle-feines-000000000614446001"
+    },
+    {
+      "brand": "MEINE METZGEREI",
+      "title": "Hähnchen Ofenschale 450 g, Hollandaise-Brokkoli",
+      "price": "5,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/233e5b2f-4143-4340-820a-d2b6bbdf9701/Hhnchen%20Ofenschale%20450%20g%20HollandaiseBrokkoli",
+      "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-haehnchen-ofenschale-450-g-hollandaise-brokkoli-000000000614848002"
+    },
+    {
+      "brand": "MEINE METZGEREI",
+      "title": "Hähnchen Ofenschale 450 g, Paprika-Rahm",
+      "price": "5,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b6737afe-64f2-4ca9-b8c2-903d621a5149/Hhnchen%20Ofenschale%20450%20g%20PaprikaRahm",
+      "link": "https://www.aldi-sued.de/produkt/meine-metzgerei-haehnchen-ofenschale-450-g-paprika-rahm-000000000614848004"
+    },
+    {
+      "brand": "GOLDEN SEAFOOD",
+      "title": "Garnelen 200 g, Knoblauch-Kräuter",
+      "price": "3,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/022e0f4b-6671-4245-b579-0a0b4a942553/Garnelen%20200%20g%20KnoblauchKruter",
+      "link": "https://www.aldi-sued.de/produkt/golden-seafood-garnelen-200-g-knoblauch-kraeuter-000000000697202001"
+    },
+    {
+      "brand": "GOLDEN SEAFOOD",
+      "title": "Garnelen 200 g, Knoblauch-Chili",
+      "price": "3,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/5579a70a-e76c-4db2-bf7e-0331b364a076/Garnelen%20200%20g%20KnoblauchChili",
+      "link": "https://www.aldi-sued.de/produkt/golden-seafood-garnelen-200-g-knoblauch-chili-000000000697202002"
+    },
+    {
+      "brand": "HARIBO",
+      "title": "Fruchtgummi Osterei 600 g",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/f7721342-a27e-4c08-a5fe-c781df80eb52/Fruchtgummi%20Osterei%20600%20g",
+      "link": "https://www.aldi-sued.de/produkt/haribo-fruchtgummi-osterei-600-g-000000000000106937"
+    },
+    {
+      "brand": "ALMARE",
+      "title": "Räucherlachs 200 g",
+      "price": "4,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/969209ed-7891-48f5-8c0b-536808c86334/Rucherlachs%20200%20g",
+      "link": "https://www.aldi-sued.de/produkt/almare-raeucherlachs-200-g-000000000000107223"
+    },
+    {
+      "brand": "KINDER",
+      "title": "Paradiso 116 g",
+      "price": "1,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/abc345a5-dda7-4708-a2e6-10e906fd72c6/Paradiso%20116%20g",
+      "link": "https://www.aldi-sued.de/produkt/kinder-paradiso-116-g-000000000000107648"
+    },
+    {
+      "brand": "LYTTOS",
+      "title": "Griechische Riesenoliven 1,7 l",
+      "price": "4,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ff32a328-8a1d-4f4a-9554-df1ac5a203f2/Griechische%20Riesenoliven%2017%20l",
+      "link": "https://www.aldi-sued.de/produkt/lyttos-griechische-riesenoliven-1-7-l-000000000000108255"
+    },
+    {
+      "brand": "KNOPPERS",
+      "title": "Knoppers Minis 200 g",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/0b3d51e1-3fc0-4912-ae0a-7c7e19e0cca6/Knoppers%20Minis%20200%20g",
+      "link": "https://www.aldi-sued.de/produkt/knoppers-knoppers-minis-200-g-000000000000152881"
+    },
+    {
+      "brand": "FERRERO",
+      "title": "Duplo 327,6 g, 18er-Pack",
+      "price": "4,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2617c45c-9e31-482d-84a4-ce8c2e3d9244/Duplo%203276%20g%2018erPack",
+      "link": "https://www.aldi-sued.de/produkt/ferrero-duplo-327-6-g-18er-pack-000000000000153018"
+    },
+    {
+      "brand": "CHOCEUR",
+      "title": "Riesen-Schoko-Küsse 300 g",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3002d3dd-7b76-4965-9515-c0271a92a652/RiesenSchokoKsse%20300%20g",
+      "link": "https://www.aldi-sued.de/produkt/choceur-riesen-schoko-kuesse-300-g-000000000000153034"
+    },
+    {
+      "brand": "CLARKE'S",
+      "title": "Bourbon Whiskey 0,7 l",
+      "price": "8,99 €",
+      "originalPrice": "9,49 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/5d609310-4d14-4ef0-9fa9-d503a307db7b/Bourbon%20Whiskey%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/clarke-s-bourbon-whiskey-0-7-l-000000000000153078"
+    },
+    {
+      "brand": "KINDER",
+      "title": "Riegel 378 g, 18er-Pack",
+      "price": "4,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7b17c8e0-c930-4e1b-821b-c8b7d2da1af2/Riegel%20378%20g%2018erPack",
+      "link": "https://www.aldi-sued.de/produkt/kinder-riegel-378-g-18er-pack-000000000000153105"
+    },
+    {
+      "brand": "SILVERSTONE",
+      "title": "Genuine Rum 0,7 l",
+      "price": "6,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/8db6a3c9-ac58-4767-a718-9d89301b340e/Genuine%20Rum%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/silverstone-genuine-rum-0-7-l-000000000000153150"
+    },
+    {
+      "brand": "STATESMAN",
+      "title": "Blended Scotch Whisky 0,7 l",
+      "price": "7,99 €",
+      "originalPrice": "8,28 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b390cc03-3c4c-424a-be4c-ad6e688f9c0a/Blended%20Scotch%20Whisky%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/statesman-blended-scotch-whisky-0-7-l-000000000000153156"
+    },
+    {
+      "brand": "BIO",
+      "title": "Bio-Maroni 100 g",
+      "price": "2,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/560b4e84-7660-4129-9dfc-769254cfaedc/BioMaroni%20100%20g",
+      "link": "https://www.aldi-sued.de/produkt/bio-bio-maroni-100-g-000000000000153268"
+    },
+    {
+      "brand": "ZARANOFF",
+      "title": "Vodka 0,7 l",
+      "price": "5,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b50d3470-6cf9-4138-aba5-26c71966d8c7/Vodka%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/zaranoff-vodka-0-7-l-000000000000153355"
+    },
+    {
+      "brand": "KINDER",
+      "title": "Country 211,5 g",
+      "price": "3,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e4e16c95-ad44-46c2-9ead-f016640c924e/Country%202115%20g",
+      "link": "https://www.aldi-sued.de/produkt/kinder-country-211-5-g-000000000000153426"
+    },
+    {
+      "brand": "CHOCEUR",
+      "title": "Nussknacker Feinherb 100 g",
+      "price": "1,11 €",
+      "originalPrice": "1,39 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/9316928a-8794-4a0c-889f-1c3f669eb7f8/Nussknacker%20Feinherb%20100%20g",
+      "link": "https://www.aldi-sued.de/produkt/choceur-nussknacker-feinherb-100-g-000000000000153684"
+    },
+    {
+      "brand": "AFRICAN ROCK",
+      "title": "African Rock Sauvignon Blanc 0,75 l",
+      "price": "2,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/a40b03fc-f7f9-4eb6-b799-077ce4e718d5/African%20Rock%20Sauvignon%20Blanc%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/african-rock-african-rock-sauvignon-blanc-0-75-l-000000000000154605"
+    },
+    {
+      "brand": "LEITZ Rheingau Riesling QbA 0,75 l",
+      "title": "0,75 l",
+      "price": "6,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/120739d1-4695-4e6a-b7cf-2e1a09128703/LEITZ%20Rheingau%20Riesling%20QbA%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-leitz-rheingau-riesling-qba-0-75-l-000000000000154622"
+    },
+    {
+      "brand": "BURLWOOD",
+      "title": "Cabernet Sauvignon 0,75 l",
+      "price": "3,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/6d40f2b8-3354-4d65-8d69-4441f17a85c0/Cabernet%20Sauvignon%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/burlwood-cabernet-sauvignon-0-75-l-000000000000154730"
+    },
+    {
+      "brand": "FERRERO",
+      "title": "Nutella 450 g",
+      "price": "3,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7d6ecfec-339d-42e5-8261-c93a57616b4f/Nutella%20450%20g",
+      "link": "https://www.aldi-sued.de/produkt/ferrero-nutella-450-g-000000000000155064"
+    },
+    {
+      "brand": "SUNSNACKS",
+      "title": "Knabberbox 300 g",
+      "price": "1,69 €",
+      "originalPrice": "1,79 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/da7af008-53f0-476d-bdd0-d2461f35c1a6/Knabberbox%20300%20g",
+      "link": "https://www.aldi-sued.de/produkt/sunsnacks-knabberbox-300-g-000000000000155420"
+    },
+    {
+      "brand": "GRANDE ALBERONE",
+      "title": "Rosso 0,75 l",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e7242f9a-e050-44ad-82ba-bfcc6f101ed7/Rosso%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/grande-alberone-rosso-0-75-l-000000000000182005"
+    },
+    {
+      "brand": "MILSANI",
+      "title": "Joghurt nach türkischer Art 3,5 % Fett 1 kg",
+      "price": "2,09 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d68cd9a4-eaf1-4a04-832f-835d5eddc9de/Joghurt%20nach%20trkischer%20Art%2035%20%25%20Fett%201%20kg",
+      "link": "https://www.aldi-sued.de/produkt/milsani-joghurt-nach-tuerkischer-art-3-5-fett-1-kg-000000000000182173"
+    },
+    {
+      "brand": "FOREST HILL",
+      "title": "Shiraz Cabernet 0,75 l",
+      "price": "2,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/9dc3090f-e68e-4d8d-8041-cfcc867c738a/Shiraz%20Cabernet%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/forest-hill-shiraz-cabernet-0-75-l-000000000000182242"
+    },
+    {
+      "brand": "KNUSPERONE",
+      "title": "GOLDEN BRIDGE Cornflakes 500 g",
+      "price": "1,59 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2a062755-0f8a-4430-ac5c-caac74a746ba/GOLDEN%20BRIDGE%20Cornflakes%20500%20g",
+      "link": "https://www.aldi-sued.de/produkt/knusperone-golden-bridge-cornflakes-500-g-000000000000182253"
+    },
+    {
+      "brand": "BITBURGER PILS",
+      "title": "Premium Pils 0,5 l",
+      "price": "0,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/99cc2b27-c3b1-4a96-af13-7941b793ffb6/Premium%20Pils%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/bitburger-pils-premium-pils-0-5-l-000000000000182390"
+    },
+    {
+      "brand": "TAUSENDFARBEN Grauer Burgunder QbA 0,75 l",
+      "title": "0,75 l",
+      "price": "4,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/363e1a38-f0e2-4438-9c19-b2e4d7e97538/TAUSENDFARBEN%20Grauer%20Burgunder%20QbA%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-tausendfarben-grauer-burgunder-qba-0-75-l-000000000000182411"
+    },
+    {
+      "brand": "MARIO COLLINA",
+      "title": "Primitivo Rosato Puglia IGT 0,75 l",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/fb8b9da2-d31f-4b3b-9ac0-c1f3f66ce8b8/Primitivo%20Rosato%20Puglia%20IGT%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/mario-collina-primitivo-rosato-puglia-igt-0-75-l-000000000000182418"
+    },
+    {
+      "brand": "PAULANER",
+      "title": "Paulaner Hefe-Weißbier 0,5 l",
+      "price": "1,09 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/20e02df2-4100-49d7-8996-65c6e2e84f57/Paulaner%20HefeWeibier%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/paulaner-paulaner-hefe-weissbier-0-5-l-000000000000182451"
+    },
+    {
+      "brand": "SCHULTENBRÄU",
+      "title": "Helles 0,5 l",
+      "price": "0,55 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/64f12026-b948-4fff-a924-bb99ccd9362e/Helles%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/schultenbraeu-helles-0-5-l-000000000000182483"
+    },
+    {
+      "brand": "Finca Sobreno Crianza 0,75 l",
+      "title": "0,75 l",
+      "price": "6,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/317c5eda-a33f-438b-b14f-914e55afd953/Finca%20Sobreno%20Crianza%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-finca-sobreno-crianza-0-75-l-000000000000182502"
+    },
+    {
+      "brand": "ROTKÄPPCHEN",
+      "title": "Sekt Trocken 0,75 l",
+      "price": "4,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/33588eaa-3072-459a-940e-615e0150f033/Sekt%20Trocken%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/rotkaeppchen-sekt-trocken-0-75-l-000000000000182522"
+    },
+    {
+      "brand": "ROTKÄPPCHEN",
+      "title": "Sekt Halbtrocken 0,75 l",
+      "price": "4,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/368bc826-aec7-42a5-b7e6-ba1c54ff7432/Sekt%20Halbtrocken%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/rotkaeppchen-sekt-halbtrocken-0-75-l-000000000000182523"
+    },
+    {
+      "brand": "FRÜH",
+      "title": "Kölsch 0,5 l",
+      "price": "1,09 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/f80641ee-3c2b-4098-9581-6dab92fd14df/Klsch%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/frueh-koelsch-0-5-l-000000000000182536"
+    },
+    {
+      "brand": "MARQUIS DE BEAUCEL",
+      "title": "Crémant de Loire AC 0,75 l",
+      "price": "6,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/9eb155af-7724-4301-b991-4a333ace4038/Crmant%20de%20Loire%20AC%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/marquis-de-beaucel-cremant-de-loire-ac-0-75-l-000000000000182568"
+    },
+    {
+      "brand": "FRITZ KELLER",
+      "title": "Weißer Burgunder 0,75 l",
+      "price": "6,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b42744c6-d101-4720-b8ca-8b79b5324e5c/Weier%20Burgunder%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/fritz-keller-weisser-burgunder-0-75-l-000000000000182573"
+    },
+    {
+      "brand": "Riesling & Chardonnay QbA 0,75 l",
+      "title": "0,75 l",
+      "price": "2,39 €",
+      "originalPrice": "2,49 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2e74177a-b85c-4f7e-8a44-171fae17a48a/Riesling%20%20Chardonnay%20QbA%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-riesling-chardonnay-qba-0-75-l-000000000000182580"
+    },
+    {
+      "brand": "EDITION LEO HILLINGER Grüner Veltliner Weinviertel DAC Österreich 0,75 l",
+      "title": "0,75 l",
+      "price": "5,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/52175e81-9e5f-4f2a-a743-3d2d66575a2a/EDITION%20LEO%20HILLINGER%20Grner%20Veltliner%20Weinviertel%20DAC%20sterreich%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-edition-leo-hillinger-gruener-veltliner-weinviertel-dac-oesterreich-0-75-l-000000000000182584"
+    },
+    {
+      "brand": "AKROPOLIS",
+      "title": "Griechischer Weinbrand 0,7 l",
+      "price": "7,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/392d327b-2c2a-4474-9bee-8fcfca58d98c/Griechischer%20Weinbrand%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/akropolis-griechischer-weinbrand-0-7-l-000000000000182585"
+    },
+    {
+      "brand": "SILVERSTONE",
+      "title": "Genuine Rum 0,7 l",
+      "price": "8,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/4414cf26-8fdb-454a-b7a4-9c52d6a3b623/Genuine%20Rum%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/silverstone-genuine-rum-0-7-l-000000000000182586"
+    },
+    {
+      "brand": "REGENT",
+      "title": "Weinbrand 0,7 l",
+      "price": "6,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3decb2ed-8044-4b89-9e91-6a5deb591306/Weinbrand%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/regent-weinbrand-0-7-l-000000000000182589"
+    },
+    {
+      "brand": "MECKSTÄDTER",
+      "title": "Doppelkorn 0,7 l",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/8381baba-a4e4-4f83-a144-1ae49ede3549/Doppelkorn%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/meckstaedter-doppelkorn-0-7-l-000000000000182592"
+    },
+    {
+      "brand": "MÜMMELMANN",
+      "title": "Jagdbitter Kräuterlikör 0,7 l",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d9b82baa-6b1e-4999-a1a4-b58fe4e68b3e/Jagdbitter%20Kruterlikr%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/muemmelmann-jagdbitter-kraeuterlikoer-0-7-l-000000000000182596"
+    },
+    {
+      "brand": "ST. VITUS",
+      "title": "Boonekamp 4 x 20 ml",
+      "price": "1,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d9363cf6-1821-42e6-9930-c2aafd12558a/Boonekamp%204%20x%2020%20ml",
+      "link": "https://www.aldi-sued.de/produkt/st-vitus-boonekamp-4-x-20-ml-000000000000182597"
+    },
+    {
+      "brand": "STOLZENFELS",
+      "title": "Sekt Halbtrocken 3 x 0,2 l",
+      "price": "2,99 €",
+      "originalPrice": "3,29 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2d436a3e-b5ec-40db-9296-339bde18c278/Sekt%20Halbtrocken%203%20x%2002%20l",
+      "link": "https://www.aldi-sued.de/produkt/stolzenfels-sekt-halbtrocken-3-x-0-2-l-000000000000182602"
+    },
+    {
+      "brand": "STOLZENFELS",
+      "title": "Sekt trocken 0,75 l",
+      "price": "2,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/da3b38be-bfdc-4564-9928-645d690af287/Sekt%20trocken%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/stolzenfels-sekt-trocken-0-75-l-000000000000182603"
+    },
+    {
+      "brand": "STOLZENFELS",
+      "title": "Sekt trocken 200 ml",
+      "price": "1,15 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/87cd40d7-c49b-48ec-85a6-5c3c1b123005/Sekt%20trocken%20200%20ml",
+      "link": "https://www.aldi-sued.de/produkt/stolzenfels-sekt-trocken-200-ml-000000000000182604"
+    },
+    {
+      "brand": "Grüner Veltiner 1 l",
+      "title": "1 l",
+      "price": "2,79 €",
+      "originalPrice": "2,89 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b5df7cad-ff81-4af3-a41c-3bfa0a2e90d7/Grner%20Veltiner%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-gruener-veltiner-1-l-000000000000182607"
+    },
+    {
+      "brand": "Mosel QbA 1 l",
+      "title": "1 l",
+      "price": "2,49 €",
+      "originalPrice": "2,79 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/fb32aa30-2e3e-42ae-b159-ce9b3e053559/Mosel%20QbA%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-mosel-qba-1-l-000000000000182609"
+    },
+    {
+      "brand": "Müller-Thurgau QbA 1 l",
+      "title": "1 l",
+      "price": "2,29 €",
+      "originalPrice": "2,39 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/98f90d8e-2f0f-4cc2-b3c4-0c984afde86a/MllerThurgau%20QbA%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-mueller-thurgau-qba-1-l-000000000000182610"
+    },
+    {
+      "brand": "MARIO COLLINA",
+      "title": "Pinot Grigio 0,75 l",
+      "price": "2,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3405af18-20b8-4705-8144-5e943d38f529/Pinot%20Grigio%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/mario-collina-pinot-grigio-0-75-l-000000000000182612"
+    },
+    {
+      "brand": "Sweet Rose Spanischer Roséwein 1 l",
+      "title": "1 l",
+      "price": "1,89 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/306797e2-e2b3-4088-ad7e-05de03d24fb1/Sweet%20Rose%20Spanischer%20Roswein%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-sweet-rose-spanischer-rosewein-1-l-000000000000182613"
+    },
+    {
+      "brand": "Sweet Red Spanischer Rotwein 1 l",
+      "title": "1 l",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/ea805a27-91b5-46fb-9349-c0721cd57117/Sweet%20Red%20Spanischer%20Rotwein%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-sweet-red-spanischer-rotwein-1-l-000000000000182614"
+    },
+    {
+      "brand": "LE ROUGE",
+      "title": "Terres Du Midi IGP 1 l",
+      "price": "2,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/d2f1122a-01d3-4a33-895c-5c56c5e4a449/Terres%20Du%20Midi%20IGP%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/le-rouge-terres-du-midi-igp-1-l-000000000000182616"
+    },
+    {
+      "brand": null,
+      "title": null,
+      "price": "1,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/6d431bfd-4d33-406c-8a3d-2eb9217554c9/Glhwein%20rot%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-gluehwein-rot-1-l-000000000000182624"
+    },
+    {
+      "brand": "Mädchentraube Szekérvár Ungarn 0,75 l",
+      "title": "0,75 l",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/9138a961-4ebd-4ddf-b8b1-64ea15c80408/Mdchentraube%20Szekrvr%20Ungarn%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-maedchentraube-szekervar-ungarn-0-75-l-000000000000182625"
+    },
+    {
+      "brand": "STOLZENFELS",
+      "title": "Sekt halbtrocken 0,75 l",
+      "price": "2,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/1a297968-3c53-4976-aae9-5046327fbab7/Sekt%20halbtrocken%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/stolzenfels-sekt-halbtrocken-0-75-l-000000000000182631"
+    },
+    {
+      "brand": "Riesling QbA 1 l",
+      "title": "1 l",
+      "price": "2,79 €",
+      "originalPrice": "2,89 €",
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/bc932c44-4885-47fe-9786-e004be1d4c6a/Riesling%20QbA%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-riesling-qba-1-l-000000000000182632"
+    },
+    {
+      "brand": "RAVINI",
+      "title": "Hugo rosé, 0,75 l",
+      "price": "1,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/057d0b7c-e407-43e4-b146-28d53e8a0ad7/Hugo%20ros%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/ravini-hugo-rose-0-75-l-000000000000182665"
+    },
+    {
+      "brand": "FRANCOIS NOBLECOUR",
+      "title": "Bordeaux Supérieur Barrique AOP 0,75 l",
+      "price": "3,39 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/a5135c69-a3f9-43bc-a7ac-d35166f03973/Bordeaux%20Suprieur%20Barrique%20AOP%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/francois-noblecour-bordeaux-superieur-barrique-aop-0-75-l-000000000000182666"
+    },
+    {
+      "brand": "Premium Glühwein weiß 0,75 l",
+      "title": "0,75 l",
+      "price": "1,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/51839454-0b44-4815-bb90-3d66d116df95/Premium%20Glhwein%20wei%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-premium-gluehwein-weiss-0-75-l-000000000000182688"
+    },
+    {
+      "brand": "Faustino Rioja Crianza DOCa 0,75 l",
+      "title": "0,75 l",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/0b22ac42-4ef8-42db-af04-5389da64adea/Faustino%20Rioja%20Crianza%20DOCa%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-faustino-rioja-crianza-doca-0-75-l-000000000000182696"
+    },
+    {
+      "brand": "SCHULTENBRÄU",
+      "title": "Premium Pilsener 0,5 l",
+      "price": "0,55 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/53462bd0-a8b8-4053-8f1e-ac5f577e43d3/Premium%20Pilsener%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/schultenbraeu-premium-pilsener-0-5-l-000000000000182707"
+    },
+    {
+      "brand": "RAIMUND PRUM",
+      "title": "Riesling Mosel 0,75 l",
+      "price": "3,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/92bf3a85-a5a7-4e78-8e68-c35c58c2267c/Riesling%20Mosel%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/raimund-prum-riesling-mosel-0-75-l-000000000000182716"
+    },
+    {
+      "brand": "Merlot Pays d´Oc IGP 0,75 l",
+      "title": "0,75 l",
+      "price": "2,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/cba2273a-ad9b-4fc2-84e0-14cbea79b26d/Merlot%20Pays%20dOc%20IGP%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-merlot-pays-d-oc-igp-0-75-l-000000000000182719"
+    },
+    {
+      "brand": "CHARETTE",
+      "title": "Chardonnay Vin de France 0,75 l",
+      "price": "2,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/285c6317-c0c1-4495-b015-0817f5fe7548/Chardonnay%20Vin%20de%20France%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/charette-chardonnay-vin-de-france-0-75-l-000000000000182727"
+    },
+    {
+      "brand": "FERRERO",
+      "title": "Nutella 750 g",
+      "price": "5,29 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/78efa744-b553-4475-81ae-9716fb72fedf/Nutella%20750%20g",
+      "link": "https://www.aldi-sued.de/produkt/ferrero-nutella-750-g-000000000000182730"
+    },
+    {
+      "brand": "MANDALEY BLUE",
+      "title": "MANDALEY BLUE London Dry Gin 0,7 l",
+      "price": "9,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/0ff73572-2320-4e94-97f4-82e3391f7f2b/MANDALEY%20BLUE%20London%20Dry%20Gin%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/mandaley-blue-mandaley-blue-london-dry-gin-0-7-l-000000000000182731"
+    },
+    {
+      "brand": "KROMBACHER",
+      "title": "Pils 0,5 l",
+      "price": "0,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/3a64b164-94cd-482b-a678-672d84befaac/Pils%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/krombacher-pils-0-5-l-000000000000182738"
+    },
+    {
+      "brand": "MARQUIS DE BEAUCEL",
+      "title": "Crémant De Bordeaux Rosé Brut 0,75 l",
+      "price": "6,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/45c3ca23-22f4-44f2-aa05-d8158e68441c/Crmant%20De%20Bordeaux%20Ros%20Brut%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/marquis-de-beaucel-cremant-de-bordeaux-rose-brut-0-75-l-000000000000182788"
+    },
+    {
+      "brand": "MARIO COLLINA",
+      "title": "Merlot Vino d'Italia 0,75 l",
+      "price": "1,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/7891ce46-8664-4389-a373-5c986f8ab121/Merlot%20Vino%20dItalia%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/mario-collina-merlot-vino-d-italia-0-75-l-000000000000182789"
+    },
+    {
+      "brand": "Primitivo Puglia IGT 0,75 l",
+      "title": "0,75 l",
+      "price": "1,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2c789743-3828-4dc6-bb2c-fc655f733ffe/Primitivo%20Puglia%20IGT%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-primitivo-puglia-igt-0-75-l-000000000000182790"
+    },
+    {
+      "brand": "Doppio Tratto Primitivo IGT, 0,75 l",
+      "title": "0,75 l",
+      "price": "3,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/1040bcfe-bd13-400b-8ad9-a5a2f92f6e0e/Doppio%20Tratto%20Primitivo%20IGT%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-doppio-tratto-primitivo-igt-0-75-l-000000000000182791"
+    },
+    {
+      "brand": "MARIO COLLINA",
+      "title": "Chardonnay Garda DOC 0,75 l",
+      "price": "2,19 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/a0ceec98-b089-4009-8ed4-7c5f697caa3e/Chardonnay%20Garda%20DOC%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/mario-collina-chardonnay-garda-doc-0-75-l-000000000000182792"
+    },
+    {
+      "brand": "CAVONE",
+      "title": "Grappa 0,5 l",
+      "price": "5,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/23583b45-e921-463c-97e7-cc86b77059c6/Grappa%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/cavone-grappa-0-5-l-000000000000182801"
+    },
+    {
+      "brand": "RAMON LOPEZ MURILLO",
+      "title": "RAMON LOPEZ MURILLO Guia Real Rioja Reserva DOCa 0,75 l",
+      "price": "4,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/96dc288a-a32e-4def-bca7-386aed2660eb/RAMON%20LOPEZ%20MURILLO%20Guia%20Real%20Rioja%20Reserva%20DOCa%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/ramon-lopez-murillo-ramon-lopez-murillo-guia-real-rioja-reserva-doca-0-75-l-000000000000182804"
+    },
+    {
+      "brand": "RAVINI",
+      "title": "Amaretto 0,7 l",
+      "price": "4,89 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/22af7b11-80b5-4499-beee-19f6708fefda/Amaretto%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/ravini-amaretto-0-7-l-000000000000182812"
+    },
+    {
+      "brand": "VELTINS",
+      "title": "Pilsener 0,5 l",
+      "price": "0,95 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/66599deb-1da9-4ab9-bd69-57b1252737ad/Pilsener%2005%20l",
+      "link": "https://www.aldi-sued.de/produkt/veltins-pilsener-0-5-l-000000000000182838"
+    },
+    {
+      "brand": "Bianco Vino d'Italia 1 l",
+      "title": "1 l",
+      "price": "2,69 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2dadbbea-0bbb-4daf-a8e4-41efba0d5b51/Bianco%20Vino%20dItalia%201%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-bianco-vino-d-italia-1-l-000000000000182880"
+    },
+    {
+      "brand": "BARON PHILLIPE DE ROTHSCHILD Cabernet Sauvignon 0,75 l",
+      "title": "0,75 l",
+      "price": "5,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/png/scaleWidth/232/de5a5e69-408c-4374-9c63-95228734d45c/BARON%20PHILLIPE%20DE%20ROTHSCHILD%20Cabernet%20Sauvignon%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-baron-phillipe-de-rothschild-cabernet-sauvignon-0-75-l-000000000000182911"
+    },
+    {
+      "brand": "JOHNSEN CLUB",
+      "title": "London Dry Gin 0,7 l",
+      "price": "6,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/8d1b6984-680a-4801-b976-de540882d7f8/London%20Dry%20Gin%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/johnsen-club-london-dry-gin-0-7-l-000000000000182935"
+    },
+    {
+      "brand": "Amaro 0,7 l",
+      "title": "0,7 l",
+      "price": "9,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/bf7c5ab6-d7c3-46f0-a464-82c14110e511/Amaro%2007%20l",
+      "link": "https://www.aldi-sued.de/produkt/no-brand-amaro-0-7-l-000000000000182948"
+    },
+    {
+      "brand": "STOLZENFELS",
+      "title": "Sekt Rosé 0,75 l",
+      "price": "2,99 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/b685a86b-c56d-43a5-ab86-6e6a9abd2d9d/Sekt%20Ros%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/stolzenfels-sekt-rose-0-75-l-000000000000182978"
+    },
+    {
+      "brand": "AFRICAN ROCK",
+      "title": "Cabernet Sauvignon Pinotage 0,75 l",
+      "price": "2,49 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/e1983525-f705-4d8a-a0c4-18a50626973d/Cabernet%20Sauvignon%20Pinotage%20075%20l",
+      "link": "https://www.aldi-sued.de/produkt/african-rock-cabernet-sauvignon-pinotage-0-75-l-000000000000182983"
+    },
+    {
+      "brand": "GRAFSCHAFTER GOLDSAFT",
+      "title": "Goldsaft Brotaustrich 450g",
+      "price": "1,79 €",
+      "originalPrice": null,
+      "imageUrl": "https://dm.emea.cms.aldi.cx/is/image/aldiprodeu/product/jpg/scaleWidth/232/2afa8d66-0172-4567-a123-fc3d1606b87f/Goldsaft%20Brotaustrich%20450g",
+      "link": "https://www.aldi-sued.de/produkt/grafschafter-goldsaft-goldsaft-brotaustrich-450g-000000000000182990"
+    }
+  ]
 }
