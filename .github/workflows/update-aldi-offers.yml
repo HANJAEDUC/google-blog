@@ -1,4 +1,4 @@
-name: Update Aldi Offers
+name: Update Aldi Offers (알디 할인 행사 업데이트)
 
 on:
   # 매주 월요일 새벽 2시 (한국시간 10시)에 자동 실행
@@ -22,27 +22,11 @@ jobs:
           
       - name: Install dependencies
         run: npm ci
-        
+          
       - name: Install Puppeteer with Chrome
         run: |
           npm install puppeteer
-          sudo apt-get update
-          sudo apt-get install -y \
-            libx11-xcb1 \
-            libxcomposite1 \
-            libxcursor1 \
-            libxdamage1 \
-            libxi6 \
-            libxtst6 \
-            libnss3 \
-            libcups2 \
-            libxss1 \
-            libxrandr2 \
-            libasound2 \
-            libpangocairo-1.0-0 \
-            libatk1.0-0 \
-            libatk-bridge2.0-0 \
-            libgtk-3-0
+          npx puppeteer browsers install chrome
             
       - name: Run Aldi crawler
         run: node scripts/crawl_aldi.js
