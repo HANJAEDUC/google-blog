@@ -171,14 +171,17 @@ export default function DashboardClient() {
                     let val = row[col] !== undefined ? row[col] : '-';
 
                     if (col === '종목명' && row['종목코드']) {
-                        const naverLink = `https://finance.naver.com/item/main.naver?code=${row['종목코드']}`;
+                        // 종목코드 포맷팅: 6자리 패딩 (예: 26150 -> 026150) 및 콤마 제거
+                        const rawCode = String(row['종목코드']).replace(/,/g, '');
+                        const paddedCode = rawCode.padStart(6, '0');
+                        const naverLink = `https://finance.naver.com/item/main.naver?code=${paddedCode}`;
                         return (
                             <td key={col}>
                                 <a href={naverLink} target="_blank" rel="noopener noreferrer"
                                     style={{ color: 'inherit', textDecoration: 'none', fontWeight: 600, borderBottom: '1px dashed #666' }}>
                                     {val}
                                 </a>
-                                <span style={{ color: '#aaa', fontSize: '0.85em', marginLeft: '4px' }}>({row['종목코드']})</span>
+                                <span style={{ color: '#aaa', fontSize: '0.85em', marginLeft: '4px' }}>({paddedCode})</span>
                             </td>
                         );
                     }
