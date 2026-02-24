@@ -193,7 +193,7 @@ export default function DashboardClient() {
 
             <main className={styles.gridContainer}>
                 {/* Row 1: 가격 골든크로스 */}
-                <section className={styles.panel}>
+                <section className={`${styles.panel} ${styles.panelPrice}`}>
                     <h2 className={styles.panelTitle}>
                         <span>📈 가격 골든크로스 <span className={styles.badge}>MA20 &gt; MA200</span></span>
                         <div className={styles.scannerPanel}>
@@ -235,7 +235,7 @@ export default function DashboardClient() {
                 </section>
 
                 {/* Row 2: 거래량 급증 */}
-                <section className={styles.panel}>
+                <section className={`${styles.panel} ${styles.panelVolume}`}>
                     <h2 className={styles.panelTitle}>
                         <span>📊 거래량 급증 <span className={styles.badge}>V_MA5 &gt; V_MA20</span></span>
                         <div className={styles.scannerPanel}>

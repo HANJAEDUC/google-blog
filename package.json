@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev:web": "next dev",
+    "dev:py": "python kospi_backend/app.py",
+    "dev": "npx concurrently \"npm run dev:web\" \"npm run dev:py\"",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",

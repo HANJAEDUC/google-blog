@@ -5,15 +5,15 @@ const nextConfig: NextConfig = {
     return [
       {
         source: '/api/signals',
-        destination: 'http://127.0.0.1:8080/api/signals',
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080'}/api/signals`,
       },
       {
         source: '/api/investor',
-        destination: 'http://127.0.0.1:8080/api/investor',
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080'}/api/investor`,
       },
       {
         source: '/api/scan/:path*',
-        destination: 'http://127.0.0.1:8080/api/scan/:path*',
+        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080'}/api/scan/:path*`,
       },
     ];
   },
