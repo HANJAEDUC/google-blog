@@ -67,6 +67,7 @@ export default function Navbar() {
             <Link href="/japanese" className={styles.link}>JapaneseWords</Link>
             <Link href="/prices" className={styles.link}>GermanPrices</Link>
             <Link href="/german-signs" className={styles.link}>GermanSigns</Link>
+            <Link href="/private" className={styles.link}>PRIVATE</Link>
             <DualClock />
             {/* Desktop: Anchor tag for hover effect */}
             <a
@@ -93,15 +94,15 @@ export default function Navbar() {
 
       {/* Mobile: Fixed Mail Button (Outside Scroll Container) */}
       <button
-          className={`${styles.iconLink} ${styles.mobileFixedMail}`}
-          aria-label="Send Feedback"
-          onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              window.location.href = "mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement";
-          }}
+        className={`${styles.iconLink} ${styles.mobileFixedMail}`}
+        aria-label="Send Feedback"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          window.location.href = "mailto:hanjaeduc@gmail.com?subject=Suggestions for Improvement";
+        }}
       >
-          <IoMailOutline size={24} />
+        <IoMailOutline size={24} />
       </button>
     </nav>
   );
