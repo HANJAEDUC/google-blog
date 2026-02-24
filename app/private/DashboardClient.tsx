@@ -37,7 +37,7 @@ export default function DashboardClient() {
     const intervalsRef = useRef<Record<string, NodeJS.Timeout>>({});
 
     useEffect(() => {
-        fetchSignals();
+        // fetchSignals(); // Removed automatic loading on mount to start with a clear dashboard
 
         // Set initial date
         const d = new Date();
