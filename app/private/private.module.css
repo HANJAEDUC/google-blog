@@ -119,6 +119,11 @@
     color-scheme: dark;
 }
 
+.select option {
+    background: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface);
+}
+
 .gridContainer {
     display: flex;
     flex-direction: column;
