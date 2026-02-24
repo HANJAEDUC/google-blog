@@ -197,7 +197,7 @@ export default function DashboardClient() {
                     <h2 className={styles.panelTitle}>
                         <span>📈 가격 골든크로스 <span className={styles.badge}>MA20 &gt; MA200</span></span>
                         <div className={styles.scannerPanel}>
-                            {(!scanState['price_gc'] || (!scanState['price_gc'].is_running && scanState['price_gc'].progress >= 100) || scanState['price_gc'].message === '대기 중') ? (
+                            {!scanState['price_gc']?.is_running ? (
                                 <button className={styles.btnPrimary} onClick={() => startScan('price_gc')}>🚀 스캔 실행</button>
                             ) : null}
                             {scanState['price_gc'] && scanState['price_gc'].is_running && (
@@ -239,7 +239,7 @@ export default function DashboardClient() {
                     <h2 className={styles.panelTitle}>
                         <span>📊 거래량 급증 <span className={styles.badge}>V_MA5 &gt; V_MA20</span></span>
                         <div className={styles.scannerPanel}>
-                            {(!scanState['vol_gc'] || (!scanState['vol_gc'].is_running && scanState['vol_gc'].progress >= 100) || scanState['vol_gc'].message === '대기 중') ? (
+                            {!scanState['vol_gc']?.is_running ? (
                                 <button className={styles.btnPrimary} onClick={() => startScan('vol_gc')}>🚀 스캔 실행</button>
                             ) : null}
                             {scanState['vol_gc'] && scanState['vol_gc'].is_running && (
@@ -281,7 +281,7 @@ export default function DashboardClient() {
                     <h2 className={styles.panelTitle}>
                         <span>🔥 눌림 매수 신호</span>
                         <div className={styles.scannerPanel}>
-                            {(!scanState['pullback'] || (!scanState['pullback'].is_running && scanState['pullback'].progress >= 100) || scanState['pullback'].message === '대기 중') ? (
+                            {!scanState['pullback']?.is_running ? (
                                 <button className={styles.btnPrimary} onClick={() => startScan('pullback')}>🚀 스캔 실행</button>
                             ) : null}
                             {scanState['pullback'] && scanState['pullback'].is_running && (
