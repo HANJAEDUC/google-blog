@@ -120,8 +120,8 @@
 }
 
 .select option {
-    background: var(--md-sys-color-surface-container-highest);
-    color: var(--md-sys-color-on-surface);
+    background-color: #1e293b;
+    color: #f8fafc;
 }
 
 .gridContainer {
