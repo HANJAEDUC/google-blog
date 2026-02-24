@@ -21,7 +21,7 @@ export default function DashboardClient() {
 
     const [dateStr, setDateStr] = useState('');
     const [targetDate, setTargetDate] = useState('');
-    const [topN, setTopN] = useState('500');
+    const [topN, setTopN] = useState('0');
 
     const [scanState, setScanState] = useState<Record<string, { is_running: boolean; progress: number; message: string; signals_found: number }>>({});
 
@@ -163,6 +163,15 @@ export default function DashboardClient() {
             <tr key={idx} className={row['신호유형']?.includes('오늘 신호') ? styles.rowHighlight : ''}>
                 {columns.map(col => {
                     let val = row[col] !== undefined ? row[col] : '-';
+
+                    if (col === '종목명' && row['종목코드']) {
+                        return (
+                            <td key={col}>
+                                {val} <span style={{ color: '#aaa', fontSize: '0.85em', marginLeft: '4px' }}>({row['종목코드']})</span>
+                            </td>
+                        );
+                    }
+
                     if (col === '신호유형' && typeof val === 'string' && val.includes('오늘 신호')) {
                         return <td key={col}><span className={styles.signalBadge}>{val}</span></td>;
                     }
@@ -179,12 +188,6 @@ export default function DashboardClient() {
                 <p className={styles.subtitle}>KOSPI & KOSDAQ 전략</p>
                 <div className={styles.statusBar}>
                     <span>기준일 선택: <input type="date" className={styles.datePicker} value={targetDate} onChange={e => setTargetDate(e.target.value)} /></span>
-                    <span>최대 종목수:
-                        <select className={styles.select} value={topN} onChange={e => setTopN(e.target.value)}>
-                            {[100, 200, 300, 400, 500, 600, 700, 800, 900, 1000].map(v => <option key={v} value={v}>{v}개</option>)}
-                            <option value="0">전체 (최대)</option>
-                        </select>
-                    </span>
                     <span>업데이트: <strong>{dateStr || '-'}</strong></span>
                 </div>
             </header>
