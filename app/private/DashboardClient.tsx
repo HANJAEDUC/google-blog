@@ -35,6 +35,7 @@ export default function DashboardClient() {
     });
 
     const intervalsRef = useRef<Record<string, NodeJS.Timeout>>({});
+    const lastItemsJsonRef = useRef<Record<string, string>>({});
 
     useEffect(() => {
         // fetchSignals(); // Removed automatic loading on mount to start with a clear dashboard
@@ -128,15 +129,20 @@ export default function DashboardClient() {
                     setScanState(prev => ({ ...prev, [target]: state }));
 
                     if (state.found_items && state.found_items.length > 0) {
-                        const kospiItems = state.found_items.filter((i: any) => i.market === 'KOSPI').map((i: any, idx: number) => ({ '순위': idx + 1, ...i.item }));
-                        const kosdaqItems = state.found_items.filter((i: any) => i.market === 'KOSDAQ').map((i: any, idx: number) => ({ '순위': idx + 1, ...i.item }));
+                        const currentJson = JSON.stringify(state.found_items);
+                        if (lastItemsJsonRef.current[target] !== currentJson) {
+                            lastItemsJsonRef.current[target] = currentJson;
 
-                        setTablesData((prev: any) => {
-                            if (target === 'price_gc') return { ...prev, price_gc_kospi: kospiItems, price_gc_kosdaq: kosdaqItems };
-                            if (target === 'vol_gc') return { ...prev, vol_gc_kospi: kospiItems, vol_gc_kosdaq: kosdaqItems };
-                            if (target === 'pullback') return { ...prev, pullback_kospi: kospiItems, pullback_kosdaq: kosdaqItems };
-                            return prev;
-                        });
+                            const kospiItems = state.found_items.filter((i: any) => i.market === 'KOSPI').map((i: any, idx: number) => ({ '순위': idx + 1, ...i.item }));
+                            const kosdaqItems = state.found_items.filter((i: any) => i.market === 'KOSDAQ').map((i: any, idx: number) => ({ '순위': idx + 1, ...i.item }));
+
+                            setTablesData((prev: any) => {
+                                if (target === 'price_gc') return { ...prev, price_gc_kospi: kospiItems, price_gc_kosdaq: kosdaqItems };
+                                if (target === 'vol_gc') return { ...prev, vol_gc_kospi: kospiItems, vol_gc_kosdaq: kosdaqItems };
+                                if (target === 'pullback') return { ...prev, pullback_kospi: kospiItems, pullback_kosdaq: kosdaqItems };
+                                return prev;
+                            });
+                        }
                     }
 
                     if (!state.is_running) {
@@ -165,9 +171,14 @@ export default function DashboardClient() {
                     let val = row[col] !== undefined ? row[col] : '-';
 
                     if (col === '종목명' && row['종목코드']) {
+                        const naverLink = `https://finance.naver.com/item/main.naver?code=${row['종목코드']}`;
                         return (
                             <td key={col}>
-                                {val} <span style={{ color: '#aaa', fontSize: '0.85em', marginLeft: '4px' }}>({row['종목코드']})</span>
+                                <a href={naverLink} target="_blank" rel="noopener noreferrer"
+                                    style={{ color: 'inherit', textDecoration: 'none', fontWeight: 600, borderBottom: '1px dashed #666' }}>
+                                    {val}
+                                </a>
+                                <span style={{ color: '#aaa', fontSize: '0.85em', marginLeft: '4px' }}>({row['종목코드']})</span>
                             </td>
                         );
                     }
