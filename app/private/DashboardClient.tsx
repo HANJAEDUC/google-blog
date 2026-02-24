@@ -74,8 +74,6 @@ export default function DashboardClient() {
     };
 
     const startScan = async (target: string) => {
-        let topNStr = topN === '0' ? '전체 종목' : `상위 ${topN}개`;
-        if (!window.confirm(`해당 패턴( ${target} )의 최신 데이터를 [ ${targetDate} ] 기준, ${topNStr} 대상으로 스캔합니다. 시작하시겠습니까?`)) return;
 
         // Clear corresponding tables
         setTablesData((prev: any) => {
