@@ -2,18 +2,19 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
     return [
       {
         source: '/api/signals',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080'}/api/signals`,
+        destination: `${backendUrl}/api/signals`,
       },
       {
         source: '/api/investor',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080'}/api/investor`,
+        destination: `${backendUrl}/api/investor`,
       },
       {
         source: '/api/scan/:path*',
-        destination: `${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://127.0.0.1:8080'}/api/scan/:path*`,
+        destination: `${backendUrl}/api/scan/:path*`,
       },
     ];
   },
