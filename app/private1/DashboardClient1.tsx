@@ -63,10 +63,7 @@ export default function DashboardClient1() {
                             fontWeight: '600',
                             borderBottom: '1px solid rgba(255,255,255,0.08)',
                             paddingBottom: '10px',
-                            marginBottom: '6px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
+                            marginBottom: '6px'
                         }}>
                             <span style={{
                                 background: 'rgba(0, 201, 255, 0.15)',
@@ -75,6 +72,89 @@ export default function DashboardClient1() {
                             }}>
                                 {verse.chapter} : {verse.verse}
                             </span>
+                            <button
+                                onClick={() => {
+                                    if ('speechSynthesis' in window) {
+                                        if (window.speechSynthesis.speaking) {
+                                            window.speechSynthesis.cancel();
+                                        }
+                                        const utterance = new SpeechSynthesisUtterance(verse.niv);
+
+                                        // Try to find a high-quality English voice
+                                        const voices = window.speechSynthesis.getVoices();
+                                        const voiceNames = ['Google US English', 'Samantha', 'Karen', 'Daniel'];
+
+                                        let selectedVoice: SpeechSynthesisVoice | undefined;
+
+                                        // 1. Try specific high-quality names
+                                        for (let i = 0; i < voices.length; i++) {
+                                            if (voiceNames.includes(voices[i].name)) {
+                                                selectedVoice = voices[i];
+                                                break;
+                                            }
+                                        }
+
+                                        // 2. Try any English Premium voice
+                                        if (!selectedVoice) {
+                                            for (let i = 0; i < voices.length; i++) {
+                                                if (voices[i].name.includes('English') &&
+                                                    (voices[i].name.includes('Premium') || voices[i].name.includes('Enhanced'))) {
+                                                    selectedVoice = voices[i];
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        // 3. Fallback to any en-US or en-GB voice
+                                        if (!selectedVoice) {
+                                            for (let i = 0; i < voices.length; i++) {
+                                                if (voices[i].lang === 'en-US' || voices[i].lang === 'en-GB') {
+                                                    selectedVoice = voices[i];
+                                                    break;
+                                                }
+                                            }
+                                        }
+
+                                        if (selectedVoice) {
+                                            utterance.voice = selectedVoice;
+                                        }
+
+                                        utterance.lang = 'en-US';
+                                        utterance.rate = 0.85; // Slightly slower for better dictation feel
+                                        utterance.pitch = 1.0;
+                                        window.speechSynthesis.speak(utterance);
+                                    } else {
+                                        alert("Sorry, your browser doesn't support text to speech!");
+                                    }
+                                }}
+                                style={{
+                                    background: 'rgba(255,255,255,0.1)',
+                                    border: '1px solid rgba(255,255,255,0.2)',
+                                    padding: '6px 14px',
+                                    borderRadius: '20px',
+                                    color: 'white',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    fontSize: '0.9rem',
+                                    fontWeight: '500',
+                                    transition: 'all 0.2s ease',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                }}
+                                onMouseOver={(e) => {
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.2)';
+                                    e.currentTarget.style.transform = 'scale(1.05)';
+                                }}
+                                onMouseOut={(e) => {
+                                    e.currentTarget.style.background = 'rgba(255,255,255,0.1)';
+                                    e.currentTarget.style.transform = 'scale(1)';
+                                }}
+                                onMouseDown={(e) => e.currentTarget.style.transform = 'scale(0.95)'}
+                                onMouseUp={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+                            >
+                                🔊 Listen
+                            </button>
                         </div>
                         <div style={{ fontSize: '1.3rem', lineHeight: '1.6', color: '#ffffff', wordBreak: 'keep-all' }}>
                             {verse.gae}
