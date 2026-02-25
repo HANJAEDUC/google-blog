@@ -1,5 +1,5 @@
 # google-blog
-(Last redeploy: 2026-02-25 13:10 - Force refresh for Env Var)
+(Last redeploy: 2026-02-25 13:58 - Refresh for new tunnel URL)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
