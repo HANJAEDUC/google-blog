@@ -113,3 +113,14 @@
  GET /private1 200 in 34ms (compile: 3ms, render: 31ms)
 [NextConfig] Backend Proxy URL: http://localhost:8080
 ✓ Compiled in 26ms
+ GET /private1 200 in 123ms (compile: 48ms, render: 75ms)
+ GET /private1 200 in 18ms (compile: 3ms, render: 14ms)
+ GET /private1 200 in 31ms (compile: 7ms, render: 25ms)
+ GET /japanese 200 in 76ms (compile: 61ms, render: 15ms)
+ GET /private 200 in 47ms (compile: 40ms, render: 6ms)
+ GET /private1 200 in 15ms (compile: 5ms, render: 9ms)
+[NextConfig] Backend Proxy URL: http://localhost:8080
+✓ Compiled in 23ms
+ GET /private1 200 in 132ms (compile: 61ms, render: 71ms)
+ GET /private1 200 in 34ms (compile: 7ms, render: 27ms)
+ GET /private1 200 in 35ms (compile: 8ms, render: 27ms)

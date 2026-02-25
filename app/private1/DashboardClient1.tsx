@@ -63,7 +63,11 @@ export default function DashboardClient1() {
                             fontWeight: '600',
                             borderBottom: '1px solid rgba(255,255,255,0.08)',
                             paddingBottom: '10px',
-                            marginBottom: '6px'
+                            marginBottom: '6px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '8px'
                         }}>
                             <span style={{
                                 background: 'rgba(0, 201, 255, 0.15)',
