@@ -1,0 +1,344 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 100px);
+    padding: 20px;
+}
+
+.authBox {
+    background-color: var(--md-sys-color-surface);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.title {
+    color: var(--md-sys-color-on-surface);
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.subtitle {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 14px;
+    margin-bottom: 24px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid var(--md-sys-color-outline);
+    background-color: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface);
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.input:focus {
+    border-color: #4285F4;
+}
+
+.button {
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #4285F4;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.button:hover {
+    background-color: #3367D6;
+}
+
+.error {
+    color: #EA4335;
+    font-size: 14px;
+    margin-top: 16px;
+}
+
+.contentContainer {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Dashboard Styles Adapted from KOSPI_KODEX static/style.css for Next.js */
+.dashboardContainer {
+    font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.header {
+    margin-bottom: 20px;
+}
+
+.header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin-bottom: 5px;
+}
+
+.statusBar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 13px;
+    background: var(--md-sys-color-surface-container-low);
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #fbbf24;
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.15);
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.datePicker,
+.select {
+    background: var(--md-sys-color-surface-container-highest);
+    color: var(--md-sys-color-on-surface);
+    border: 1px solid var(--md-sys-color-outline);
+    padding: 6px 10px;
+    border-radius: 6px;
+    color-scheme: dark;
+}
+
+.select option {
+    background-color: #1e293b;
+    color: #f8fafc;
+}
+
+.gridContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.panel {
+    background: var(--md-sys-color-surface-container-lowest);
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panelPrice {
+    border: 1px solid #60a5fa;
+    box-shadow: 0 0 15px rgba(96, 165, 250, 0.1);
+}
+
+.panelVolume {
+    border: 1px solid #c084fc;
+    box-shadow: 0 0 15px rgba(192, 132, 252, 0.1);
+}
+
+.highlightPanel {
+    border: 1px solid #4ade80;
+    box-shadow: 0 0 15px rgba(74, 222, 128, 0.1);
+}
+
+.panelTitle {
+    font-size: 18px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.badge {
+    font-size: 11px;
+    background: #333;
+    color: white;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: normal;
+    margin-left: 10px;
+}
+
+.tabs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--md-sys-color-outline-variant);
+    padding-bottom: 5px;
+}
+
+.tabBtn {
+    background: transparent;
+    border: none;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 12px 24px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.tabBtn:hover {
+    color: var(--md-sys-color-on-surface);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tabBtn.active {
+    color: #4ade80;
+    background: rgba(74, 222, 128, 0.1);
+}
+
+.tableWrapper {
+    overflow-x: auto;
+    overflow-y: visible;
+    width: 100%;
+}
+
+.tableWrapper::-webkit-scrollbar {
+    height: 12px;
+}
+
+.tableWrapper::-webkit-scrollbar-track {
+    background: var(--md-sys-color-surface-container);
+    border-radius: 4px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 6px;
+    border: 2px solid var(--md-sys-color-surface-container);
+}
+
+.dataTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    text-align: right;
+    color: var(--md-sys-color-on-surface);
+}
+
+.dataTable th {
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface-variant);
+    background: rgba(255, 255, 255, 0.02);
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    white-space: nowrap;
+}
+
+.dataTable td {
+    padding: 16px 18px;
+    border-bottom: 1px solid var(--md-sys-color-outline-variant);
+    white-space: nowrap;
+}
+
+.dataTable th:nth-child(2),
+.dataTable td:nth-child(2) {
+    text-align: left;
+}
+
+.dataTable tbody tr {
+    transition: background 0.2s ease;
+}
+
+.dataTable tbody tr:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.rowHighlight {
+    background-color: rgba(239, 68, 68, 0.1) !important;
+}
+
+.signalBadge {
+    background: #ef4444;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.emptyMsg {
+    text-align: center !important;
+    color: var(--md-sys-color-on-surface-variant);
+    padding: 30px !important;
+}
+
+.btnPrimary {
+    background: #4f46e5;
+    color: white;
+    font-weight: 600;
+    padding: 6px 14px;
+    font-size: 13px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btnPrimary:hover {
+    background: #4338ca;
+}
+
+.btnDanger {
+    background: #ef4444;
+    color: white;
+    font-weight: 600;
+    padding: 4px 8px;
+    font-size: 11px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+}
+
+.scannerPanel {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 12px;
+}
+
+.progContainer {
+    display: flex;
+    align-items: center;
+    background: var(--md-sys-color-surface-container-high);
+    padding: 4px 10px;
+    border-radius: 4px;
+}
+
+.progMessage {
+    color: var(--md-sys-color-on-surface);
+}
+
+.guideContent {
+    margin-top: 10px;
+}
+
+.guideH3 {
+    color: #4ade80;
+    font-size: 15px;
+    margin: 15px 0 5px 0;
+}
+
+.guideUl {
+    margin-left: 20px;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 14px;
+    line-height: 1.8;
+}
