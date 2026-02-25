@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   async rewrites() {
     const backendUrl = process.env.KOSPI_KODEX || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8080';
+    console.log(`[NextConfig] Backend Proxy URL: ${backendUrl}`);
     return [
       {
         source: '/api/signals',

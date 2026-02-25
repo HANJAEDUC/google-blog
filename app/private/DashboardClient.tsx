@@ -69,8 +69,9 @@ export default function DashboardClient() {
                     pullback_kosdaq: json.data.pullback_kosdaq || [],
                 });
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error('Signal fetch error:', e);
+            alert("서버 통신 오류 (시그널): " + (e.message || e));
         }
     };
 
@@ -97,7 +98,7 @@ export default function DashboardClient() {
             } else {
                 alert(json.message);
             }
-        } catch (e) { alert("서버 통신 오류"); }
+        } catch (e: any) { alert("서버 통신 오류: " + (e.message || e)); }
     };
 
     const stopScan = async (target: string) => {
@@ -113,7 +114,7 @@ export default function DashboardClient() {
             } else {
                 fetchSignals();
             }
-        } catch (e) { alert("서버 통신 오류"); }
+        } catch (e: any) { alert("서버 통신 오류: " + (e.message || e)); }
     };
 
     const monitorScan = (target: string) => {
