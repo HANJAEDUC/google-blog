@@ -2,12 +2,22 @@
 
 import { useState, useRef, ChangeEvent, DragEvent } from 'react';
 import styles from './pdf-to-jpg.module.css';
-import { IoCloudUploadOutline, IoDownloadOutline, IoShieldCheckmarkOutline, IoDocumentTextOutline, IoRefreshOutline } from 'react-icons/io5';
+import {
+  IoCloudUploadOutline,
+  IoDownloadOutline,
+  IoShieldCheckmarkOutline,
+  IoDocumentTextOutline,
+  IoRefreshOutline,
+  IoGridOutline,
+  IoLayersOutline,
+} from 'react-icons/io5';
 import JSZip from 'jszip';
 
 interface PageResult {
   pageIndex: number;
   dataUrl: string;
+  width: number;
+  height: number;
 }
 
 export default function PdfConverterClient() {
@@ -17,6 +27,9 @@ export default function PdfConverterClient() {
   const [loading, setLoading] = useState(false);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [pages, setPages] = useState<PageResult[]>([]);
+  const [outputMode, setOutputMode] = useState<'separate' | 'merged'>('separate');
+  const [mergedDataUrl, setMergedDataUrl] = useState<string | null>(null);
+  const [isMerging, setIsMerging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Helper to load PDF.js via CDN dynamically (bypasses Node.js 'canvas' module issues)
@@ -43,9 +56,50 @@ export default function PdfConverterClient() {
     });
   };
 
+  // Helper to merge all converted pages into a single vertical JPG canvas
+  const generateMergedImage = async (pageList: PageResult[]): Promise<string | null> => {
+    if (pageList.length === 0) return null;
+    if (pageList.length === 1) return pageList[0].dataUrl;
+
+    setIsMerging(true);
+    try {
+      const maxWidth = Math.max(...pageList.map((p) => p.width));
+      const totalHeight = pageList.reduce((sum, p) => sum + p.height, 0);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = maxWidth;
+      canvas.height = totalHeight;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) return null;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, maxWidth, totalHeight);
+
+      let currentY = 0;
+      for (const page of pageList) {
+        const img = new Image();
+        img.src = page.dataUrl;
+        await new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+        });
+        ctx.drawImage(img, 0, currentY, page.width, page.height);
+        currentY += page.height;
+      }
+
+      return canvas.toDataURL('image/jpeg', 0.92);
+    } catch (err) {
+      console.error('Failed to generate merged image:', err);
+      return null;
+    } finally {
+      setIsMerging(false);
+    }
+  };
+
   const processPdf = async (pdfFile: File, renderScale: number, passwordInput?: string) => {
     setLoading(true);
     setPages([]);
+    setMergedDataUrl(null);
     setProgress({ current: 0, total: 0 });
 
     try {
@@ -57,7 +111,7 @@ export default function PdfConverterClient() {
         password: passwordInput,
       });
 
-      // Handle password prompt callback if required (e.g. Verdienstabrechnung / salary slips)
+      // Handle password prompt callback if required
       loadingTask.onPassword = (updatePassword: (pw: string) => void, reason: number) => {
         const userPw = prompt(
           reason === 1
@@ -97,6 +151,8 @@ export default function PdfConverterClient() {
           convertedPages.push({
             pageIndex: i,
             dataUrl: dataUrl,
+            width: viewport.width,
+            height: viewport.height,
           });
         }
 
@@ -104,6 +160,12 @@ export default function PdfConverterClient() {
       }
 
       setPages(convertedPages);
+
+      // Auto-generate merged image if 2 or more pages
+      if (convertedPages.length >= 2) {
+        const merged = await generateMergedImage(convertedPages);
+        setMergedDataUrl(merged);
+      }
     } catch (error: any) {
       console.error('Error processing PDF:', error);
       if (error?.name === 'PasswordException') {
@@ -185,9 +247,20 @@ export default function PdfConverterClient() {
     link.click();
   };
 
+  const downloadMergedImage = () => {
+    if (!mergedDataUrl) return;
+    const link = document.createElement('a');
+    link.href = mergedDataUrl;
+    const baseName = file ? file.name.replace(/\.pdf$/i, '') : 'pdf_merged';
+    link.download = `${baseName}_merged.jpg`;
+    link.click();
+  };
+
   const handleReset = () => {
     setFile(null);
     setPages([]);
+    setMergedDataUrl(null);
+    setOutputMode('separate');
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -255,16 +328,47 @@ export default function PdfConverterClient() {
               </select>
             </div>
 
-            {pages.length > 0 && (
+            {pages.length > 0 && outputMode === 'separate' && (
               <button className={styles.zipBtn} onClick={downloadAllAsZip}>
                 <IoDownloadOutline size={18} />
                 전체 ZIP 다운로드 ({pages.length}장)
               </button>
             )}
 
+            {pages.length > 0 && outputMode === 'merged' && mergedDataUrl && (
+              <button className={styles.mergedDlTopBtn} onClick={downloadMergedImage}>
+                <IoDownloadOutline size={18} />
+                통합 JPG 다운로드 (1장)
+              </button>
+            )}
+
             <button className={styles.resetBtn} onClick={handleReset}>
               <IoRefreshOutline size={16} />
               새 파일
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Output Mode Switcher for Multi-page PDFs */}
+      {file && pages.length >= 2 && !loading && (
+        <div className={styles.modeSection}>
+          <div className={styles.modeLabel}>저장 형식 선택:</div>
+          <div className={styles.modeSwitcher}>
+            <button
+              className={`${styles.modeBtn} ${outputMode === 'separate' ? styles.modeBtnActive : ''}`}
+              onClick={() => setOutputMode('separate')}
+            >
+              <IoGridOutline size={18} />
+              <span>각 페이지별 JPG ({pages.length}개 파일)</span>
+            </button>
+
+            <button
+              className={`${styles.modeBtn} ${outputMode === 'merged' ? styles.modeBtnActive : ''}`}
+              onClick={() => setOutputMode('merged')}
+            >
+              <IoLayersOutline size={18} />
+              <span>1개의 통합 JPG (세로 연속 이미지)</span>
             </button>
           </div>
         </div>
@@ -287,8 +391,8 @@ export default function PdfConverterClient() {
         </div>
       )}
 
-      {/* Converted Pages Grid */}
-      {pages.length > 0 && (
+      {/* Converted Pages Grid (Separate Mode or 1-page PDF) */}
+      {!loading && pages.length > 0 && (outputMode === 'separate' || pages.length === 1) && (
         <div className={styles.grid}>
           {pages.map((p) => (
             <div key={p.pageIndex} className={styles.pageCard}>
@@ -309,6 +413,37 @@ export default function PdfConverterClient() {
           ))}
         </div>
       )}
+
+      {/* Merged Single Image Mode (Multi-page PDF) */}
+      {!loading && pages.length >= 2 && outputMode === 'merged' && (
+        <div className={styles.mergedCard}>
+          {isMerging ? (
+            <div className={styles.mergingStatus}>1개의 통합 JPG 합성 중...</div>
+          ) : mergedDataUrl ? (
+            <>
+              <div className={styles.mergedHeader}>
+                <div className={styles.mergedTitleGroup}>
+                  <IoLayersOutline size={22} color="#4285f4" />
+                  <div>
+                    <h3 className={styles.mergedTitle}>통합 이미지 ({pages.length}개 페이지 결합)</h3>
+                    <p className={styles.mergedSub}>모든 페이지가 세로 순서대로 합쳐진 1개의 JPG 파일입니다.</p>
+                  </div>
+                </div>
+                <button className={styles.mergedDlMainBtn} onClick={downloadMergedImage}>
+                  <IoDownloadOutline size={20} />
+                  1개의 통합 JPG 다운로드
+                </button>
+              </div>
+              <div className={styles.mergedImgWrapper}>
+                <img src={mergedDataUrl} alt="Merged PDF pages" className={styles.mergedImg} />
+              </div>
+            </>
+          ) : (
+            <div className={styles.mergingStatus}>통합 이미지를 생성할 수 없습니다.</div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
+
