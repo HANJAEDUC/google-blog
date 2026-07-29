@@ -225,7 +225,8 @@ export default function PdfConverterClient() {
     const link = document.createElement('a');
     link.href = page.dataUrl;
     const baseName = file ? file.name.replace(/\.pdf$/i, '') : 'document';
-    link.download = `${baseName}_${page.pageIndex}.jpg`;
+    const total = pages.length;
+    link.download = `${baseName}_${page.pageIndex}of${total}.jpg`;
     link.click();
   };
 
@@ -234,16 +235,17 @@ export default function PdfConverterClient() {
 
     const zip = new JSZip();
     const baseName = file ? file.name.replace(/\.pdf$/i, '') : 'document';
+    const total = pages.length;
 
     pages.forEach((p) => {
       const base64Data = p.dataUrl.replace(/^data:image\/jpeg;base64,/, '');
-      zip.file(`${baseName}_${p.pageIndex}.jpg`, base64Data, { base64: true });
+      zip.file(`${baseName}_${p.pageIndex}of${total}.jpg`, base64Data, { base64: true });
     });
 
     const content = await zip.generateAsync({ type: 'blob' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(content);
-    link.download = `${baseName}_all.zip`;
+    link.download = `${baseName}_${total}of${total}.zip`;
     link.click();
   };
 
@@ -252,7 +254,8 @@ export default function PdfConverterClient() {
     const link = document.createElement('a');
     link.href = mergedDataUrl;
     const baseName = file ? file.name.replace(/\.pdf$/i, '') : 'document';
-    link.download = `${baseName}_${pages.length}.jpg`;
+    const total = pages.length;
+    link.download = `${baseName}_${total}of${total}.jpg`;
     link.click();
   };
 
