@@ -19,18 +19,59 @@ export default function PdfConverterClient() {
   const [pages, setPages] = useState<PageResult[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const processPdf = async (pdfFile: File, renderScale: number) => {
+  // Helper to load PDF.js via CDN dynamically (bypasses Node.js 'canvas' module issues)
+  const getPdfJsLib = (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      if (typeof window !== 'undefined' && (window as any).pdfjsLib) {
+        resolve((window as any).pdfjsLib);
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = () => {
+        const pdfjsLib = (window as any).pdfjsLib;
+        if (pdfjsLib) {
+          pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+          resolve(pdfjsLib);
+        } else {
+          reject(new Error('PDF.js library failed to initialize'));
+        }
+      };
+      script.onerror = () => reject(new Error('Failed to load PDF.js script from CDN'));
+      document.head.appendChild(script);
+    });
+  };
+
+  const processPdf = async (pdfFile: File, renderScale: number, passwordInput?: string) => {
     setLoading(true);
     setPages([]);
     setProgress({ current: 0, total: 0 });
 
     try {
-      // Dynamically import pdfjs-dist on client side
-      const pdfjsLib = await import('pdfjs-dist');
-      pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.mjs`;
-
+      const pdfjsLib = await getPdfJsLib();
       const arrayBuffer = await pdfFile.arrayBuffer();
-      const pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      const loadingTask = pdfjsLib.getDocument({
+        data: arrayBuffer,
+        password: passwordInput,
+      });
+
+      // Handle password prompt callback if required (e.g. Verdienstabrechnung / salary slips)
+      loadingTask.onPassword = (updatePassword: (pw: string) => void, reason: number) => {
+        const userPw = prompt(
+          reason === 1
+            ? '🔒 이 PDF 파일은 암호로 보호되어 있습니다. 비밀번호(월급명세서의 경우 생년월일 등)를 입력해 주세요:'
+            : '❌ 비밀번호가 올바르지 않습니다. 다시 입력해 주세요:'
+        );
+        if (userPw !== null) {
+          updatePassword(userPw);
+        } else {
+          setLoading(false);
+        }
+      };
+
+      const pdfDoc = await loadingTask.promise;
       const numPages = pdfDoc.numPages;
 
       setProgress({ current: 0, total: numPages });
@@ -63,9 +104,12 @@ export default function PdfConverterClient() {
       }
 
       setPages(convertedPages);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error processing PDF:', error);
-      alert('PDF 변환 중 오류가 발생했습니다. 다른 PDF 파일로 시도해 주세요.');
+      if (error?.name === 'PasswordException') {
+        return;
+      }
+      alert(`PDF 변환 중 오류가 발생했습니다: ${error?.message || '다른 PDF 파일로 시도해 주세요.'}`);
     } finally {
       setLoading(false);
     }
@@ -130,7 +174,6 @@ export default function PdfConverterClient() {
     const baseName = file ? file.name.replace(/\.pdf$/i, '') : 'pdf_images';
 
     pages.forEach((p) => {
-      // Remove header 'data:image/jpeg;base64,'
       const base64Data = p.dataUrl.replace(/^data:image\/jpeg;base64,/, '');
       zip.file(`${baseName}_page_${p.pageIndex}.jpg`, base64Data, { base64: true });
     });
