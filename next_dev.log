@@ -6,7 +6,8 @@
 - Local:         http://localhost:3000
 - Network:       http://192.168.2.227:3000
 
-✓ Starting...
+✓
+Starting...
 ✓ Ready in 648ms
 ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
 ▲ Next.js 16.1.4 (Turbopack)
