@@ -6,8 +6,7 @@ export const metadata = {
   description: '구글 스프레드시트 각 셀의 내용이 독립된 카드로 정리되는 영어 문장 공간입니다.',
 };
 
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
+export const revalidate = 60;
 
 export default async function EnglishSentencePage() {
   const sentences = await getEnglishSentences();

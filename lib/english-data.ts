@@ -32,11 +32,10 @@ We have to go around because of the construction.`
 
 export async function getEnglishSentences(gid?: string): Promise<SentenceItem[]> {
   const targetGid = gid || GID_SHEET_4;
-  // Append timestamp to bypass fetch caching
-  const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?gid=${targetGid}&single=true&output=csv&t=${Date.now()}`;
+  const csvUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/pub?gid=${targetGid}&single=true&output=csv`;
 
   try {
-    const response = await fetch(csvUrl, { cache: 'no-store' });
+    const response = await fetch(csvUrl, { next: { revalidate: 60 } });
     if (response.ok) {
       const csvText = await response.text();
 

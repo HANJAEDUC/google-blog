@@ -1,17 +1,38 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './english-sentence.module.css';
 import { SentenceItem } from '@/lib/english-data';
-import { IoSearchOutline, IoCopyOutline } from 'react-icons/io5';
+import { IoSearchOutline, IoCopyOutline, IoShuffleOutline } from 'react-icons/io5';
 
 interface EnglishSentenceClientProps {
   initialSentences: SentenceItem[];
 }
 
 export default function EnglishSentenceClient({ initialSentences }: EnglishSentenceClientProps) {
+  const [sentences, setSentences] = useState<SentenceItem[]>(initialSentences);
   const [search, setSearch] = useState('');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Fisher-Yates Shuffle helper
+  const shuffleArray = (array: SentenceItem[]) => {
+    const arr = [...array];
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  };
+
+  // Shuffle sentences on initial page load / open
+  useEffect(() => {
+    setSentences(shuffleArray(initialSentences));
+  }, [initialSentences]);
+
+  const handleShuffle = () => {
+    setSentences(shuffleArray(sentences));
+    showToast('🔀 문장 순서가 무작위로 섞였습니다!');
+  };
 
   const handleCopy = (text: string) => {
     if (navigator.clipboard) {
@@ -27,7 +48,7 @@ export default function EnglishSentenceClient({ initialSentences }: EnglishSente
     }, 2000);
   };
 
-  const filteredItems = initialSentences.filter((item) => {
+  const filteredItems = sentences.filter((item) => {
     if (!search) return true;
     return item.content.toLowerCase().includes(search.toLowerCase());
   });
@@ -38,16 +59,22 @@ export default function EnglishSentenceClient({ initialSentences }: EnglishSente
         <h1 className={styles.title}>EnglishSentence</h1>
       </header>
 
-      {/* Search Bar */}
-      <div className={styles.searchBox}>
-        <IoSearchOutline size={20} className={styles.searchIcon} />
-        <input
-          type="text"
-          className={styles.searchInput}
-          placeholder="검색어를 입력하세요..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+      {/* Search & Action Row */}
+      <div className={styles.searchRow}>
+        <div className={styles.searchBox}>
+          <IoSearchOutline size={20} className={styles.searchIcon} />
+          <input
+            type="text"
+            className={styles.searchInput}
+            placeholder="검색어를 입력하세요..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <button className={styles.shuffleBtn} onClick={handleShuffle} title="문장 순서 무작위 섞기">
+          <IoShuffleOutline size={18} />
+          <span>순서 섞기</span>
+        </button>
       </div>
 
       {/* Sentences Grid */}
@@ -85,3 +112,4 @@ export default function EnglishSentenceClient({ initialSentences }: EnglishSente
     </div>
   );
 }
+
