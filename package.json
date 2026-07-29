@@ -14,8 +14,10 @@
   "dependencies": {
     "cheerio": "^1.2.0",
     "clsx": "^2.1.1",
+    "jszip": "^3.10.1",
     "next": "16.1.4",
     "papaparse": "^5.5.3",
+    "pdfjs-dist": "^6.2.108",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-icons": "^5.5.0"
