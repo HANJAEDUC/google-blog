@@ -245,7 +245,7 @@ export default function PdfConverterClient() {
     const content = await zip.generateAsync({ type: 'blob' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(content);
-    link.download = `${baseName}_${total}of${total}.zip`;
+    link.download = `${baseName}_nof${total}.zip`;
     link.click();
   };
 
@@ -255,7 +255,7 @@ export default function PdfConverterClient() {
     link.href = mergedDataUrl;
     const baseName = file ? file.name.replace(/\.pdf$/i, '') : 'document';
     const total = pages.length;
-    link.download = `${baseName}_${total}of${total}.jpg`;
+    link.download = `${baseName}_nof${total}.jpg`;
     link.click();
   };
 
