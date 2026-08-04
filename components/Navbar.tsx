@@ -68,7 +68,6 @@ export default function Navbar() {
             <Link href="/prices" className={styles.link}>GermanPrices</Link>
             <Link href="/german-signs" className={styles.link}>GermanSigns</Link>
             <Link href="/english-sentence" className={styles.link}>EnglishSentence</Link>
-            <Link href="/pdf-to-jpg" className={styles.link}>PdfToJpg</Link>
             <Link href="/private" className={styles.link}>PRIVATE</Link>
             <DualClock />
             {/* Desktop: Anchor tag for hover effect */}
