@@ -1,353 +1,637 @@
-import { useEffect, useState, useRef } from 'react';
+"use client";
+
+import { useEffect, useState, useMemo } from 'react';
 import styles from './private.module.css';
 
-interface DashboardResponse {
-    ok: boolean;
-    data: {
-        last_updated: string;
-        price_gc_kospi: any[];
-        price_gc_kosdaq: any[];
-        vol_gc_kospi: any[];
-        vol_gc_kosdaq: any[];
-        pullback_kospi: any[];
-        pullback_kosdaq: any[];
+export interface StockGemItem {
+    시장: string;
+    종목코드: string;
+    종목명: string;
+    종합점수: number;
+    등급: string;
+    포착알고리즘: string;
+    '종가(원)': string;
+    raw_price: number;
+    '등락률(%)': string;
+    raw_rate: number;
+    '거래대금(억)': string;
+    raw_val_eok: number;
+    '20일거래량배수': string;
+    raw_vol_ratio: number;
+    '회전율(%)': string;
+    raw_turnover: number;
+    '20일이격도': string;
+    당일외인순매수: string;
+    당일기관순매수: string;
+    '10일외인매수일': string;
+    '10일기관매수일': string;
+    '10일합산순매수': string;
+    '시총대비매집(%)': string;
+    외인보유율: string;
+    '추세점수(25)': number;
+    '거래량점수(25)': number;
+    '수급강도(30)': number;
+    '연속성점수(20)': number;
+    algo1: boolean;
+    algo1_note: string;
+    algo2: boolean;
+    algo2_note: string;
+    algo3: boolean;
+    algo3_note: string;
+    algo4: boolean;
+    algo4_note: string;
+    AI_전략코멘트: string;
+    종합순위: number;
+}
+
+export interface MidtermGemsPayload {
+    target_date: string;
+    krx_base_date: string;
+    min_val_eok: number;
+    updated_at: string;
+    top30_overall: StockGemItem[];
+    algo1_pullback: StockGemItem[];
+    algo2_stealth: StockGemItem[];
+    algo3_breakout: StockGemItem[];
+    algo4_smart_money: StockGemItem[];
+    all_evaluated: StockGemItem[];
+}
+
+type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'all';
+type MarketFilter = 'ALL' | 'KOSPI' | 'KOSDAQ';
+
+const TAB_CONFIG: Record<
+    TabKey,
+    {
+        label: string;
+        shortBadge: string;
+        title: string;
+        principle: string;
+        noteKey?: keyof StockGemItem;
     }
+> = {
+    top30: {
+        label: '🌟 Part 1: 종합 랭킹 Top 30',
+        shortBadge: '알고리즘 5',
+        title: '🌟 [Part 1: 알고리즘 5] 100점 만점 멀티팩터 중단기 종합 랭킹 Top 30',
+        principle:
+            '추세·이격도(25점) + 거래량·회전율 품질(25점) + 수급강도(30점) + 수급연속성·시너지(20점) = 100점 만점 종합 채점 상위 30선',
+    },
+    algo1: {
+        label: '🎯 Part 2: #1 눌림목',
+        shortBadge: '🎯#1눌림목',
+        title: "🎯 [Part 2: 알고리즘 1] 대량거래 기준봉 후 '거래량 급감 눌림목 + 수급 홀딩' 종목",
+        principle:
+            '최근 15일 내 대량거래 양봉(기준봉) 발생 후, 거래량이 마르며 20일선을 지지하고 외인/기관 수급이 유지되는 스윙 타점',
+        noteKey: 'algo1_note',
+    },
+    algo2: {
+        label: '🕵️ Part 3: #2 연속매집',
+        shortBadge: '🕵️#2연속매집',
+        title: "🕵️ [Part 3: 알고리즘 2] 변동성 수축(VCP) + 외인/기관 '조용한 연속 매집' 종목",
+        principle:
+            '주가 과열 없이 안정된 이격도에서 최근 10거래일 중 6일 이상 외국인/기관이 꾸준히 지분을 매집한 종목',
+        noteKey: 'algo2_note',
+    },
+    algo3: {
+        label: '🚀 Part 4: #3 초입돌파',
+        shortBadge: '🚀#3초입돌파',
+        title: "🚀 [Part 4: 알고리즘 3] 과열 배제형(적정 회전율 0.8~22%) '초입 진성 거래량 돌파' 종목",
+        principle:
+            '20일 평균 거래량 대비 1.8배 이상 돌파하면서 회전율이 22% 이하로 건전하고 외인/기관 수급이 동반된 초입 돌파주',
+        noteKey: 'algo3_note',
+    },
+    algo4: {
+        label: '📈 Part 5: #4 외인지분↑',
+        shortBadge: '📈#4외인지분↑',
+        title: '📈 [Part 5: 알고리즘 4] 외인 지분율 추세 상승 + 최근 3일 기관 동반 유입 (Smart Money) 종목',
+        principle:
+            '최근 10~20일간 외국인 보유 지분율이 추세적으로 상승하고 최근 3일 기관 순매수까지 가세한 종목',
+        noteKey: 'algo4_note',
+    },
+    all: {
+        label: '📋 전체 채점 종목',
+        shortBadge: '전체 유니버스',
+        title: '📋 전체 발굴 대상 채점 결과 리스트',
+        principle:
+            '최소 거래대금 기준을 통과한 코스피·코스닥 우량 보통주 전체의 멀티팩터 채점 및 포착 알고리즘 상세 내역',
+        noteKey: 'AI_전략코멘트',
+    },
+};
+
+function formatDateReadable(yyyymmdd?: string) {
+    if (!yyyymmdd || yyyymmdd.length !== 8) return yyyymmdd || '-';
+    return `${yyyymmdd.slice(0, 4)}-${yyyymmdd.slice(4, 6)}-${yyyymmdd.slice(6, 8)}`;
 }
 
 export default function DashboardClient() {
-    const [activeTabPrice, setActiveTabPrice] = useState('gc-kospi');
-    const [activeTabVol, setActiveTabVol] = useState('vol-kospi');
-    const [activeTabPb, setActiveTabPb] = useState('pb-kospi');
+    const [payload, setPayload] = useState<MidtermGemsPayload | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [runningScript, setRunningScript] = useState<boolean>(false);
+    const [canRunLocalScript, setCanRunLocalScript] = useState<boolean>(false);
+    const [activeTab, setActiveTab] = useState<TabKey>('top30');
+    const [marketFilter, setMarketFilter] = useState<MarketFilter>('ALL');
+    const [gradeFilter, setGradeFilter] = useState<string>('ALL');
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [statusMessage, setStatusMessage] = useState<string>('');
 
-    const [dateStr, setDateStr] = useState('');
-    const [targetDate, setTargetDate] = useState('');
-    const [topN, setTopN] = useState('0');
+    const loadGemsData = async () => {
+        setLoading(true);
+        setStatusMessage('');
+        try {
+            const res = await fetch('/api/midterm-gems', { cache: 'no-store' });
+            if (res.ok) {
+                const json = await res.json();
+                if (json.ok && json.data) {
+                    setPayload(json.data);
+                    setCanRunLocalScript(Boolean(json.canRunLocalScript));
+                    setLoading(false);
+                    return;
+                }
+            }
+            // 정적 파일 폴백
+            const fallbackRes = await fetch('/data/midterm_gems_latest.json', { cache: 'no-store' });
+            if (fallbackRes.ok) {
+                const fallbackData = await fallbackRes.json();
+                setPayload(fallbackData);
+            }
+        } catch (err) {
+            console.error('Failed to load midterm gems data:', err);
+            setStatusMessage('데이터 로드 중 오류가 발생했습니다.');
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const [scanState, setScanState] = useState<Record<string, { is_running: boolean; progress: number; message: string; signals_found: number }>>({});
-
-    const [tablesData, setTablesData] = useState<any>({
-        price_gc_kospi: [],
-        price_gc_kosdaq: [],
-        vol_gc_kospi: [],
-        vol_gc_kosdaq: [],
-        pullback_kospi: [],
-        pullback_kosdaq: [],
-    });
-
-    const intervalsRef = useRef<Record<string, NodeJS.Timeout>>({});
-    const lastItemsJsonRef = useRef<Record<string, string>>({});
+    const handleRunLocalAnalysis = async () => {
+        if (runningScript) return;
+        setRunningScript(true);
+        setStatusMessage('⏳ KRX 백데이터 + 네이버 실시간 수급 5대 알고리즘 분석 실행 중... (약 20~40초 소요)');
+        try {
+            const res = await fetch('/api/midterm-gems', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({}),
+            });
+            const json = await res.json();
+            if (json.ok && json.data) {
+                setPayload(json.data);
+                setStatusMessage('✅ 최신 영업일 기준 5대 알고리즘 재분석 및 데이터 동기화 완료!');
+            } else {
+                setStatusMessage(`⚠️ ${json.message || '실행 실패'}`);
+            }
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            setStatusMessage(`⚠️ 실행 오류: ${msg}`);
+        } finally {
+            setRunningScript(false);
+        }
+    };
 
     useEffect(() => {
-        // fetchSignals(); // Removed automatic loading on mount to start with a clear dashboard
-
-        // Set initial date
-        const d = new Date();
-        if (d.getHours() < 15) d.setDate(d.getDate() - 1);
-        while (d.getDay() === 0 || d.getDay() === 6) {
-            d.setDate(d.getDate() - 1);
-        }
-        setTargetDate(d.toISOString().split('T')[0]);
-
-        return () => {
-            // clear intervals
-            Object.values(intervalsRef.current).forEach(clearInterval);
-        };
+        loadGemsData();
     }, []);
 
-    const fetchSignals = async () => {
-        try {
-            const res = await fetch('/api/signals');
-            const json = await res.json();
-            if (json.ok) {
-                setDateStr(json.data.last_updated);
-                setTablesData({
-                    price_gc_kospi: json.data.price_gc_kospi || [],
-                    price_gc_kosdaq: json.data.price_gc_kosdaq || [],
-                    vol_gc_kospi: json.data.vol_gc_kospi || [],
-                    vol_gc_kosdaq: json.data.vol_gc_kosdaq || [],
-                    pullback_kospi: json.data.pullback_kospi || [],
-                    pullback_kosdaq: json.data.pullback_kosdaq || [],
-                });
-            }
-        } catch (e: any) {
-            console.error('Signal fetch error:', e);
-            alert("서버 통신 오류 (시그널): " + (e.message || e));
+    const summaryCounts = useMemo(() => {
+        const all = payload?.all_evaluated || [];
+        return {
+            total: all.length,
+            sGrade: all.filter((i) => i.등급?.includes('S등급')).length,
+            aGrade: all.filter((i) => i.등급?.includes('A등급')).length,
+            bGrade: all.filter((i) => i.등급?.includes('B등급')).length,
+            algo1: payload?.algo1_pullback?.length || 0,
+            algo2: payload?.algo2_stealth?.length || 0,
+            algo3: payload?.algo3_breakout?.length || 0,
+            algo4: payload?.algo4_smart_money?.length || 0,
+        };
+    }, [payload]);
+
+    const currentList = useMemo(() => {
+        if (!payload) return [];
+        let list: StockGemItem[] = [];
+        switch (activeTab) {
+            case 'top30':
+                list = payload.top30_overall || [];
+                break;
+            case 'algo1':
+                list = payload.algo1_pullback || [];
+                break;
+            case 'algo2':
+                list = payload.algo2_stealth || [];
+                break;
+            case 'algo3':
+                list = payload.algo3_breakout || [];
+                break;
+            case 'algo4':
+                list = payload.algo4_smart_money || [];
+                break;
+            case 'all':
+                list = payload.all_evaluated || [];
+                break;
         }
-    };
 
-    const startScan = async (target: string) => {
-
-        // Clear corresponding tables
-        setTablesData((prev: any) => {
-            if (target === 'price_gc') return { ...prev, price_gc_kospi: [], price_gc_kosdaq: [] };
-            if (target === 'vol_gc') return { ...prev, vol_gc_kospi: [], vol_gc_kosdaq: [] };
-            if (target === 'pullback') return { ...prev, pullback_kospi: [], pullback_kosdaq: [] };
-            return prev;
+        return list.filter((item) => {
+            if (marketFilter !== 'ALL' && item.시장 !== marketFilter) return false;
+            if (gradeFilter !== 'ALL') {
+                if (gradeFilter === 'S' && !item.등급?.includes('S등급')) return false;
+                if (gradeFilter === 'A' && !item.등급?.includes('A등급')) return false;
+                if (gradeFilter === 'B' && !item.등급?.includes('B등급')) return false;
+            }
+            if (searchQuery.trim()) {
+                const q = searchQuery.trim().toLowerCase();
+                const matchName = item.종목명?.toLowerCase().includes(q);
+                const matchCode = item.종목코드?.toLowerCase().includes(q);
+                const matchAlgo = item.포착알고리즘?.toLowerCase().includes(q);
+                if (!matchName && !matchCode && !matchAlgo) return false;
+            }
+            return true;
         });
+    }, [payload, activeTab, marketFilter, gradeFilter, searchQuery]);
 
-        try {
-            const res = await fetch('/api/scan/start', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ target: target, target_date: targetDate, top_n: parseInt(topN) })
-            });
-            const json = await res.json();
-
-            if (json.ok) {
-                monitorScan(target);
-            } else {
-                alert(json.message);
-            }
-        } catch (e: any) { alert("서버 통신 오류: " + (e.message || e)); }
-    };
-
-    const stopScan = async (target: string) => {
-        try {
-            const res = await fetch('/api/scan/stop', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ target: target })
-            });
-            const json = await res.json();
-            if (!json.ok) {
-                alert(json.message);
-            } else {
-                fetchSignals();
-            }
-        } catch (e: any) { alert("서버 통신 오류: " + (e.message || e)); }
-    };
-
-    const monitorScan = (target: string) => {
-        if (intervalsRef.current[target]) clearInterval(intervalsRef.current[target]);
-
-        intervalsRef.current[target] = setInterval(async () => {
-            try {
-                const res = await fetch(`/api/scan/status?target=${target}`);
-                const json = await res.json();
-
-                if (json.ok) {
-                    const state = json.data;
-                    setScanState(prev => ({ ...prev, [target]: state }));
-
-                    if (state.found_items && state.found_items.length > 0) {
-                        const currentJson = JSON.stringify(state.found_items);
-                        if (lastItemsJsonRef.current[target] !== currentJson) {
-                            lastItemsJsonRef.current[target] = currentJson;
-
-                            const kospiItems = state.found_items.filter((i: any) => i.market === 'KOSPI').map((i: any, idx: number) => ({ '순위': idx + 1, ...i.item }));
-                            const kosdaqItems = state.found_items.filter((i: any) => i.market === 'KOSDAQ').map((i: any, idx: number) => ({ '순위': idx + 1, ...i.item }));
-
-                            setTablesData((prev: any) => {
-                                if (target === 'price_gc') return { ...prev, price_gc_kospi: kospiItems, price_gc_kosdaq: kosdaqItems };
-                                if (target === 'vol_gc') return { ...prev, vol_gc_kospi: kospiItems, vol_gc_kosdaq: kosdaqItems };
-                                if (target === 'pullback') return { ...prev, pullback_kospi: kospiItems, pullback_kosdaq: kosdaqItems };
-                                return prev;
-                            });
-                        }
-                    }
-
-                    if (!state.is_running) {
-                        clearInterval(intervalsRef.current[target]);
-                        if (state.progress >= 100) {
-                            setScanState(prev => ({ ...prev, [target]: { ...state, message: '✅ 스캔 및 업데이트 완료!' } }));
-                            fetchSignals();
-                        }
-                    }
-                }
-            } catch (e) { }
-        }, 500);
-    };
-
-    const renderTable = (dataArray: any[], columns: string[]) => {
-        if (!dataArray || dataArray.length === 0) {
-            return (
-                <tr>
-                    <td colSpan={columns.length} className={styles.emptyMsg}>데이터가 없습니다.</td>
-                </tr>
-            );
+    const renderGradeBadge = (grade: string) => {
+        if (!grade) return <span className={styles.gradeNormal}>-</span>;
+        if (grade.includes('S등급')) {
+            return <span className={`${styles.gradeBadge} ${styles.gradeS}`}>{grade}</span>;
         }
-        return dataArray.map((row, idx) => (
-            <tr key={idx} className={row['신호유형']?.includes('오늘 신호') ? styles.rowHighlight : ''}>
-                {columns.map(col => {
-                    let val = row[col] !== undefined ? row[col] : '-';
-
-                    if (col === '종목명' && row['종목코드']) {
-                        // 종목코드 포맷팅: 6자리 패딩 (예: 26150 -> 026150) 및 콤마 제거
-                        const rawCode = String(row['종목코드']).replace(/,/g, '');
-                        const paddedCode = rawCode.padStart(6, '0');
-                        const naverLink = `https://finance.naver.com/item/main.naver?code=${paddedCode}`;
-                        return (
-                            <td key={col}>
-                                <a href={naverLink} target="_blank" rel="noopener noreferrer"
-                                    style={{ color: 'inherit', textDecoration: 'none', fontWeight: 600, borderBottom: '1px dashed #666' }}>
-                                    {val}
-                                </a>
-                                <span style={{ color: '#aaa', fontSize: '0.85em', marginLeft: '4px' }}>({paddedCode})</span>
-                            </td>
-                        );
-                    }
-
-                    if (col === '신호유형' && typeof val === 'string' && val.includes('오늘 신호')) {
-                        return <td key={col}><span className={styles.signalBadge}>{val}</span></td>;
-                    }
-                    return <td key={col}>{val}</td>;
-                })}
-            </tr>
-        ));
+        if (grade.includes('A등급')) {
+            return <span className={`${styles.gradeBadge} ${styles.gradeA}`}>{grade}</span>;
+        }
+        if (grade.includes('B등급')) {
+            return <span className={`${styles.gradeBadge} ${styles.gradeB}`}>{grade}</span>;
+        }
+        return <span className={`${styles.gradeBadge} ${styles.gradeNormal}`}>{grade}</span>;
     };
+
+    const renderAlgoBadges = (algoStr: string) => {
+        if (!algoStr || algoStr === '-') {
+            return <span className={styles.emptyDash}>-</span>;
+        }
+        const tags = algoStr.split(/\s+/).filter(Boolean);
+        return (
+            <div className={styles.algoTagList}>
+                {tags.map((tag) => {
+                    let tagClass = styles.algoTagDefault;
+                    if (tag.includes('#1눌림목')) tagClass = styles.algoTag1;
+                    else if (tag.includes('#2연속매집')) tagClass = styles.algoTag2;
+                    else if (tag.includes('#3초입돌파')) tagClass = styles.algoTag3;
+                    else if (tag.includes('#4외인지분')) tagClass = styles.algoTag4;
+                    return (
+                        <span key={tag} className={`${styles.algoBadge} ${tagClass}`}>
+                            {tag}
+                        </span>
+                    );
+                })}
+            </div>
+        );
+    };
+
+    const renderMarketBadge = (market: string) => {
+        const isKospi = market === 'KOSPI';
+        return (
+            <span className={`${styles.marketBadge} ${isKospi ? styles.marketKospi : styles.marketKosdaq}`}>
+                {market}
+            </span>
+        );
+    };
+
+    const renderRateValue = (rateStr: string, rawRate?: number) => {
+        const val = rawRate !== undefined ? rawRate : parseFloat(String(rateStr).replace('%', ''));
+        const cls = val > 0 ? styles.rateUp : val < 0 ? styles.rateDown : styles.rateFlat;
+        return <span className={cls}>{rateStr}</span>;
+    };
+
+    const renderStockLink = (item: StockGemItem) => {
+        const rawCode = String(item.종목코드 || '').replace(/,/g, '').trim();
+        const paddedCode = rawCode.padStart(6, '0');
+        const naverUrl = `https://finance.naver.com/item/main.naver?code=${paddedCode}`;
+
+        return (
+            <div className={styles.stockCell}>
+                <a
+                    href={naverUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.stockNameLink}
+                    title={`${item.종목명} (${paddedCode}) 네이버 증권 새 탭 열기`}
+                >
+                    {item.종목명}
+                </a>
+                <a
+                    href={naverUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={styles.stockCodeLink}
+                    title={`종목코드 ${paddedCode} 네이버 증권 열기`}
+                >
+                    {paddedCode} ↗
+                </a>
+            </div>
+        );
+    };
+
+    const activeConfig = TAB_CONFIG[activeTab];
 
     return (
         <div className={styles.dashboardContainer}>
+            {/* 상단 헤더 */}
             <header className={styles.header}>
-                <h1>📊 주식 스크리닝 대시보드</h1>
-                <p className={styles.subtitle}>KOSPI & KOSDAQ 전략</p>
-                <div className={styles.statusBar}>
-                    <span>기준일 선택: <input type="date" className={styles.datePicker} value={targetDate} onChange={e => setTargetDate(e.target.value)} /></span>
-                    <span>업데이트: <strong>{dateStr || '-'}</strong></span>
+                <div className={styles.headerTop}>
+                    <div>
+                        <div className={styles.eyebrow}>KRX 60일 백데이터 × 네이버 실시간 20일 외인·기관 수급 결합</div>
+                        <h1>💎 중단기 5대 알고리즘 종목 발굴기</h1>
+                        <p className={styles.subtitle}>
+                            추세·이격도(25점) + 거래량·회전율 품질(25점) + 수급강도(30점) + 수급연속성·시너지(20점) = 100점 만점 멀티팩터 채점
+                        </p>
+                    </div>
+                    <div className={styles.actionGroup}>
+                        <button
+                            type="button"
+                            className={styles.btnRefresh}
+                            onClick={loadGemsData}
+                            disabled={loading || runningScript}
+                        >
+                            🔄 데이터 새로고침
+                        </button>
+                        {canRunLocalScript && (
+                            <button
+                                type="button"
+                                className={styles.btnRunScript}
+                                onClick={handleRunLocalAnalysis}
+                                disabled={runningScript}
+                            >
+                                {runningScript ? '⏳ 분석 실행 중...' : '⚡ 로컬 분석 재실행'}
+                            </button>
+                        )}
+                    </div>
                 </div>
+
+                {/* 요약 메타데이터 카드 바 */}
+                <div className={styles.metaGrid}>
+                    <div className={styles.metaCard}>
+                        <span className={styles.metaLabel}>📅 분석 기준일</span>
+                        <strong className={styles.metaValue}>
+                            {formatDateReadable(payload?.target_date)}
+                        </strong>
+                        <span className={styles.metaSub}>
+                            KRX 백데이터: {formatDateReadable(payload?.krx_base_date)}
+                        </span>
+                    </div>
+                    <div className={styles.metaCard}>
+                        <span className={styles.metaLabel}>🏆 등급별 분포 (최소 {payload?.min_val_eok ?? 10}억↑)</span>
+                        <div className={styles.gradeSummaryRow}>
+                            <span className={`${styles.gradeBadge} ${styles.gradeS}`}>🌟 S등급 {summaryCounts.sGrade}</span>
+                            <span className={`${styles.gradeBadge} ${styles.gradeA}`}>🏆 A등급 {summaryCounts.aGrade}</span>
+                            <span className={`${styles.gradeBadge} ${styles.gradeB}`}>✨ B등급 {summaryCounts.bGrade}</span>
+                        </div>
+                        <span className={styles.metaSub}>전체 채점 유니버스: {summaryCounts.total}종목</span>
+                    </div>
+                    <div className={styles.metaCard}>
+                        <span className={styles.metaLabel}>🎯 4대 특화 알고리즘 포착 수</span>
+                        <div className={styles.algoCountRow}>
+                            <span className={`${styles.algoBadge} ${styles.algoTag1}`}>🎯#1눌림목 {summaryCounts.algo1}</span>
+                            <span className={`${styles.algoBadge} ${styles.algoTag2}`}>🕵️#2연속매집 {summaryCounts.algo2}</span>
+                            <span className={`${styles.algoBadge} ${styles.algoTag3}`}>🚀#3초입돌파 {summaryCounts.algo3}</span>
+                            <span className={`${styles.algoBadge} ${styles.algoTag4}`}>📈#4외인지분↑ {summaryCounts.algo4}</span>
+                        </div>
+                        <span className={styles.metaSub}>업데이트: {payload?.updated_at || '-'}</span>
+                    </div>
+                </div>
+
+                {statusMessage && <div className={styles.statusBanner}>{statusMessage}</div>}
             </header>
 
-            <main className={styles.gridContainer}>
-                {/* Row 1: 가격 골든크로스 */}
-                <section className={`${styles.panel} ${styles.panelPrice}`}>
-                    <h2 className={styles.panelTitle}>
-                        <span>📈 가격 골든크로스 <span className={styles.badge}>MA20 &gt; MA200</span></span>
-                        <div className={styles.scannerPanel}>
-                            {!scanState['price_gc']?.is_running ? (
-                                <button className={styles.btnPrimary} onClick={() => startScan('price_gc')}>🚀 스캔 실행</button>
-                            ) : null}
-                            {scanState['price_gc'] && scanState['price_gc'].is_running && (
-                                <div className={styles.progContainer}>
-                                    <span className={styles.progMessage}>{scanState['price_gc'].message} (발견: {scanState['price_gc'].signals_found})</span>
-                                    <button className={styles.btnDanger} onClick={() => stopScan('price_gc')}>🛑중지</button>
-                                </div>
-                            )}
-                            {scanState['price_gc'] && !scanState['price_gc'].is_running && scanState['price_gc'].progress >= 100 && (
-                                <div className={styles.progContainer}>
-                                    <span className={styles.progMessage}>{scanState['price_gc'].message}</span>
-                                </div>
-                            )}
-                        </div>
-                    </h2>
-                    <div className={styles.tabs}>
-                        <button className={`${styles.tabBtn} ${activeTabPrice === 'gc-kospi' ? styles.active : ''}`} onClick={() => setActiveTabPrice('gc-kospi')}>KOSPI</button>
-                        <button className={`${styles.tabBtn} ${activeTabPrice === 'gc-kosdaq' ? styles.active : ''}`} onClick={() => setActiveTabPrice('gc-kosdaq')}>KOSDAQ</button>
+            {/* 5대 핵심 알고리즘 파트 탭 네비게이션 */}
+            <nav className={styles.partTabs}>
+                {(Object.keys(TAB_CONFIG) as TabKey[]).map((key) => {
+                    const cfg = TAB_CONFIG[key];
+                    let count = 0;
+                    if (key === 'top30') count = payload?.top30_overall?.length || 0;
+                    else if (key === 'algo1') count = payload?.algo1_pullback?.length || 0;
+                    else if (key === 'algo2') count = payload?.algo2_stealth?.length || 0;
+                    else if (key === 'algo3') count = payload?.algo3_breakout?.length || 0;
+                    else if (key === 'algo4') count = payload?.algo4_smart_money?.length || 0;
+                    else if (key === 'all') count = payload?.all_evaluated?.length || 0;
+
+                    return (
+                        <button
+                            key={key}
+                            type="button"
+                            className={`${styles.partTabBtn} ${activeTab === key ? styles.partTabActive : ''}`}
+                            onClick={() => setActiveTab(key)}
+                        >
+                            <span>{cfg.label}</span>
+                            <span className={styles.tabCount}>{count}</span>
+                        </button>
+                    );
+                })}
+            </nav>
+
+            {/* 메인 테이블 패널 */}
+            <section className={styles.panel}>
+                <div className={styles.panelHeader}>
+                    <div>
+                        <h2 className={styles.panelTitle}>{activeConfig.title}</h2>
+                        <p className={styles.principleBox}>💡 <strong>핵심 원리:</strong> {activeConfig.principle}</p>
                     </div>
-                    <div className={styles.tableWrapper}>
+
+                    {/* 필터 및 검색 컨트롤 */}
+                    <div className={styles.filterBar}>
+                        <div className={styles.SegmentedGroup}>
+                            {(['ALL', 'KOSPI', 'KOSDAQ'] as MarketFilter[]).map((m) => (
+                                <button
+                                    key={m}
+                                    type="button"
+                                    className={`${styles.segBtn} ${marketFilter === m ? styles.segBtnActive : ''}`}
+                                    onClick={() => setMarketFilter(m)}
+                                >
+                                    {m === 'ALL' ? '전체 시장' : m}
+                                </button>
+                            ))}
+                        </div>
+
+                        <select
+                            className={styles.selectBox}
+                            value={gradeFilter}
+                            onChange={(e) => setGradeFilter(e.target.value)}
+                            aria-label="등급 필터"
+                        >
+                            <option value="ALL">전체 등급</option>
+                            <option value="S">🌟 S등급 (80점+)</option>
+                            <option value="A">🏆 A등급 (65~79점)</option>
+                            <option value="B">✨ B등급 (50~64점)</option>
+                        </select>
+
+                        <input
+                            type="text"
+                            className={styles.searchInput}
+                            placeholder="종목명 · 종목코드 · 태그 검색..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+                </div>
+
+                {/* 데이터 테이블 */}
+                <div className={styles.tableWrapper}>
+                    {loading ? (
+                        <div className={styles.emptyMsg}>데이터를 불러오는 중입니다...</div>
+                    ) : currentList.length === 0 ? (
+                        <div className={styles.emptyMsg}>조건에 해당하는 종목이 없습니다.</div>
+                    ) : activeTab === 'top30' || activeTab === 'all' ? (
+                        /* Part 1 (종합 랭킹 Top 30) 및 전체 채점 테이블 */
                         <table className={styles.dataTable}>
                             <thead>
                                 <tr>
-                                    {['순위', '종목명', '시가총액(억)', '종가', 'MA20', 'MA200', '갭(%)', '크로스일'].map(h => <th key={h}>{h}</th>)}
+                                    <th>순위</th>
+                                    <th>등급</th>
+                                    <th>점수 (세부팩터)</th>
+                                    <th>시장</th>
+                                    <th className={styles.alignLeft}>종목명 (코드)</th>
+                                    <th>종가(원)</th>
+                                    <th>등락률</th>
+                                    <th>거래대금</th>
+                                    <th>20일이격</th>
+                                    <th>회전율</th>
+                                    <th>10일외인</th>
+                                    <th>10일기관</th>
+                                    <th>시총대비매집</th>
+                                    <th>외인보유율</th>
+                                    <th className={styles.alignLeft}>포착 알고리즘</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {activeTabPrice === 'gc-kospi'
-                                    ? renderTable(tablesData.price_gc_kospi, ['순위', '종목명', '시가총액(억원)', '종가', 'MA20', 'MA200', 'MA20_MA200갭(%)', '골든크로스일'])
-                                    : renderTable(tablesData.price_gc_kosdaq, ['순위', '종목명', '시가총액(억원)', '종가', 'MA20', 'MA200', 'MA20_MA200갭(%)', '골든크로스일'])
-                                }
+                                {currentList.map((row) => (
+                                    <tr
+                                        key={row.종목코드}
+                                        className={row.등급?.includes('S등급') ? styles.rowSGrade : ''}
+                                    >
+                                        <td className={styles.rankCell}>#{row.종합순위}</td>
+                                        <td>{renderGradeBadge(row.등급)}</td>
+                                        <td>
+                                            <div className={styles.scoreCell}>
+                                                <strong className={styles.scoreMain}>{row.종합점수?.toFixed(1)}</strong>
+                                                <span
+                                                    className={styles.scoreSub}
+                                                    title="추세(25) / 거래량(25) / 수급강도(30) / 연속성(20)"
+                                                >
+                                                    {row['추세점수(25)']}/{row['거래량점수(25)']}/{row['수급강도(30)']}/{row['연속성점수(20)']}
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td>{renderMarketBadge(row.시장)}</td>
+                                        <td className={styles.alignLeft}>{renderStockLink(row)}</td>
+                                        <td className={styles.priceCell}>{row['종가(원)']}</td>
+                                        <td>{renderRateValue(row['등락률(%)'], row.raw_rate)}</td>
+                                        <td>{row['거래대금(억)']}</td>
+                                        <td>{row['20일이격도']}</td>
+                                        <td>{row['회전율(%)']}</td>
+                                        <td>{row['10일외인매수일']}</td>
+                                        <td>{row['10일기관매수일']}</td>
+                                        <td
+                                            className={
+                                                String(row['시총대비매집(%)']).startsWith('+')
+                                                    ? styles.rateUp
+                                                    : String(row['시총대비매집(%)']).startsWith('-')
+                                                    ? styles.rateDown
+                                                    : ''
+                                            }
+                                        >
+                                            {row['시총대비매집(%)']}
+                                        </td>
+                                        <td>{row.외인보유율}</td>
+                                        <td className={styles.alignLeft}>{renderAlgoBadges(row.포착알고리즘)}</td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
-                    </div>
-                </section>
-
-                {/* Row 2: 거래량 급증 */}
-                <section className={`${styles.panel} ${styles.panelVolume}`}>
-                    <h2 className={styles.panelTitle}>
-                        <span>📊 거래량 급증 <span className={styles.badge}>V_MA5 &gt; V_MA20</span></span>
-                        <div className={styles.scannerPanel}>
-                            {!scanState['vol_gc']?.is_running ? (
-                                <button className={styles.btnPrimary} onClick={() => startScan('vol_gc')}>🚀 스캔 실행</button>
-                            ) : null}
-                            {scanState['vol_gc'] && scanState['vol_gc'].is_running && (
-                                <div className={styles.progContainer}>
-                                    <span className={styles.progMessage}>{scanState['vol_gc'].message} (발견: {scanState['vol_gc'].signals_found})</span>
-                                    <button className={styles.btnDanger} onClick={() => stopScan('vol_gc')}>🛑중지</button>
-                                </div>
-                            )}
-                            {scanState['vol_gc'] && !scanState['vol_gc'].is_running && scanState['vol_gc'].progress >= 100 && (
-                                <div className={styles.progContainer}>
-                                    <span className={styles.progMessage}>{scanState['vol_gc'].message}</span>
-                                </div>
-                            )}
-                        </div>
-                    </h2>
-                    <div className={styles.tabs}>
-                        <button className={`${styles.tabBtn} ${activeTabVol === 'vol-kospi' ? styles.active : ''}`} onClick={() => setActiveTabVol('vol-kospi')}>KOSPI</button>
-                        <button className={`${styles.tabBtn} ${activeTabVol === 'vol-kosdaq' ? styles.active : ''}`} onClick={() => setActiveTabVol('vol-kosdaq')}>KOSDAQ</button>
-                    </div>
-                    <div className={styles.tableWrapper}>
+                    ) : (
+                        /* Part 2 ~ Part 5 (알고리즘 1~4 특화 테이블: 핵심 포착 사유 포함) */
                         <table className={styles.dataTable}>
                             <thead>
                                 <tr>
-                                    {['순위', '종목명', '시가총액(억)', '종가', 'V_MA5', 'V_MA20', '비율(배)'].map(h => <th key={h}>{h}</th>)}
+                                    <th>종합순위</th>
+                                    <th>등급</th>
+                                    <th>점수</th>
+                                    <th>시장</th>
+                                    <th className={styles.alignLeft}>종목명 (코드)</th>
+                                    <th>종가(원)</th>
+                                    <th>등락률</th>
+                                    <th>거래대금</th>
+                                    <th>외인보유율</th>
+                                    <th className={styles.alignLeft}>포착 알고리즘</th>
+                                    <th className={styles.alignLeft}>핵심 포착 사유</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {activeTabVol === 'vol-kospi'
-                                    ? renderTable(tablesData.vol_gc_kospi, ['순위', '종목명', '시가총액(억원)', '종가', 'V_MA5', 'V_MA20', 'Volume_Ratio(배)'])
-                                    : renderTable(tablesData.vol_gc_kosdaq, ['순위', '종목명', '시가총액(억원)', '종가', 'V_MA5', 'V_MA20', 'Volume_Ratio(배)'])
-                                }
+                                {currentList.map((row) => {
+                                    const noteText = activeConfig.noteKey
+                                        ? String(row[activeConfig.noteKey] || row.AI_전략코멘트 || '-')
+                                        : row.AI_전략코멘트;
+
+                                    return (
+                                        <tr
+                                            key={row.종목코드}
+                                            className={row.등급?.includes('S등급') ? styles.rowSGrade : ''}
+                                        >
+                                            <td className={styles.rankCell}>#{row.종합순위}</td>
+                                            <td>{renderGradeBadge(row.등급)}</td>
+                                            <td>
+                                                <strong className={styles.scoreMain}>{row.종합점수?.toFixed(1)}</strong>
+                                            </td>
+                                            <td>{renderMarketBadge(row.시장)}</td>
+                                            <td className={styles.alignLeft}>{renderStockLink(row)}</td>
+                                            <td className={styles.priceCell}>{row['종가(원)']}</td>
+                                            <td>{renderRateValue(row['등락률(%)'], row.raw_rate)}</td>
+                                            <td>{row['거래대금(억)']}</td>
+                                            <td>{row.외인보유율}</td>
+                                            <td className={styles.alignLeft}>{renderAlgoBadges(row.포착알고리즘)}</td>
+                                            <td className={`${styles.alignLeft} ${styles.noteCell}`}>{noteText}</td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
-                    </div>
-                </section>
+                    )}
+                </div>
+            </section>
 
-                {/* Row 3: 눌림 매수 */}
-                <section className={`${styles.panel} ${styles.highlightPanel}`}>
-                    <h2 className={styles.panelTitle}>
-                        <span>🔥 눌림 매수 신호</span>
-                        <div className={styles.scannerPanel}>
-                            {!scanState['pullback']?.is_running ? (
-                                <button className={styles.btnPrimary} onClick={() => startScan('pullback')}>🚀 스캔 실행</button>
-                            ) : null}
-                            {scanState['pullback'] && scanState['pullback'].is_running && (
-                                <div className={styles.progContainer}>
-                                    <span className={styles.progMessage}>{scanState['pullback'].message} (발견: {scanState['pullback'].signals_found})</span>
-                                    <button className={styles.btnDanger} onClick={() => stopScan('pullback')}>🛑중지</button>
-                                </div>
-                            )}
-                            {scanState['pullback'] && !scanState['pullback'].is_running && scanState['pullback'].progress >= 100 && (
-                                <div className={styles.progContainer}>
-                                    <span className={styles.progMessage}>{scanState['pullback'].message}</span>
-                                </div>
-                            )}
-                        </div>
-                    </h2>
-                    <div className={styles.tabs}>
-                        <button className={`${styles.tabBtn} ${activeTabPb === 'pb-kospi' ? styles.active : ''}`} onClick={() => setActiveTabPb('pb-kospi')}>KOSPI</button>
-                        <button className={`${styles.tabBtn} ${activeTabPb === 'pb-kosdaq' ? styles.active : ''}`} onClick={() => setActiveTabPb('pb-kosdaq')}>KOSDAQ</button>
+            {/* 하단 5대 알고리즘 상세 가이드 */}
+            <section className={styles.guideSection}>
+                <h3 className={styles.guideTitle}>📌 중단기 5대 알고리즘 채점 및 발굴 기준 요약</h3>
+                <div className={styles.guideGrid}>
+                    <div className={styles.guideCard}>
+                        <h4>🌟 알고리즘 5 (100점 멀티팩터 종합)</h4>
+                        <p>
+                            추세·이격도(25점) + 거래량·회전율 품질(25점) + 수급강도(30점) + 수급연속성·시너지(20점)를 합산하여{' '}
+                            <strong>80점↑ S등급</strong>, <strong>65점↑ A등급</strong>, <strong>50점↑ B등급</strong> 부여
+                        </p>
                     </div>
-                    <div className={styles.tableWrapper}>
-                        <table className={styles.dataTable}>
-                            <thead>
-                                <tr>
-                                    {['순위', '종목명', '시가총액', '종가', 'GC발생', '눌림일', '신호유형'].map(h => <th key={h}>{h}</th>)}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {activeTabPb === 'pb-kospi'
-                                    ? renderTable(tablesData.pullback_kospi, ['순위', '종목명', '시가총액(억원)', '종가', 'GC발생일', '눌림일', '신호유형'])
-                                    : renderTable(tablesData.pullback_kosdaq, ['순위', '종목명', '시가총액(억원)', '종가', 'GC발생일', '눌림일', '신호유형'])
-                                }
-                            </tbody>
-                        </table>
+                    <div className={styles.guideCard}>
+                        <h4>🎯 알고리즘 1 (#1눌림목)</h4>
+                        <p>
+                            최근 15일 내 대량거래 기준봉 발생 후 거래량이 기준봉 대비 급감(매물 소화)하며 20일선 지지 및 외인·기관 수급이 유지되는 눌림목 타점
+                        </p>
                     </div>
-                </section>
-
-                {/* 가이드 */}
-                <section className={styles.panel}>
-                    <h2 className={styles.panelTitle}>💡 투자 전략 가이드</h2>
-                    <div className={styles.guideContent}>
-                        <h3 className={styles.guideH3}>매수 타점 분석</h3>
-                        <ul className={styles.guideUl}>
-                            <li><strong>1단계:</strong> '가격/거래량 골든크로스' 패널에서 MA20이 MA200을 상향 돌파하며 장기 상승 추세 진입 종목 확인</li>
-                            <li><strong>2단계:</strong> 크로스 발생 직후 3~10일 내 저점을 다지며 MA20에 안착한 종목 대기</li>
-                            <li><strong>3단계:</strong> '눌림 매수 신호' 패널에서 당일 양봉 전환 및 전일 고가를 돌파(<span className={styles.signalBadge}>🔔오늘 신호</span>) 시 적극 매수 고려</li>
-                        </ul>
+                    <div className={styles.guideCard}>
+                        <h4>🕵️ 알고리즘 2 (#2연속매집)</h4>
+                        <p>
+                            변동성 수축(VCP) 및 안정적인 20일 이격도 구간에서 최근 10거래일 중 6일 이상 외국인 또는 기관이 조용히 연속 순매수한 종목
+                        </p>
                     </div>
-                </section>
-
-            </main>
+                    <div className={styles.guideCard}>
+                        <h4>🚀 알고리즘 3 (#3초입돌파)</h4>
+                        <p>
+                            과열권(회전율 22% 초과)을 배제하고 적정 회전율(0.8~22%) 내에서 20일 평균 거래량 대비 1.8배 이상 돌파 + 메이저 수급이 유입된 초입 돌파주
+                        </p>
+                    </div>
+                    <div className={styles.guideCard}>
+                        <h4>📈 알고리즘 4 (#4외인지분↑)</h4>
+                        <p>
+                            최근 10~20일간 외국인 보유 지분율이 추세적으로 상승(+%p)하면서 최근 3거래일 동안 기관 순매수까지 동반 유입되는 Smart Money 종목
+                        </p>
+                    </div>
+                </div>
+            </section>
         </div>
     );
 }
