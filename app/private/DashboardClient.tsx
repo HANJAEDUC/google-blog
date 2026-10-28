@@ -57,8 +57,23 @@ export interface MidtermGemsPayload {
     all_evaluated: StockGemItem[];
 }
 
+interface DateWarningState {
+    type: 'FUTURE_DATE' | 'HOLIDAY_OR_NO_DATA' | 'INVALID_DATE';
+    inputRaw: string;
+    formattedInput: string;
+    title: string;
+    details: string[];
+    latestDate: string;
+    nearestPrevDate?: string;
+    canRunScriptForDate?: boolean;
+    cleanYmd?: string;
+}
+
 type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'all';
 type MarketFilter = 'ALL' | 'KOSPI' | 'KOSDAQ';
+
+const WEEKDAY_KO = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+const WEEKDAY_SHORT_KO = ['일', '월', '화', '수', '목', '금', '토'];
 
 const TAB_CONFIG: Record<
     TabKey,
@@ -119,13 +134,106 @@ const TAB_CONFIG: Record<
     },
 };
 
-function formatDateReadable(yyyymmdd?: string) {
+function formatDateReadable(yyyymmdd?: string): string {
     if (!yyyymmdd || yyyymmdd.length !== 8) return yyyymmdd || '-';
     return `${yyyymmdd.slice(0, 4)}-${yyyymmdd.slice(4, 6)}-${yyyymmdd.slice(6, 8)}`;
 }
 
+function formatDateWithDay(yyyymmdd?: string): string {
+    if (!yyyymmdd || yyyymmdd.length !== 8) return yyyymmdd || '-';
+    const y = parseInt(yyyymmdd.slice(0, 4), 10);
+    const m = parseInt(yyyymmdd.slice(4, 6), 10);
+    const d = parseInt(yyyymmdd.slice(6, 8), 10);
+    const dt = new Date(y, m - 1, d);
+    if (isNaN(dt.getTime())) return formatDateReadable(yyyymmdd);
+    return `${formatDateReadable(yyyymmdd)} (${WEEKDAY_SHORT_KO[dt.getDay()]})`;
+}
+
+function formatChipLabel(yyyymmdd: string, isLatest: boolean): string {
+    if (yyyymmdd.length !== 8) return yyyymmdd;
+    const mm = yyyymmdd.slice(4, 6);
+    const dd = yyyymmdd.slice(6, 8);
+    return isLatest ? `${mm}/${dd} (최신)` : `${mm}/${dd}`;
+}
+
+/**
+ * YYYY-MM-DD 또는 YYYYMMDD 문자열을 검증하여 유효한 달력 날짜인지 판별
+ */
+function parseAndValidateYmd(rawInput: string): {
+    valid: boolean;
+    ymd: string;
+    formatted: string;
+    dateObj?: Date;
+    weekdayKo?: string;
+    isWeekend?: boolean;
+} {
+    const cleaned = rawInput.replace(/[-/.]/g, '').trim();
+    if (!/^\d{8}$/.test(cleaned)) {
+        return { valid: false, ymd: cleaned, formatted: rawInput };
+    }
+    const y = parseInt(cleaned.slice(0, 4), 10);
+    const m = parseInt(cleaned.slice(4, 6), 10);
+    const d = parseInt(cleaned.slice(6, 8), 10);
+
+    if (y < 2000 || y > 2100 || m < 1 || m > 12 || d < 1 || d > 31) {
+        return { valid: false, ymd: cleaned, formatted: `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}` };
+    }
+
+    const dt = new Date(y, m - 1, d);
+    // 실제 달력 날짜와 일치하는지 확인 (예: 2026-02-30 방지)
+    if (dt.getFullYear() !== y || dt.getMonth() !== m - 1 || dt.getDate() !== d) {
+        return { valid: false, ymd: cleaned, formatted: `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}` };
+    }
+
+    const dayIdx = dt.getDay();
+    return {
+        valid: true,
+        ymd: cleaned,
+        formatted: `${cleaned.slice(0, 4)}-${cleaned.slice(4, 6)}-${cleaned.slice(6, 8)}`,
+        dateObj: dt,
+        weekdayKo: WEEKDAY_KO[dayIdx],
+        isWeekend: dayIdx === 0 || dayIdx === 6,
+    };
+}
+
+/**
+ * 입력 날짜(ymd)보다 앞서 있는 가장 가까운 정상 거래일 계산
+ * 1순위: availableDates 내 직전 거래일
+ * 2순위: 주말(토/일)일 경우 직전 금요일 계산
+ */
+function computeNearestPrevTradingDate(ymd: string, availableDates: string[], latestDate: string): string {
+    const sortedDesc = [...availableDates].sort().reverse();
+    const fromAvailable = sortedDesc.find((d) => d < ymd);
+    if (fromAvailable) {
+        return fromAvailable;
+    }
+
+    const parsed = parseAndValidateYmd(ymd);
+    if (parsed.valid && parsed.dateObj) {
+        const cur = new Date(parsed.dateObj.getTime());
+        cur.setDate(cur.getDate() - 1);
+        while (cur.getDay() === 0 || cur.getDay() === 6) {
+            cur.setDate(cur.getDate() - 1);
+        }
+        const y = cur.getFullYear();
+        const m = String(cur.getMonth() + 1).padStart(2, '0');
+        const d = String(cur.getDate()).padStart(2, '0');
+        const candidate = `${y}${m}${d}`;
+        if (candidate <= latestDate) {
+            return candidate;
+        }
+    }
+
+    return sortedDesc[sortedDesc.length - 1] || latestDate;
+}
+
 export default function DashboardClient() {
     const [payload, setPayload] = useState<MidtermGemsPayload | null>(null);
+    const [availableDates, setAvailableDates] = useState<string[]>(['20261028']);
+    const [latestDate, setLatestDate] = useState<string>('20261028');
+    const [dateInputText, setDateInputText] = useState<string>('2026-10-28');
+    const [dateWarning, setDateWarning] = useState<DateWarningState | null>(null);
+
     const [loading, setLoading] = useState<boolean>(true);
     const [runningScript, setRunningScript] = useState<boolean>(false);
     const [canRunLocalScript, setCanRunLocalScript] = useState<boolean>(false);
@@ -135,25 +243,61 @@ export default function DashboardClient() {
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [statusMessage, setStatusMessage] = useState<string>('');
 
-    const loadGemsData = async () => {
+    // 초기 최신 데이터 및 날짜 인덱스 로드
+    const loadInitialData = async () => {
         setLoading(true);
         setStatusMessage('');
+        setDateWarning(null);
         try {
+            // 1. 날짜 인덱스 확인 (/data/midterm_gems_dates.json)
+            let idxAvail: string[] = [];
+            let idxLatest = '';
+            try {
+                const idxRes = await fetch('/data/midterm_gems_dates.json', { cache: 'no-store' });
+                if (idxRes.ok) {
+                    const idxJson = await idxRes.json();
+                    if (Array.isArray(idxJson.available_dates)) idxAvail = idxJson.available_dates;
+                    if (idxJson.latest_date) idxLatest = idxJson.latest_date;
+                }
+            } catch {
+                // ignore
+            }
+
+            // 2. API 라우트 조회
             const res = await fetch('/api/midterm-gems', { cache: 'no-store' });
             if (res.ok) {
                 const json = await res.json();
                 if (json.ok && json.data) {
+                    const mergedAvail = Array.from(
+                        new Set([...(json.availableDates || []), ...idxAvail, json.data.target_date])
+                    )
+                        .filter(Boolean)
+                        .sort()
+                        .reverse();
+                    const topLatest = mergedAvail[0] || json.latestDate || idxLatest || json.data.target_date;
+
                     setPayload(json.data);
+                    setAvailableDates(mergedAvail);
+                    setLatestDate(topLatest);
+                    setDateInputText(formatDateReadable(json.data.target_date));
                     setCanRunLocalScript(Boolean(json.canRunLocalScript));
                     setLoading(false);
                     return;
                 }
             }
-            // 정적 파일 폴백
+
+            // 3. 정적 파일 폴백
             const fallbackRes = await fetch('/data/midterm_gems_latest.json', { cache: 'no-store' });
             if (fallbackRes.ok) {
-                const fallbackData = await fallbackRes.json();
+                const fallbackData: MidtermGemsPayload = await fallbackRes.json();
+                const mergedAvail = Array.from(new Set([...idxAvail, fallbackData.target_date]))
+                    .filter(Boolean)
+                    .sort()
+                    .reverse();
                 setPayload(fallbackData);
+                setAvailableDates(mergedAvail);
+                setLatestDate(mergedAvail[0] || fallbackData.target_date);
+                setDateInputText(formatDateReadable(fallbackData.target_date));
             }
         } catch (err) {
             console.error('Failed to load midterm gems data:', err);
@@ -163,20 +307,177 @@ export default function DashboardClient() {
         }
     };
 
-    const handleRunLocalAnalysis = async () => {
+    /**
+     * 특정 기준일(YYYYMMDD 또는 YYYY-MM-DD) 선택/조회 처리
+     */
+    const handleSelectDate = async (rawInput: string) => {
+        setStatusMessage('');
+        const parsed = parseAndValidateYmd(rawInput);
+
+        // 케이스 ③ 잘못된 날짜 형식이나 달력에 없는 날짜
+        if (!parsed.valid) {
+            setDateWarning({
+                type: 'INVALID_DATE',
+                inputRaw: rawInput,
+                formattedInput: parsed.formatted,
+                title: `⚠️ [날짜 입력 오류] 입력하신 '${rawInput}'는 날짜 형식이 올바르지 않거나 달력에 존재하지 않는 날짜입니다.`,
+                details: ['▶ 8자리 숫자(YYYYMMDD) 또는 달력(YYYY-MM-DD)에서 올바른 거래일을 선택해 주세요.'],
+                latestDate,
+            });
+            return;
+        }
+
+        const targetYmd = parsed.ymd;
+
+        // 케이스 ① 미래 날짜를 입력/선택한 경우 (targetDate > latestDate)
+        if (targetYmd > latestDate) {
+            setDateWarning({
+                type: 'FUTURE_DATE',
+                inputRaw: rawInput,
+                formattedInput: parsed.formatted,
+                title: `⚠️ [미래 날짜 경고] 입력하신 [${parsed.formatted}]는 아직 거래 데이터가 없는 미래 날짜입니다!`,
+                details: [`▶ 현재 분석 가능한 가장 최신 거래일: [${formatDateReadable(latestDate)}]`],
+                latestDate,
+                cleanYmd: targetYmd,
+            });
+            return;
+        }
+
+        // 케이스 ②-A 주말(토·일)을 선택한 경우 즉시 경고 배너 표시
+        if (parsed.isWeekend) {
+            const nearestPrev = computeNearestPrevTradingDate(targetYmd, availableDates, latestDate);
+            setDateWarning({
+                type: 'HOLIDAY_OR_NO_DATA',
+                inputRaw: rawInput,
+                formattedInput: `${parsed.formatted} (${parsed.weekdayKo})`,
+                title: `⚠️ [휴장일 / 데이터 없음 경고] 입력하신 [${parsed.formatted} (${parsed.weekdayKo})]은 주말(휴장일)이거나 분석 데이터를 판별할 수 없는 날짜입니다!`,
+                details: [
+                    `▶ 입력하신 날짜 직전의 가장 가까운 정상 거래일: [${formatDateWithDay(nearestPrev)}]`,
+                ],
+                latestDate,
+                nearestPrevDate: nearestPrev,
+                canRunScriptForDate: false,
+                cleanYmd: targetYmd,
+            });
+            return;
+        }
+
+        // 정상 평일인 경우: 1) 정적 파일(/data/midterm_gems_ALL_{YYYYMMDD}.json) 먼저 조회
+        setLoading(true);
+        try {
+            const staticRes = await fetch(`/data/midterm_gems_ALL_${targetYmd}.json`, { cache: 'no-store' });
+            if (staticRes.ok) {
+                const staticData: MidtermGemsPayload = await staticRes.json();
+                setPayload(staticData);
+                setDateInputText(formatDateReadable(targetYmd));
+                setDateWarning(null);
+                setLoading(false);
+                return;
+            }
+
+            // 2) API 라우트(/api/midterm-gems?date=YYYYMMDD) 조회
+            const apiRes = await fetch(`/api/midterm-gems?date=${targetYmd}`, { cache: 'no-store' });
+            const apiJson = await apiRes.json().catch(() => ({}));
+            if (apiRes.ok && apiJson.ok && apiJson.data) {
+                setPayload(apiJson.data);
+                if (Array.isArray(apiJson.availableDates)) {
+                    setAvailableDates(apiJson.availableDates);
+                }
+                setDateInputText(formatDateReadable(targetYmd));
+                setDateWarning(null);
+                setLoading(false);
+                return;
+            }
+
+            // 케이스 ②-B 평일이지만 공휴일(휴장일)이거나 아직 해당 날짜 JSON 데이터가 생성되지 않은 경우
+            const nearestPrev =
+                apiJson.nearestPrevDate || computeNearestPrevTradingDate(targetYmd, availableDates, latestDate);
+            setDateWarning({
+                type: 'HOLIDAY_OR_NO_DATA',
+                inputRaw: rawInput,
+                formattedInput: `${parsed.formatted} (${parsed.weekdayKo})`,
+                title: `⚠️ [휴장일 / 데이터 없음 경고] 입력하신 [${parsed.formatted} (${parsed.weekdayKo})]은 공휴일(휴장일)이거나 분석 데이터를 판별할 수 없는 날짜입니다!`,
+                details: [
+                    `▶ 입력하신 날짜 직전의 가장 가까운 정상 거래일: [${formatDateWithDay(nearestPrev)}]`,
+                ],
+                latestDate,
+                nearestPrevDate: nearestPrev,
+                canRunScriptForDate: Boolean(apiJson.canRunLocalScript ?? canRunLocalScript),
+                cleanYmd: targetYmd,
+            });
+        } catch (err) {
+            console.error('Date fetch error:', err);
+            const nearestPrev = computeNearestPrevTradingDate(targetYmd, availableDates, latestDate);
+            setDateWarning({
+                type: 'HOLIDAY_OR_NO_DATA',
+                inputRaw: rawInput,
+                formattedInput: `${parsed.formatted} (${parsed.weekdayKo})`,
+                title: `⚠️ [휴장일 / 데이터 없음 경고] 입력하신 [${parsed.formatted} (${parsed.weekdayKo})]의 데이터를 불러올 수 없습니다.`,
+                details: [`▶ 입력하신 날짜 직전의 가장 가까운 정상 거래일: [${formatDateWithDay(nearestPrev)}]`],
+                latestDate,
+                nearestPrevDate: nearestPrev,
+                canRunScriptForDate: canRunLocalScript,
+                cleanYmd: targetYmd,
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    /**
+     * 로컬/백엔드 파이썬 스크립트로 특정 기준일(또는 최신일) 실시간 분석 실행
+     */
+    const handleRunLocalAnalysis = async (specificDateYmd?: string) => {
         if (runningScript) return;
+        const targetYmd = specificDateYmd || payload?.target_date || '';
         setRunningScript(true);
-        setStatusMessage('⏳ KRX 백데이터 + 네이버 실시간 수급 5대 알고리즘 분석 실행 중... (약 20~40초 소요)');
+        setStatusMessage(
+            `⏳ [${targetYmd ? formatDateReadable(targetYmd) : '최신 거래일'}] 기준 과거 60거래일 백데이터 + 20일 수급 재계산 중... (약 15~30초 소요)`
+        );
         try {
             const res = await fetch('/api/midterm-gems', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({}),
+                body: JSON.stringify({ targetDate: targetYmd }),
             });
             const json = await res.json();
+
             if (json.ok && json.data) {
                 setPayload(json.data);
-                setStatusMessage('✅ 최신 영업일 기준 5대 알고리즘 재분석 및 데이터 동기화 완료!');
+                if (Array.isArray(json.availableDates)) {
+                    setAvailableDates(json.availableDates);
+                }
+                if (json.latestDate) {
+                    setLatestDate(json.latestDate);
+                }
+                setDateInputText(formatDateReadable(json.data.target_date));
+                setDateWarning(null);
+                setStatusMessage(
+                    `✅ [${formatDateReadable(json.data.target_date)}] 기준 60거래일 슬라이딩 재계산 및 동기화 완료!`
+                );
+            } else if (json.errorType) {
+                const parsed = parseAndValidateYmd(targetYmd);
+                setDateWarning({
+                    type: json.errorType,
+                    inputRaw: targetYmd,
+                    formattedInput: parsed.formatted,
+                    title:
+                        json.scriptWarningTitle ||
+                        `⚠️ [휴장일 / 데이터 없음 경고] 입력하신 [${parsed.formatted}]은 분석 데이터를 판별할 수 없는 날짜입니다!`,
+                    details:
+                        Array.isArray(json.scriptWarningDetails) && json.scriptWarningDetails.length > 0
+                            ? json.scriptWarningDetails
+                            : [
+                                  `▶ 입력하신 날짜 직전의 가장 가까운 정상 거래일: [${formatDateReadable(
+                                      json.nearestPrevDate || latestDate
+                                  )}]`,
+                              ],
+                    latestDate: json.latestDate || latestDate,
+                    nearestPrevDate: json.nearestPrevDate || latestDate,
+                    canRunScriptForDate: false,
+                    cleanYmd: targetYmd,
+                });
+                setStatusMessage('');
             } else {
                 setStatusMessage(`⚠️ ${json.message || '실행 실패'}`);
             }
@@ -189,8 +490,19 @@ export default function DashboardClient() {
     };
 
     useEffect(() => {
-        loadGemsData();
+        loadInitialData();
     }, []);
+
+    // 현재 선택된 날짜의 availableDates 내 인덱스 (이전/다음 거래일 이동용)
+    const currentActiveYmd = payload?.target_date || latestDate;
+    const currentIdxInAvail = availableDates.indexOf(currentActiveYmd);
+    // availableDates는 내림차순 정렬 (예: ['20261028', '20261027', '20261026', '20261023'])
+    const prevTradingDate =
+        currentIdxInAvail >= 0 && currentIdxInAvail + 1 < availableDates.length
+            ? availableDates[currentIdxInAvail + 1]
+            : null;
+    const nextTradingDate =
+        currentIdxInAvail > 0 ? availableDates[currentIdxInAvail - 1] : null;
 
     const summaryCounts = useMemo(() => {
         const all = payload?.all_evaluated || [];
@@ -347,35 +659,125 @@ export default function DashboardClient() {
                         <button
                             type="button"
                             className={styles.btnRefresh}
-                            onClick={loadGemsData}
+                            onClick={loadInitialData}
                             disabled={loading || runningScript}
                         >
-                            🔄 데이터 새로고침
+                            🔄 최신 데이터 새로고침
                         </button>
                         {canRunLocalScript && (
                             <button
                                 type="button"
                                 className={styles.btnRunScript}
-                                onClick={handleRunLocalAnalysis}
+                                onClick={() => handleRunLocalAnalysis(payload?.target_date)}
                                 disabled={runningScript}
                             >
-                                {runningScript ? '⏳ 분석 실행 중...' : '⚡ 로컬 분석 재실행'}
+                                {runningScript ? '⏳ 분석 실행 중...' : '⚡ 현재 기준일 재분석'}
                             </button>
                         )}
                     </div>
                 </div>
 
-                {/* 요약 메타데이터 카드 바 */}
+                {/* 요약 메타데이터 3단 카드 바 */}
                 <div className={styles.metaGrid}>
-                    <div className={styles.metaCard}>
-                        <span className={styles.metaLabel}>📅 분석 기준일</span>
-                        <strong className={styles.metaValue}>
-                            {formatDateReadable(payload?.target_date)}
-                        </strong>
-                        <span className={styles.metaSub}>
-                            KRX 백데이터: {formatDateReadable(payload?.krx_base_date)}
-                        </span>
+                    {/* 1. 업그레이드된 인터랙티브 [📅 분석 기준일] 선택 카드 */}
+                    <div className={`${styles.metaCard} ${styles.metaCardDate}`}>
+                        <div className={styles.dateCardHeader}>
+                            <span className={styles.metaLabel}>📅 분석 기준일 (T) 선택 · 조회</span>
+                            <div className={styles.navArrowGroup}>
+                                <button
+                                    type="button"
+                                    className={styles.btnNavArrow}
+                                    disabled={!prevTradingDate || loading}
+                                    onClick={() => prevTradingDate && handleSelectDate(prevTradingDate)}
+                                    title={
+                                        prevTradingDate
+                                            ? `이전 거래일 (${formatDateReadable(prevTradingDate)})`
+                                            : '이전 거래일 데이터 없음'
+                                    }
+                                >
+                                    ◀ 이전 거래일
+                                </button>
+                                <button
+                                    type="button"
+                                    className={styles.btnNavArrow}
+                                    disabled={!nextTradingDate || loading}
+                                    onClick={() => nextTradingDate && handleSelectDate(nextTradingDate)}
+                                    title={
+                                        nextTradingDate
+                                            ? `다음 거래일 (${formatDateReadable(nextTradingDate)})`
+                                            : '가장 최신 거래일입니다'
+                                    }
+                                >
+                                    다음 거래일 ▶
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className={styles.currentDateDisplayRow}>
+                            <strong className={styles.metaValue}>
+                                {formatDateWithDay(payload?.target_date)}
+                            </strong>
+                            <span className={styles.metaSubBadge}>
+                                KRX 60일 백데이터: {formatDateReadable(payload?.krx_base_date)}
+                            </span>
+                        </div>
+
+                        {/* 달력 선택기 + 직접 입력 + 조회 버튼 */}
+                        <form
+                            className={styles.dateInputRow}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                handleSelectDate(dateInputText);
+                            }}
+                        >
+                            <input
+                                type="date"
+                                className={styles.datePickerInput}
+                                value={
+                                    /^\d{4}-\d{2}-\d{2}$/.test(dateInputText)
+                                        ? dateInputText
+                                        : formatDateReadable(payload?.target_date)
+                                }
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    setDateInputText(val);
+                                    if (val) handleSelectDate(val);
+                                }}
+                                aria-label="분석 기준일 달력 선택"
+                            />
+                            <input
+                                type="text"
+                                className={styles.dateTextInput}
+                                value={dateInputText}
+                                onChange={(e) => setDateInputText(e.target.value)}
+                                placeholder="YYYYMMDD 또는 YYYY-MM-DD"
+                                aria-label="분석 기준일 직접 입력"
+                            />
+                            <button type="submit" className={styles.btnDateLookup} disabled={loading}>
+                                조회
+                            </button>
+                        </form>
+
+                        {/* 최근 거래일 빠른 선택 칩(Chip) */}
+                        <div className={styles.dateChipRow}>
+                            <span className={styles.chipRowLabel}>최근 거래일:</span>
+                            {availableDates.slice(0, 7).map((d, idx) => {
+                                const isActive = d === payload?.target_date;
+                                return (
+                                    <button
+                                        key={d}
+                                        type="button"
+                                        className={`${styles.dateChip} ${isActive ? styles.dateChipActive : ''}`}
+                                        onClick={() => handleSelectDate(d)}
+                                    >
+                                        {formatChipLabel(d, idx === 0)}
+                                    </button>
+                                );
+                            })}
+                        </div>
                     </div>
+
+                    {/* 2. 등급별 분포 카드 */}
                     <div className={styles.metaCard}>
                         <span className={styles.metaLabel}>🏆 등급별 분포 (최소 {payload?.min_val_eok ?? 10}억↑)</span>
                         <div className={styles.gradeSummaryRow}>
@@ -383,8 +785,12 @@ export default function DashboardClient() {
                             <span className={`${styles.gradeBadge} ${styles.gradeA}`}>🏆 A등급 {summaryCounts.aGrade}</span>
                             <span className={`${styles.gradeBadge} ${styles.gradeB}`}>✨ B등급 {summaryCounts.bGrade}</span>
                         </div>
-                        <span className={styles.metaSub}>전체 채점 유니버스: {summaryCounts.total}종목</span>
+                        <span className={styles.metaSub}>
+                            [{formatDateReadable(payload?.target_date)}] 채점 유니버스: 총 {summaryCounts.total}종목
+                        </span>
                     </div>
+
+                    {/* 3. 4대 특화 알고리즘 포착 수 카드 */}
                     <div className={styles.metaCard}>
                         <span className={styles.metaLabel}>🎯 4대 특화 알고리즘 포착 수</span>
                         <div className={styles.algoCountRow}>
@@ -396,6 +802,91 @@ export default function DashboardClient() {
                         <span className={styles.metaSub}>업데이트: {payload?.updated_at || '-'}</span>
                     </div>
                 </div>
+
+                {/* 슬라이딩 60거래일 기준 안내 배지 */}
+                <div className={styles.slidingNoticeBar}>
+                    💡 선택한 기준일(T)의 장마감 거래를 기준으로, <strong>그 날로부터 과거 60거래일 주가·거래량(이격도·회전율)</strong> 및{' '}
+                    <strong>20거래일 외인·기관 수급</strong>을 재계산합니다. (미래 데이터 참조 없음 — 기준일마다 발굴 종목·점수·순위가 달라집니다)
+                </div>
+
+                {/* 날짜 유효성 검증 경고 배너 (미래 날짜 / 휴장일·데이터 없음 / 날짜 형식 오류) */}
+                {dateWarning && (
+                    <div className={styles.warningAlertBox} role="alert">
+                        <div className={styles.warningHeader}>
+                            <strong className={styles.warningTitle}>{dateWarning.title}</strong>
+                            <button
+                                type="button"
+                                className={styles.btnWarningClose}
+                                onClick={() => setDateWarning(null)}
+                                aria-label="경고 닫기"
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <ul className={styles.warningDetailList}>
+                            {dateWarning.details.map((line, i) => (
+                                <li key={i}>{line}</li>
+                            ))}
+                        </ul>
+                        <div className={styles.warningActionRow}>
+                            {dateWarning.type === 'FUTURE_DATE' && (
+                                <button
+                                    type="button"
+                                    className={styles.btnWarningPrimary}
+                                    onClick={() => handleSelectDate(dateWarning.latestDate)}
+                                >
+                                    📅 최신 거래일({formatDateReadable(dateWarning.latestDate)}) 데이터 보기
+                                </button>
+                            )}
+
+                            {dateWarning.type === 'HOLIDAY_OR_NO_DATA' && (
+                                <>
+                                    {dateWarning.nearestPrevDate && (
+                                        <button
+                                            type="button"
+                                            className={styles.btnWarningPrimary}
+                                            onClick={() =>
+                                                dateWarning.nearestPrevDate &&
+                                                handleSelectDate(dateWarning.nearestPrevDate)
+                                            }
+                                        >
+                                            ◀ 직전 거래일({formatDateReadable(dateWarning.nearestPrevDate)})로 이동
+                                        </button>
+                                    )}
+                                    <button
+                                        type="button"
+                                        className={styles.btnWarningSecondary}
+                                        onClick={() => handleSelectDate(dateWarning.latestDate)}
+                                    >
+                                        최신 거래일({formatDateReadable(dateWarning.latestDate)}) 보기
+                                    </button>
+                                    {dateWarning.canRunScriptForDate && dateWarning.cleanYmd && (
+                                        <button
+                                            type="button"
+                                            className={styles.btnWarningRun}
+                                            disabled={runningScript}
+                                            onClick={() =>
+                                                dateWarning.cleanYmd && handleRunLocalAnalysis(dateWarning.cleanYmd)
+                                            }
+                                        >
+                                            ⚡ 이 날짜({dateWarning.cleanYmd}) 실시간 분석 실행
+                                        </button>
+                                    )}
+                                </>
+                            )}
+
+                            {dateWarning.type === 'INVALID_DATE' && (
+                                <button
+                                    type="button"
+                                    className={styles.btnWarningPrimary}
+                                    onClick={() => handleSelectDate(dateWarning.latestDate)}
+                                >
+                                    📅 최신 거래일({formatDateReadable(dateWarning.latestDate)}) 데이터 보기
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                )}
 
                 {statusMessage && <div className={styles.statusBanner}>{statusMessage}</div>}
             </header>
@@ -430,8 +921,15 @@ export default function DashboardClient() {
             <section className={styles.panel}>
                 <div className={styles.panelHeader}>
                     <div>
-                        <h2 className={styles.panelTitle}>{activeConfig.title}</h2>
-                        <p className={styles.principleBox}>💡 <strong>핵심 원리:</strong> {activeConfig.principle}</p>
+                        <h2 className={styles.panelTitle}>
+                            {activeConfig.title}{' '}
+                            <span className={styles.titleDateBadge}>
+                                기준일: {formatDateReadable(payload?.target_date)}
+                            </span>
+                        </h2>
+                        <p className={styles.principleBox}>
+                            💡 <strong>핵심 원리:</strong> {activeConfig.principle}
+                        </p>
                     </div>
 
                     {/* 필터 및 검색 컨트롤 */}

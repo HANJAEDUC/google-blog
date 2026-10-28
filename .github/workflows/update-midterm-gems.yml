@@ -61,5 +61,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add public/data/midterm_gems_latest.json
+          git add public/data/midterm_gems_*.json
           git diff --staged --quiet || (git commit -m "🤖 Auto-update midterm stock gems ($(date +'%Y-%m-%d %H:%M KST'))" && git push)
+

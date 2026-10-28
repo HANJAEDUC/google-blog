@@ -890,18 +890,35 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
         "algo4_smart_money": df_algo4.to_dict(orient="records"),
         "all_evaluated": df_all.to_dict(orient="records")
     }
-    for j_path in (json_path, latest_json_path):
-        with open(j_path, "w", encoding="utf-8") as jf:
-            json.dump(json_payload, jf, ensure_ascii=False, indent=2)
+    with open(json_path, "w", encoding="utf-8") as jf:
+        json.dump(json_payload, jf, ensure_ascii=False, indent=2)
 
     # 날짜별 JSON 목록 인덱스 파일 생성 (output/midterm_gems_dates.json)
-    available_dates = sorted([
+    available_dates_set = {
         f.replace("midterm_gems_ALL_", "").replace(".json", "")
         for f in os.listdir(OUTPUT_DIR)
         if f.startswith("midterm_gems_ALL_") and f.endswith(".json") and len(f) == len("midterm_gems_ALL_YYYYMMDD.json")
-    ], reverse=True)
+    }
+    candidate_blog_dirs = [
+        os.path.abspath(os.path.join(BASE_DIR, "..", "public", "data")),
+        os.path.abspath(os.path.join(BASE_DIR, "..", "GoogleBlog", "google-blog", "public", "data")),
+    ]
+    for b_dir in candidate_blog_dirs:
+        if os.path.isdir(b_dir):
+            for f in os.listdir(b_dir):
+                if f.startswith("midterm_gems_ALL_") and f.endswith(".json") and len(f) == len("midterm_gems_ALL_YYYYMMDD.json"):
+                    available_dates_set.add(f.replace("midterm_gems_ALL_", "").replace(".json", ""))
+
+    available_dates = sorted(available_dates_set, reverse=True)
+    latest_date_str = available_dates[0] if available_dates else target_date
+    is_latest = (target_date >= latest_date_str) or (not os.path.exists(latest_json_path))
+
+    if is_latest:
+        with open(latest_json_path, "w", encoding="utf-8") as jf:
+            json.dump(json_payload, jf, ensure_ascii=False, indent=2)
+
     dates_index_payload = {
-        "latest_date": available_dates[0] if available_dates else target_date,
+        "latest_date": latest_date_str,
         "available_dates": available_dates,
         "updated_at": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
@@ -910,18 +927,16 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
         json.dump(dates_index_payload, djf, ensure_ascii=False, indent=2)
 
     # GoogleBlog (vpe.co.kr/private) 정적 데이터 폴더가 존재하면 자동 동기화
-    candidate_blog_dirs = [
-        os.path.abspath(os.path.join(BASE_DIR, "..", "public", "data")),
-        os.path.abspath(os.path.join(BASE_DIR, "..", "GoogleBlog", "google-blog", "public", "data")),
-    ]
     for blog_data_dir in candidate_blog_dirs:
         if os.path.isdir(blog_data_dir):
             try:
-                for fname, payload_obj in [
-                    ("midterm_gems_latest.json", json_payload),
+                sync_targets = [
                     (f"midterm_gems_ALL_{target_date}.json", json_payload),
                     ("midterm_gems_dates.json", dates_index_payload),
-                ]:
+                ]
+                if is_latest or not os.path.exists(os.path.join(blog_data_dir, "midterm_gems_latest.json")):
+                    sync_targets.append(("midterm_gems_latest.json", json_payload))
+                for fname, payload_obj in sync_targets:
                     blog_json_path = os.path.join(blog_data_dir, fname)
                     with open(blog_json_path, "w", encoding="utf-8") as bjf:
                         json.dump(payload_obj, bjf, ensure_ascii=False, indent=2)
