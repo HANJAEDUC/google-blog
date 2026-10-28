@@ -44,3 +44,6 @@ next-env.d.ts
 scripts/*.log
 scripts/shuffled_words.json
 scripts/aldi_offers.json
+
+scripts/krx_cache/
+scripts/output/
