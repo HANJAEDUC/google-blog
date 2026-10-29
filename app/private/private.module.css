@@ -838,6 +838,30 @@
     border: 1px solid rgba(232, 121, 249, 0.4);
 }
 
+.algoTagMa {
+    background: rgba(234, 179, 8, 0.18);
+    color: #facc15;
+    border: 1px solid rgba(250, 204, 21, 0.48);
+}
+
+.ma5Cell {
+    color: #facc15;
+    font-weight: 700;
+}
+
+.ma20Cell {
+    color: #f87171;
+    font-weight: 600;
+}
+
+.ma60Cell {
+    color: #34d399;
+}
+
+.ma120Cell {
+    color: #60a5fa;
+}
+
 .algoTagDefault {
     background: rgba(148, 163, 184, 0.15);
     color: var(--md-sys-color-on-surface);

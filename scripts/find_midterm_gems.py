@@ -253,7 +253,7 @@ def fetch_naver_stock_bundle(code, target_date=None):
 
     try:
         r2 = requests.get(
-            f"https://fchart.stock.naver.com/sise.nhn?symbol={code}&timeframe=day&count=90&requestType=0",
+            f"https://fchart.stock.naver.com/sise.nhn?symbol={code}&timeframe=day&count=160&requestType=0",
             headers=HEADERS_NAVER,
             timeout=4
         )
@@ -500,8 +500,10 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
     closes = [r["close"] for r in recs]
     vols = [r["vol"] for r in recs]
 
+    ma5 = sum(closes[-5:]) / min(5, len(closes))
     ma20 = sum(closes[-20:]) / min(20, len(closes))
     ma60 = sum(closes[-60:]) / min(60, len(closes))
+    ma120 = sum(closes[-120:]) / min(120, len(closes))
     disparity20 = (curr_price / ma20 * 100.0) if ma20 > 0 else 100.0
 
     # 직전 20일 평균 거래량 (당일 제외)
@@ -640,6 +642,20 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         )
 
     # ==========================================================================
+    # 📐 [이평선 정배열] 5일 > 20일 > 60일 > 120일 이동평균선 완전 정배열 판정
+    # ==========================================================================
+    algo_ma_match = False
+    algo_ma_note = ""
+    if len(closes) >= 60 and (ma5 > ma20 > ma60 > ma120):
+        algo_ma_match = True
+        spread_5_120 = ((ma5 - ma120) / ma120 * 100.0) if ma120 > 0 else 0.0
+        pos_desc = "현재가 5일선 위 강세" if curr_price >= ma5 else ("5~20일선 눌림 지지" if curr_price >= ma20 else "20일선 하단 조정")
+        algo_ma_note = (
+            f"5일({int(round(ma5)):,}) > 20일({int(round(ma20)):,}) > 60일({int(round(ma60)):,}) > 120일({int(round(ma120)):,}) "
+            f"완전 정배열 | {pos_desc} (5-120이격 +{spread_5_120:.1f}%)"
+        )
+
+    # ==========================================================================
     # 🌟 [알고리즘 5] 100점 만점 멀티팩터 종합 채점 시스템
     # ==========================================================================
     # 1) 추세 및 위치 점수 (25점 만점)
@@ -720,6 +736,8 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         matched_tags.append("🚀#3초입돌파")
     if algo4_match:
         matched_tags.append("📈#4외인지분↑")
+    if algo_ma_match:
+        matched_tags.append("📐5>20>60>120")
 
     # 알고리즘 다중 포착 보너스 (최대 5점)
     score_cont += min(5.0, len(matched_tags) * 2.0)
@@ -737,7 +755,7 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         grade = "일반"
 
     # AI 종합 전략 코멘트 생성
-    notes = [n for n in [algo1_note, algo2_note, algo3_note, algo4_note] if n]
+    notes = [n for n in [algo1_note, algo2_note, algo3_note, algo4_note, algo_ma_note] if n]
     if notes:
         summary_opinion = " / ".join(notes)
     else:
@@ -764,6 +782,10 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         "회전율(%)": f"{turnover:.2f}%",
         "raw_turnover": turnover,
         "20일이격도": f"{disparity20:.1f}%",
+        "MA5": f"{int(round(ma5)):,}",
+        "MA20": f"{int(round(ma20)):,}",
+        "MA60": f"{int(round(ma60)):,}",
+        "MA120": f"{int(round(ma120)):,}",
         "당일외인순매수": f"{f_today:+,}",
         "당일기관순매수": f"{o_today:+,}",
         "10일외인매수일": f"{f_buy_days_10}/10일",
@@ -783,6 +805,8 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         "algo3_note": algo3_note,
         "algo4": algo4_match,
         "algo4_note": algo4_note,
+        "algo_ma": algo_ma_match,
+        "algo_ma_note": algo_ma_note,
         "AI_전략코멘트": summary_opinion
     }
 
@@ -841,6 +865,7 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
     df_algo2 = df_all[df_all["algo2"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(20)
     df_algo3 = df_all[df_all["algo3"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(20)
     df_algo4 = df_all[df_all["algo4"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(20)
+    df_algo_ma = df_all[df_all["algo_ma"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(40)
 
     # 콘솔 요약 출력
     print("\n" + "=" * 98)
@@ -898,6 +923,7 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
         "algo2_stealth": df_algo2.to_dict(orient="records"),
         "algo3_breakout": df_algo3.to_dict(orient="records"),
         "algo4_smart_money": df_algo4.to_dict(orient="records"),
+        "algo_ma_aligned": df_algo_ma.to_dict(orient="records"),
         "all_evaluated": df_all.to_dict(orient="records")
     }
     with open(json_path, "w", encoding="utf-8") as jf:

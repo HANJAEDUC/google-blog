@@ -21,6 +21,10 @@ export interface StockGemItem {
     '회전율(%)': string;
     raw_turnover: number;
     '20일이격도': string;
+    MA5?: string;
+    MA20?: string;
+    MA60?: string;
+    MA120?: string;
     당일외인순매수: string;
     당일기관순매수: string;
     '10일외인매수일': string;
@@ -40,6 +44,8 @@ export interface StockGemItem {
     algo3_note: string;
     algo4: boolean;
     algo4_note: string;
+    algo_ma?: boolean;
+    algo_ma_note?: string;
     AI_전략코멘트: string;
     종합순위: number;
 }
@@ -54,6 +60,7 @@ export interface MidtermGemsPayload {
     algo2_stealth: StockGemItem[];
     algo3_breakout: StockGemItem[];
     algo4_smart_money: StockGemItem[];
+    algo_ma_aligned?: StockGemItem[];
     all_evaluated: StockGemItem[];
 }
 
@@ -69,7 +76,7 @@ interface DateWarningState {
     cleanYmd?: string;
 }
 
-type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'all';
+type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'algo_ma' | 'all';
 type MarketFilter = 'ALL' | 'KOSPI' | 'KOSDAQ';
 
 const WEEKDAY_KO = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
@@ -123,6 +130,14 @@ const TAB_CONFIG: Record<
         principle:
             '최근 10~20일간 외국인 보유 지분율이 추세적으로 상승하고 최근 3일 기관 순매수까지 가세한 종목',
         noteKey: 'algo4_note',
+    },
+    algo_ma: {
+        label: '📐 Part 6: 이평선 정배열 (5>20>60>120)',
+        shortBadge: '📐5>20>60>120',
+        title: '📐 [Part 6: 이동평균선 투자의 정석] 5일 > 20일 > 60일 > 120일 완전 정배열 (Stage 1) 종목',
+        principle:
+            '단기(5일) > 중기(20일) > 수급(60일) > 경기(120일) 이동평균선이 위에서부터 차례대로 정렬된 제1스테이지 완전 정배열 추세 종목',
+        noteKey: 'algo_ma_note',
     },
     all: {
         label: '📋 전체 채점 종목',
@@ -515,6 +530,9 @@ export default function DashboardClient() {
             algo2: payload?.algo2_stealth?.length || 0,
             algo3: payload?.algo3_breakout?.length || 0,
             algo4: payload?.algo4_smart_money?.length || 0,
+            algoMa:
+                payload?.algo_ma_aligned?.length ??
+                all.filter((i) => i.algo_ma || i.포착알고리즘?.includes('5>20>60>120')).length,
         };
     }, [payload]);
 
@@ -536,6 +554,13 @@ export default function DashboardClient() {
                 break;
             case 'algo4':
                 list = payload.algo4_smart_money || [];
+                break;
+            case 'algo_ma':
+                list =
+                    payload.algo_ma_aligned ||
+                    (payload.all_evaluated || []).filter(
+                        (i) => i.algo_ma || i.포착알고리즘?.includes('5>20>60>120')
+                    );
                 break;
             case 'all':
                 list = payload.all_evaluated || [];
@@ -587,6 +612,7 @@ export default function DashboardClient() {
                     else if (tag.includes('#2연속매집')) tagClass = styles.algoTag2;
                     else if (tag.includes('#3초입돌파')) tagClass = styles.algoTag3;
                     else if (tag.includes('#4외인지분')) tagClass = styles.algoTag4;
+                    else if (tag.includes('5>20>60>120')) tagClass = styles.algoTagMa;
                     return (
                         <span key={tag} className={`${styles.algoBadge} ${tagClass}`}>
                             {tag}
@@ -790,14 +816,15 @@ export default function DashboardClient() {
                         </span>
                     </div>
 
-                    {/* 3. 4대 특화 알고리즘 포착 수 카드 */}
+                    {/* 3. 특화 알고리즘 포착 수 카드 */}
                     <div className={styles.metaCard}>
-                        <span className={styles.metaLabel}>🎯 4대 특화 알고리즘 포착 수</span>
+                        <span className={styles.metaLabel}>🎯 특화 알고리즘 & 이평선 정배열 포착 수</span>
                         <div className={styles.algoCountRow}>
                             <span className={`${styles.algoBadge} ${styles.algoTag1}`}>🎯#1눌림목 {summaryCounts.algo1}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTag2}`}>🕵️#2연속매집 {summaryCounts.algo2}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTag3}`}>🚀#3초입돌파 {summaryCounts.algo3}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTag4}`}>📈#4외인지분↑ {summaryCounts.algo4}</span>
+                            <span className={`${styles.algoBadge} ${styles.algoTagMa}`}>📐5&gt;20&gt;60&gt;120 {summaryCounts.algoMa}</span>
                         </div>
                         <span className={styles.metaSub}>업데이트: {payload?.updated_at || '-'}</span>
                     </div>
@@ -901,6 +928,7 @@ export default function DashboardClient() {
                     else if (key === 'algo2') count = payload?.algo2_stealth?.length || 0;
                     else if (key === 'algo3') count = payload?.algo3_breakout?.length || 0;
                     else if (key === 'algo4') count = payload?.algo4_smart_money?.length || 0;
+                    else if (key === 'algo_ma') count = summaryCounts.algoMa;
                     else if (key === 'all') count = payload?.all_evaluated?.length || 0;
 
                     return (
@@ -1042,6 +1070,58 @@ export default function DashboardClient() {
                                 ))}
                             </tbody>
                         </table>
+                    ) : activeTab === 'algo_ma' ? (
+                        /* Part 6: 이동평균선 5 > 20 > 60 > 120 완전 정배열 특화 테이블 */
+                        <table className={styles.dataTable}>
+                            <thead>
+                                <tr>
+                                    <th>종합순위</th>
+                                    <th>등급</th>
+                                    <th>점수</th>
+                                    <th>시장</th>
+                                    <th className={styles.alignLeft}>종목명 (코드)</th>
+                                    <th>종가(원)</th>
+                                    <th>등락률</th>
+                                    <th>거래대금</th>
+                                    <th>5일선</th>
+                                    <th>20일선</th>
+                                    <th>60일선</th>
+                                    <th>120일선</th>
+                                    <th>외인보유율</th>
+                                    <th className={styles.alignLeft}>포착 알고리즘</th>
+                                    <th className={styles.alignLeft}>정배열(5&gt;20&gt;60&gt;120) 상세 상태</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {currentList.map((row) => {
+                                    const noteText = row.algo_ma_note || row.AI_전략코멘트 || '-';
+                                    return (
+                                        <tr
+                                            key={row.종목코드}
+                                            className={row.등급?.includes('S등급') ? styles.rowSGrade : ''}
+                                        >
+                                            <td className={styles.rankCell}>#{row.종합순위}</td>
+                                            <td>{renderGradeBadge(row.등급)}</td>
+                                            <td>
+                                                <strong className={styles.scoreMain}>{row.종합점수?.toFixed(1)}</strong>
+                                            </td>
+                                            <td>{renderMarketBadge(row.시장)}</td>
+                                            <td className={styles.alignLeft}>{renderStockLink(row)}</td>
+                                            <td className={styles.priceCell}>{row['종가(원)']}</td>
+                                            <td>{renderRateValue(row['등락률(%)'], row.raw_rate)}</td>
+                                            <td>{row['거래대금(억)']}</td>
+                                            <td className={styles.ma5Cell}>{row.MA5 || '-'}</td>
+                                            <td className={styles.ma20Cell}>{row.MA20 || '-'}</td>
+                                            <td className={styles.ma60Cell}>{row.MA60 || '-'}</td>
+                                            <td className={styles.ma120Cell}>{row.MA120 || '-'}</td>
+                                            <td>{row.외인보유율}</td>
+                                            <td className={styles.alignLeft}>{renderAlgoBadges(row.포착알고리즘)}</td>
+                                            <td className={`${styles.alignLeft} ${styles.noteCell}`}>{noteText}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
                     ) : (
                         /* Part 2 ~ Part 5 (알고리즘 1~4 특화 테이블: 핵심 포착 사유 포함) */
                         <table className={styles.dataTable}>
@@ -1126,6 +1206,12 @@ export default function DashboardClient() {
                         <h4>📈 알고리즘 4 (#4외인지분↑)</h4>
                         <p>
                             최근 10~20일간 외국인 보유 지분율이 추세적으로 상승(+%p)하면서 최근 3거래일 동안 기관 순매수까지 동반 유입되는 Smart Money 종목
+                        </p>
+                    </div>
+                    <div className={styles.guideCard}>
+                        <h4>📐 이평선 완전 정배열 (5 &gt; 20 &gt; 60 &gt; 120)</h4>
+                        <p>
+                            「이동평균선 투자의 정석」 제1스테이지(Stage 1) 기준, 단기(5일) &gt; 중기(20일) &gt; 수급(60일) &gt; 경기(120일)선이 위에서부터 차례대로 정렬된 대세 상승 추세 종목
                         </p>
                     </div>
                 </div>
