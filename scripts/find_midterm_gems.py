@@ -187,11 +187,14 @@ def validate_target_date(target_date):
     w_idx = dt.weekday()
 
     # 네이버 증권 대표 종목(삼성전자 005930) 기준 실제 개장일 데이터 존재 여부 확인
+    # 주의: 네이버 /trend API의 bizdate 파라미터는 해당 날짜 '이전(<)' 데이터를 반환하므로
+    # target_date 당일을 포함하려면 target_date + 1일(익일)을 커서로 전달해야 함
     is_valid_trading_day = False
     nearest_prev_day = None
+    next_cal_day = (dt + datetime.timedelta(days=1)).strftime("%Y%m%d")
     try:
         r = requests.get(
-            f"https://m.stock.naver.com/api/stock/005930/trend?pageSize=20&bizdate={target_date}",
+            f"https://m.stock.naver.com/api/stock/005930/trend?pageSize=25&bizdate={next_cal_day}",
             headers=HEADERS_NAVER,
             timeout=4
         )
@@ -237,8 +240,9 @@ def fetch_naver_stock_bundle(code, target_date=None):
     chart_bars = []
     try:
         trend_url = f"https://m.stock.naver.com/api/stock/{code}/trend?pageSize=60"
-        if target_date:
-            trend_url += f"&bizdate={target_date}"
+        if target_date and len(target_date) == 8 and target_date.isdigit():
+            next_dt = (datetime.datetime.strptime(target_date, "%Y%m%d") + datetime.timedelta(days=1)).strftime("%Y%m%d")
+            trend_url += f"&bizdate={next_dt}"
         r1 = requests.get(trend_url, headers=HEADERS_NAVER, timeout=4)
         if r1.status_code == 200:
             data = r1.json()
@@ -530,7 +534,13 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
     f_today = today_sup["foreign"]
     o_today = today_sup["organ"]
     hold_today = today_sup["hold_ratio"]
+    # 장 마감 직후 당일 외인보유율(foreignerHoldRatio)이 0.00%로 미정산된 경우 전일 보유율 + 당일 외인 순매수로 보정
+    if hold_today <= 0.0 and len(supply_days) >= 2 and supply_days[-2]["hold_ratio"] > 0:
+        prev_hold = supply_days[-2]["hold_ratio"]
+        hold_today = max(0.0, round(prev_hold + (f_today / shrs * 100.0 if shrs > 0 else 0.0), 2))
+        today_sup["hold_ratio"] = hold_today
 
+    recent_20 = supply_days[-20:]
     recent_10 = supply_days[-10:]
     recent_5 = supply_days[-5:]
 
@@ -548,7 +558,7 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
 
     # 외인 보유율 변화 (10~20일 전 대비)
     hold_past_10 = recent_10[0]["hold_ratio"] if recent_10 else hold_today
-    hold_past_20 = supply_days[0]["hold_ratio"] if supply_days else hold_today
+    hold_past_20 = recent_20[0]["hold_ratio"] if recent_20 else hold_today
     hold_diff_20 = hold_today - hold_past_20
     hold_diff_10 = hold_today - hold_past_10
 
