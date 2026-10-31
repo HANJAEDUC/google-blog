@@ -63,13 +63,22 @@ def parse_float(val, default=0.0):
 
 
 def is_common_stock(name):
-    """우선주, 스팩(SPAC), 리츠, ETN 등을 배제하고 일반 보통주만 선별"""
+    """우선주, 스팩(SPAC), 리츠, ETF/ETN 등을 배제하고 일반 보통주만 선별"""
     if not name:
         return False
-    exclude_keywords = ["스팩", "리츠", "ETN", "ETF", "인버스", "레버리지", "선물", "채권"]
+    exclude_keywords = [
+        "스팩", "리츠", "ETN", "ETF", "인버스", "레버리지", "선물", "채권",
+        "액티브", "(합성)", "머니마켓", "CD금리", "KOFR"
+    ]
     for kw in exclude_keywords:
         if kw in name:
             return False
+    etf_prefixes = (
+        "KODEX ", "TIGER ", "RISE ", "ACE ", "SOL ", "HANARO ", "KBSTAR ",
+        "PLUS ", "KIWOOM ", "TIMEFOLIO ", "ARIRANG ", "KOSEF ", "WON ", "BNK ", "1Q "
+    )
+    if name.startswith(etf_prefixes):
+        return False
     if name.endswith(("우", "우B", "우C", "1우", "2우B", "3우B")):
         return False
     return True
@@ -282,18 +291,84 @@ def fetch_naver_stock_bundle(code, target_date=None):
     return trends, chart_bars
 
 
+def supplement_universe_from_naver(stock_series, target_date):
+    """
+    장 마감 직후 KRX 데이터가 미반영되었거나 KRX API 접속 불가 시,
+    네이버 증권 시가총액/거래 상위 API(KOSPI/KOSDAQ)에서 종목 유니버스 및 당일 시세를 보강
+    """
+    latest_naver_dt = get_naver_latest_bizdate()
+    is_latest_target = (target_date >= latest_naver_dt)
+    for mkt in ["KOSPI", "KOSDAQ"]:
+        for page in [1, 2, 3]:
+            try:
+                url = f"https://m.stock.naver.com/api/stocks/marketValue/{mkt}?page={page}&pageSize=100"
+                r = requests.get(url, headers=HEADERS_NAVER, timeout=4)
+                if r.status_code != 200:
+                    continue
+                stocks = r.json().get("stocks", [])
+                for st in stocks:
+                    if st.get("stockEndType") and st.get("stockEndType") != "stock":
+                        continue
+                    code = st.get("itemCode", "")
+                    name = st.get("stockName", "")
+                    if not code or len(code) != 6 or not is_common_stock(name):
+                        continue
+                    c_p = parse_int(st.get("closePriceRaw", st.get("closePrice", 0)))
+                    vol = parse_int(st.get("accumulatedTradingVolumeRaw", st.get("accumulatedTradingVolume", 0)))
+                    val = parse_int(st.get("accumulatedTradingValueRaw", 0))
+                    if val <= 0 and c_p > 0 and vol > 0:
+                        val = c_p * vol
+                    mktcap = parse_int(st.get("marketValueRaw", 0))
+                    shrs = (mktcap // c_p) if (c_p > 0 and mktcap > 0) else 0
+                    fluc = parse_float(st.get("fluctuationsRatio", 0.0))
+
+                    if code not in stock_series:
+                        stock_series[code] = {
+                            "market": mkt,
+                            "name": name,
+                            "shrs": shrs,
+                            "mktcap": mktcap,
+                            "records": []
+                        }
+                    else:
+                        if stock_series[code]["shrs"] <= 0 and shrs > 0:
+                            stock_series[code]["shrs"] = shrs
+                        if stock_series[code]["mktcap"] <= 0 and mktcap > 0:
+                            stock_series[code]["mktcap"] = mktcap
+
+                    if is_latest_target and c_p > 0:
+                        existing_dates = {rec["date"] for rec in stock_series[code]["records"]}
+                        if target_date not in existing_dates:
+                            stock_series[code]["records"].append({
+                                "date": target_date,
+                                "close": c_p,
+                                "open": c_p,
+                                "high": c_p,
+                                "low": c_p,
+                                "vol": vol,
+                                "val": val,
+                                "rate": fluc
+                            })
+            except Exception:
+                pass
+
+
 def build_universe_and_series(target_date, min_val_eok=10.0):
     """
     1. KRX 60영업일 백데이터(KOSPI) + 최근 KOSDAQ 시세를 로드
     2. KRX 미반영 최신 거래일은 네이버 시세/수급 데이터로 하이브리드 보정
     """
     trading_days = get_cached_trading_days(target_date, count=62)
-    latest_krx_day = trading_days[-1] if trading_days else target_date
+    latest_krx_day = trading_days[-1] if trading_days else ""
 
-    print(f"▶ [Step 1] KRX 백데이터 로드 중: 총 {len(trading_days)}영업일 ({trading_days[0]} ~ {latest_krx_day})")
-    if latest_krx_day < target_date:
+    if trading_days:
+        print(f"▶ [Step 1] KRX 백데이터 로드 중: 총 {len(trading_days)}영업일 ({trading_days[0]} ~ {latest_krx_day})")
+    else:
+        print(f"▶ [Step 1] KRX 백데이터 미존재 — 네이버 API 단독 폴백 모드로 동작합니다.")
+
+    if not latest_krx_day or latest_krx_day < target_date:
         print(f"   ℹ️ KRX Open API에 [{target_date}] 정산 데이터가 아직 미반영 상태입니다.")
-        print(f"   ⚡ [하이브리드 보정 가동] 60일 기준선은 KRX 백데이터({latest_krx_day}까지)를 사용하고,")
+        print(f"   ⚡ [하이브리드 보정 가동] 60일 기준선은 KRX 백데이터({latest_krx_day or '없음'}까지)를 사용하고,")
         print(f"      최신 영업일([{target_date}])의 종가·거래량·외인/기관 수급은 네이버 API에서 실시간 결합합니다!")
 
     stock_series = {}
@@ -389,14 +464,18 @@ def build_universe_and_series(target_date, min_val_eok=10.0):
                 "close": close_p,
                 "open": open_p,
                 "high": high_p,
-                "low": low_p,
+                "low": high_p if low_p <= 0 else low_p,
                 "vol": vol,
                 "val": val,
                 "rate": fluc
             })
 
+    # KRX 데이터가 최신일이 아니거나 비어 있을 때 네이버 API로 유니버스 및 당일 거래대금 보강
+    if not stock_series or not latest_krx_day or latest_krx_day < target_date:
+        supplement_universe_from_naver(stock_series, target_date)
+
     # 3) 1차 유동성 및 활성 종목 유니버스 추출 (KOSPI + KOSDAQ)
-    # 거래대금이 활발하거나 거래량이 증가한 상위 후보군 약 220개를 선별하여 네이버 20일 수급 병렬 조회
+    # 거래대금이 활발하거나 거래량이 증가한 상위 후보군 약 250개를 선별하여 네이버 20일 수급 병렬 조회
     min_val_won = min_val_eok * 100_000_000
     kospi_candidates = []
     kosdaq_candidates = []
@@ -420,8 +499,7 @@ def build_universe_and_series(target_date, min_val_eok=10.0):
         priority_score = (last_rec["val"] / 100_000_000) * (1.0 + min(5.0, vol_ratio * 0.5))
 
         if info["market"] == "KOSPI":
-            if len(recs) >= 20:
-                kospi_candidates.append((priority_score, code))
+            kospi_candidates.append((priority_score, code))
         else:
             kosdaq_candidates.append((priority_score, code))
 
@@ -430,13 +508,13 @@ def build_universe_and_series(target_date, min_val_eok=10.0):
 
     # 코스피 상위 150개 + 코스닥 상위 100개 = 총 250개 핵심 후보군 선정
     selected_codes = [c for _, c in kospi_candidates[:150]] + [c for _, c in kosdaq_candidates[:100]]
-    return stock_series, selected_codes, latest_krx_day
+    return stock_series, selected_codes, (latest_krx_day or target_date)
 
 
-def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
+def analyze_single_stock(code, info, trend_list, chart_bars, target_date, latest_krx_day=None):
     """
     단일 종목에 대해 KRX 백데이터 + 네이버 65일 일봉 + 네이버 수급 데이터를 결합하고
-    알고리즘 1 ~ 5를 동시에 판독 및 채점
+    알고리즘 1 ~ 5 및 10일 외국인·기관 수급강도(%)를 동시에 판독 및 채점
     """
     if not trend_list:
         return None
@@ -501,34 +579,49 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
     vols = [r["vol"] for r in recs]
 
     ma5 = sum(closes[-5:]) / min(5, len(closes))
+    ma10 = sum(closes[-10:]) / min(10, len(closes))
     ma20 = sum(closes[-20:]) / min(20, len(closes))
     ma60 = sum(closes[-60:]) / min(60, len(closes))
     ma120 = sum(closes[-120:]) / min(120, len(closes))
+    disparity10 = (curr_price / ma10 * 100.0) if ma10 > 0 else 100.0
     disparity20 = (curr_price / ma20 * 100.0) if ma20 > 0 else 100.0
+    above_ma10 = bool(curr_price >= ma10)
+
+    # 직전 10일 주가 상승률 및 20·60일 고점 근접도
+    close_10d_ago = closes[-11] if len(closes) >= 11 else closes[0]
+    ret_10d = ((curr_price - close_10d_ago) / close_10d_ago * 100.0) if close_10d_ago > 0 else 0.0
 
     # 직전 20일 평균 거래량 (당일 제외)
     prev_vols_20 = vols[-21:-1] if len(vols) >= 21 else vols[:-1]
     vol_ma20 = sum(prev_vols_20) / max(1, len(prev_vols_20)) if prev_vols_20 else max(1, curr_vol)
     vol_ratio_20 = curr_vol / vol_ma20 if vol_ma20 > 0 else 1.0
 
-    # 최근 60일 최저가 / 최고가
+    # 최근 20일/60일 최저가 / 최고가 및 고점 근접도
     low_60 = min(closes[-60:]) if closes else curr_price
     high_60 = max(closes[-60:]) if closes else curr_price
+    high_20 = max(closes[-20:]) if closes else curr_price
     from_low_60_pct = ((curr_price - low_60) / low_60 * 100.0) if low_60 > 0 else 0.0
+    near_high_20_pct = (curr_price / high_20 * 100.0) if high_20 > 0 else 100.0
+    near_high_60_pct = (curr_price / high_60 * 100.0) if high_60 > 0 else 100.0
 
-    # 네이버 수급 파싱 (최근 20일)
+    # 네이버 수급 파싱 (최근 20일 + KRX 미반영 시 네이버 일별 거래량 폴백 결합)
     supply_days = []
     for td in valid_trends:
+        bdate = td.get("bizdate", "")
         f_q = parse_int(td.get("foreignerPureBuyQuant", 0))
         o_q = parse_int(td.get("organPureBuyQuant", 0))
         i_q = parse_int(td.get("individualPureBuyQuant", 0))
         h_r = parse_float(td.get("foreignerHoldRatio", 0.0))
+        day_vol = recs_by_date.get(bdate, {}).get("vol", 0)
+        if day_vol <= 0:
+            day_vol = parse_int(td.get("accumulatedTradingVolume", 0))
         supply_days.append({
-            "date": td.get("bizdate", ""),
+            "date": bdate,
             "foreign": f_q,
             "organ": o_q,
             "indiv": i_q,
             "twin": f_q + o_q,
+            "vol": day_vol,
             "hold_ratio": h_r
         })
 
@@ -545,15 +638,86 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
     recent_20 = supply_days[-20:]
     recent_10 = supply_days[-10:]
     recent_5 = supply_days[-5:]
+    recent_3 = supply_days[-3:]
 
     # 최근 10일 중 외인 또는 기관 순매수 일수, 합산 순매수
     f_buy_days_10 = sum(1 for d in recent_10 if d["foreign"] > 0)
     o_buy_days_10 = sum(1 for d in recent_10 if d["organ"] > 0)
     twin_pos_days_10 = sum(1 for d in recent_10 if (d["foreign"] > 0 or d["organ"] > 0))
+    twin_net_pos_days_10 = sum(1 for d in recent_10 if d["twin"] > 0)
     sum_f_10 = sum(d["foreign"] for d in recent_10)
     sum_o_10 = sum(d["organ"] for d in recent_10)
     sum_twin_10 = sum_f_10 + sum_o_10
     sum_twin_5 = sum(d["twin"] for d in recent_5)
+
+    # 기간별(3·5·10·20일) 수급 강도(%) 계산 = 기간 누적 순매수 수량 ÷ 같은 기간 전체 거래량 × 100
+    def calc_period_intensity(sub_days):
+        v_sum = sum(d["vol"] for d in sub_days)
+        if v_sum <= 0:
+            return 0.0, 0.0, 0.0, 0
+        f_s = sum(d["foreign"] for d in sub_days)
+        o_s = sum(d["organ"] for d in sub_days)
+        t_s = f_s + o_s
+        return (f_s / v_sum * 100.0), (o_s / v_sum * 100.0), (t_s / v_sum * 100.0), v_sum
+
+    f_int_3, o_int_3, twin_int_3, _ = calc_period_intensity(recent_3)
+    f_int_5, o_int_5, twin_int_5, _ = calc_period_intensity(recent_5)
+    f_int_10, o_int_10, twin_int_10, vol_sum_10 = calc_period_intensity(recent_10)
+    f_int_20, o_int_20, twin_int_20, _ = calc_period_intensity(recent_20)
+
+    # 연구용 수급강도 구간 분류 (1%, 3%, 5%, 10%, 20% 기준)
+    if twin_int_10 >= 20.0:
+        intensity_zone_10 = "20%↑ (초고강도)"
+    elif twin_int_10 >= 10.0:
+        intensity_zone_10 = "10~20% (고강도)"
+    elif twin_int_10 >= 5.0:
+        intensity_zone_10 = "5~10% (중강도)"
+    elif twin_int_10 >= 3.0:
+        intensity_zone_10 = "3~5% (관심구간)"
+    elif twin_int_10 >= 1.0:
+        intensity_zone_10 = "1~3% (초기구간)"
+    elif twin_int_10 > 0.0:
+        intensity_zone_10 = "0~1% (미약)"
+    else:
+        intensity_zone_10 = "순매도 구간"
+
+    # 연속 순매수일 계산 (최근 기준일로부터 연속 양수 일수 vs 기간 누적 양수일 구분)
+    def calc_streak(days_list, key_name):
+        cnt = 0
+        for d in reversed(days_list):
+            if d[key_name] > 0:
+                cnt += 1
+            else:
+                break
+        return cnt
+
+    streak_twin = calc_streak(supply_days, "twin")
+    streak_f = calc_streak(supply_days, "foreign")
+    streak_o = calc_streak(supply_days, "organ")
+
+    # 순매수 중 주가 상승·횡보·하락 반응
+    if ret_10d >= 4.0:
+        price_reaction_10 = f"📈 상승반응 ({ret_10d:+.1f}%)"
+    elif ret_10d >= -3.0:
+        price_reaction_10 = f"➖ 횡보응축 ({ret_10d:+.1f}%)"
+    else:
+        price_reaction_10 = f"📉 하락중유입 ({ret_10d:+.1f}%)"
+
+    # 하루 집중 매수 vs 여러 날 지속 매수 판별
+    pos_twins_10 = [d["twin"] for d in recent_10 if d["twin"] > 0]
+    max_day_share_pct = (max(pos_twins_10) / sum(pos_twins_10) * 100.0) if pos_twins_10 and sum(pos_twins_10) > 0 else 0.0
+    if twin_net_pos_days_10 >= 6 and max_day_share_pct <= 45.0:
+        buy_concentration_10 = f"🟢 다일지속 ({twin_net_pos_days_10}/10일, 최대일 {max_day_share_pct:.0f}%)"
+    elif max_day_share_pct >= 60.0 or twin_net_pos_days_10 <= 2:
+        buy_concentration_10 = f"⚡ 하루집중 ({twin_net_pos_days_10}/10일, 최대일 {max_day_share_pct:.0f}%)"
+    else:
+        buy_concentration_10 = f"🔵 분산유입 ({twin_net_pos_days_10}/10일, 최대일 {max_day_share_pct:.0f}%)"
+
+    data_source_label = (
+        "KRX확정+네이버수급"
+        if (latest_krx_day and latest_krx_day >= target_date)
+        else "네이버API폴백(KRX미반영)"
+    )
 
     # 상장주식수 대비 최근 10일 외인+기관 순매수 지분율(%)
     net_buy_shrs_pct_10 = (sum_twin_10 / shrs * 100.0) if shrs > 0 else 0.0
@@ -781,8 +945,12 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         "raw_vol_ratio": vol_ratio_20,
         "회전율(%)": f"{turnover:.2f}%",
         "raw_turnover": turnover,
+        "10일이격도": f"{disparity10:.1f}%",
+        "raw_disparity10": round(disparity10, 2),
+        "above_ma10": above_ma10,
         "20일이격도": f"{disparity20:.1f}%",
         "MA5": f"{int(round(ma5)):,}",
+        "MA10": f"{int(round(ma10)):,}",
         "MA20": f"{int(round(ma20)):,}",
         "MA60": f"{int(round(ma60)):,}",
         "MA120": f"{int(round(ma120)):,}",
@@ -790,7 +958,29 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date):
         "당일기관순매수": f"{o_today:+,}",
         "10일외인매수일": f"{f_buy_days_10}/10일",
         "10일기관매수일": f"{o_buy_days_10}/10일",
+        "10일합산매수일": f"{twin_net_pos_days_10}/10일",
+        "연속순매수": f"합산 {streak_twin}일 (외{streak_f}·기{streak_o})",
         "10일합산순매수": f"{sum_twin_10:+,}",
+        "10일전체거래량": f"{vol_sum_10:,}",
+        "10일합산강도(%)": f"{twin_int_10:+.2f}%",
+        "raw_supply_intensity_10d": round(twin_int_10, 2),
+        "10일외인강도(%)": f"{f_int_10:+.2f}%",
+        "raw_f_intensity_10d": round(f_int_10, 2),
+        "10일기관강도(%)": f"{o_int_10:+.2f}%",
+        "raw_o_intensity_10d": round(o_int_10, 2),
+        "3일합산강도(%)": f"{twin_int_3:+.2f}%",
+        "raw_supply_intensity_3d": round(twin_int_3, 2),
+        "5일합산강도(%)": f"{twin_int_5:+.2f}%",
+        "raw_supply_intensity_5d": round(twin_int_5, 2),
+        "20일합산강도(%)": f"{twin_int_20:+.2f}%",
+        "raw_supply_intensity_20d": round(twin_int_20, 2),
+        "수급강도구간": intensity_zone_10,
+        "10일수익률(%)": f"{ret_10d:+.2f}%",
+        "raw_ret_10d": round(ret_10d, 2),
+        "고점근접도": f"20일 {near_high_20_pct:.0f}% / 60일 {near_high_60_pct:.0f}%",
+        "수급주가반응": price_reaction_10,
+        "매수집중형태": buy_concentration_10,
+        "데이터소스": data_source_label,
         "시총대비매집(%)": f"{net_buy_shrs_pct_10:+.2f}%",
         "외인보유율": f"{hold_today:.2f}% ({best_hold_diff:+.2f}%p)",
         "추세점수(25)": round(score_trend, 1),
@@ -844,7 +1034,7 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
     for code in selected_codes:
         info = stock_series.get(code)
         t_list, c_bars = bundle_map.get(code, ([], []))
-        res = analyze_single_stock(code, info, t_list, c_bars, target_date)
+        res = analyze_single_stock(code, info, t_list, c_bars, target_date, latest_krx_day=latest_krx_day)
         if res:
             results.append(res)
 
@@ -866,6 +1056,23 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
     df_algo3 = df_all[df_all["algo3"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(20)
     df_algo4 = df_all[df_all["algo4"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(20)
     df_algo_ma = df_all[df_all["algo_ma"]].sort_values(by=["종합점수", "raw_val_eok"], ascending=[False, False]).head(40)
+
+    # [Part 7] 10일 외국인+기관 수급강도(%) 순위 — 코스피 TOP 20 & 코스닥 TOP 20
+    df_part7_kospi = (
+        df_all[df_all["시장"] == "KOSPI"]
+        .sort_values(by=["raw_supply_intensity_10d", "raw_val_eok"], ascending=[False, False])
+        .head(20)
+        .copy()
+    )
+    df_part7_kospi["수급강도순위"] = range(1, len(df_part7_kospi) + 1)
+
+    df_part7_kosdaq = (
+        df_all[df_all["시장"] == "KOSDAQ"]
+        .sort_values(by=["raw_supply_intensity_10d", "raw_val_eok"], ascending=[False, False])
+        .head(20)
+        .copy()
+    )
+    df_part7_kosdaq["수급강도순위"] = range(1, len(df_part7_kosdaq) + 1)
 
     # 콘솔 요약 출력
     print("\n" + "=" * 98)
@@ -894,6 +1101,22 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
         else:
             print("   (해당 조건을 만족하는 종목이 없습니다.)")
 
+    print("\n" + "=" * 98)
+    print(f"🔥 [Part 7-A] 코스피(KOSPI) 10일 외국인+기관 수급강도 순위 TOP 20 (기준일: {target_date})")
+    print("=" * 98)
+    p7_cols = [
+        "수급강도순위", "종목코드", "종목명", "종가(원)", "등락률(%)", "MA10", "10일이격도",
+        "10일합산강도(%)", "10일외인강도(%)", "10일기관강도(%)", "연속순매수", "수급주가반응"
+    ]
+    if not df_part7_kospi.empty:
+        print(df_part7_kospi[p7_cols].to_string(index=False))
+
+    print("\n" + "=" * 98)
+    print(f"🔥 [Part 7-B] 코스닥(KOSDAQ) 10일 외국인+기관 수급강도 순위 TOP 20 (기준일: {target_date})")
+    print("=" * 98)
+    if not df_part7_kosdaq.empty:
+        print(df_part7_kosdaq[p7_cols].to_string(index=False))
+
     # ==========================================================================
     # 파일 저장 (output/ 폴더에 .csv 및 .md 리포트 생성)
     # ==========================================================================
@@ -905,9 +1128,10 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
 
     save_cols = [
         "종합순위", "등급", "종합점수", "시장", "종목코드", "종목명", "포착알고리즘",
-        "종가(원)", "등락률(%)", "거래대금(억)", "20일거래량배수", "회전율(%)", "20일이격도",
+        "종가(원)", "등락률(%)", "거래대금(억)", "20일거래량배수", "회전율(%)", "10일이격도", "20일이격도",
         "당일외인순매수", "당일기관순매수", "10일외인매수일", "10일기관매수일",
-        "10일합산순매수", "시총대비매집(%)", "외인보유율",
+        "10일합산순매수", "10일합산강도(%)", "10일외인강도(%)", "10일기관강도(%)",
+        "시총대비매집(%)", "외인보유율",
         "추세점수(25)", "거래량점수(25)", "수급강도(30)", "연속성점수(20)", "AI_전략코멘트"
     ]
     df_all[save_cols].to_csv(csv_path, index=False, encoding="utf-8-sig")
@@ -924,6 +1148,8 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
         "algo3_breakout": df_algo3.to_dict(orient="records"),
         "algo4_smart_money": df_algo4.to_dict(orient="records"),
         "algo_ma_aligned": df_algo_ma.to_dict(orient="records"),
+        "part7_kospi_top20": df_part7_kospi.to_dict(orient="records"),
+        "part7_kosdaq_top20": df_part7_kosdaq.to_dict(orient="records"),
         "all_evaluated": df_all.to_dict(orient="records")
     }
     with open(json_path, "w", encoding="utf-8") as jf:

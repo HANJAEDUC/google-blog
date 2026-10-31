@@ -20,8 +20,12 @@ export interface StockGemItem {
     raw_vol_ratio: number;
     '회전율(%)': string;
     raw_turnover: number;
+    '10일이격도'?: string;
+    raw_disparity10?: number;
+    above_ma10?: boolean;
     '20일이격도': string;
     MA5?: string;
+    MA10?: string;
     MA20?: string;
     MA60?: string;
     MA120?: string;
@@ -29,7 +33,30 @@ export interface StockGemItem {
     당일기관순매수: string;
     '10일외인매수일': string;
     '10일기관매수일': string;
+    '10일합산매수일'?: string;
+    연속순매수?: string;
     '10일합산순매수': string;
+    '10일전체거래량'?: string;
+    '10일합산강도(%)'?: string;
+    raw_supply_intensity_10d?: number;
+    '10일외인강도(%)'?: string;
+    raw_f_intensity_10d?: number;
+    '10일기관강도(%)'?: string;
+    raw_o_intensity_10d?: number;
+    '3일합산강도(%)'?: string;
+    raw_supply_intensity_3d?: number;
+    '5일합산강도(%)'?: string;
+    raw_supply_intensity_5d?: number;
+    '20일합산강도(%)'?: string;
+    raw_supply_intensity_20d?: number;
+    수급강도구간?: string;
+    '10일수익률(%)'?: string;
+    raw_ret_10d?: number;
+    고점근접도?: string;
+    수급주가반응?: string;
+    매수집중형태?: string;
+    데이터소스?: string;
+    수급강도순위?: number;
     '시총대비매집(%)': string;
     외인보유율: string;
     '추세점수(25)': number;
@@ -61,6 +88,8 @@ export interface MidtermGemsPayload {
     algo3_breakout: StockGemItem[];
     algo4_smart_money: StockGemItem[];
     algo_ma_aligned?: StockGemItem[];
+    part7_kospi_top20?: StockGemItem[];
+    part7_kosdaq_top20?: StockGemItem[];
     all_evaluated: StockGemItem[];
 }
 
@@ -76,8 +105,10 @@ interface DateWarningState {
     cleanYmd?: string;
 }
 
-type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'algo_ma' | 'all';
+type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'algo_ma' | 'part7_supply' | 'all';
 type MarketFilter = 'ALL' | 'KOSPI' | 'KOSDAQ';
+type Ma10FilterMode = 'ALL' | 'ABOVE_MA10';
+type IntensityMinFilter = 'ALL' | '1' | '3' | '5' | '10';
 
 const WEEKDAY_KO = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
 const WEEKDAY_SHORT_KO = ['일', '월', '화', '수', '목', '금', '토'];
@@ -138,6 +169,13 @@ const TAB_CONFIG: Record<
         principle:
             '단기(5일) > 중기(20일) > 수급(60일) > 경기(120일) 이동평균선이 위에서부터 차례대로 정렬된 제1스테이지 완전 정배열 추세 종목',
         noteKey: 'algo_ma_note',
+    },
+    part7_supply: {
+        label: '🔥 Part 7: 10일 수급강도 (코스피20·코스닥20)',
+        shortBadge: '🔥10일수급강도',
+        title: '🔥 [Part 7: 수급 매매 학습·모의검증] 10일선 · 외국인+기관 수급강도(%) 순위 (코스피 TOP 20 / 코스닥 TOP 20)',
+        principle:
+            '합산 강도(%) = (10거래일 외국인+기관 누적 순매수 수량 ÷ 같은 10거래일 전체 거래량) × 100 | 장 마감 시 KRX 미반영 데이터는 네이버 API(일봉 거래량+수급)로 자동 폴백 계산 | 1%·3%·5%·10%·20% 구간은 연구용 관찰 구간이며 자동 매수 신호가 아닙니다.',
     },
     all: {
         label: '📋 전체 채점 종목',
@@ -242,11 +280,25 @@ function computeNearestPrevTradingDate(ymd: string, availableDates: string[], la
     return sortedDesc[sortedDesc.length - 1] || latestDate;
 }
 
+function getSupplyIntensity10d(item: StockGemItem): number {
+    if (typeof item.raw_supply_intensity_10d === 'number') {
+        return item.raw_supply_intensity_10d;
+    }
+    if (item['10일합산강도(%)']) {
+        const parsed = parseFloat(String(item['10일합산강도(%)']).replace('%', '').replace('+', ''));
+        if (!isNaN(parsed)) return parsed;
+    }
+    // 구버전 JSON 폴백: 시총대비매집(%)과 회전율(%)로 근사치 산출
+    const shrsPct = parseFloat(String(item['시총대비매집(%)'] || '0').replace('%', '').replace('+', ''));
+    const turn = item.raw_turnover || 1;
+    return Number(((shrsPct / Math.max(0.5, turn * 5)) * 100).toFixed(2));
+}
+
 export default function DashboardClient() {
     const [payload, setPayload] = useState<MidtermGemsPayload | null>(null);
-    const [availableDates, setAvailableDates] = useState<string[]>(['20261028']);
-    const [latestDate, setLatestDate] = useState<string>('20261028');
-    const [dateInputText, setDateInputText] = useState<string>('2026-10-28');
+    const [availableDates, setAvailableDates] = useState<string[]>(['20261030']);
+    const [latestDate, setLatestDate] = useState<string>('20261030');
+    const [dateInputText, setDateInputText] = useState<string>('2026-10-30');
     const [dateWarning, setDateWarning] = useState<DateWarningState | null>(null);
 
     const [loading, setLoading] = useState<boolean>(true);
@@ -257,6 +309,10 @@ export default function DashboardClient() {
     const [gradeFilter, setGradeFilter] = useState<string>('ALL');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [statusMessage, setStatusMessage] = useState<string>('');
+
+    // Part 7 전용 필터 상태 (10일선 위 필터 / 수급강도 구간 필터)
+    const [ma10FilterMode, setMa10FilterMode] = useState<Ma10FilterMode>('ALL');
+    const [intensityMinFilter, setIntensityMinFilter] = useState<IntensityMinFilter>('ALL');
 
     // 초기 최신 데이터 및 날짜 인덱스 로드
     const loadInitialData = async () => {
@@ -511,13 +567,63 @@ export default function DashboardClient() {
     // 현재 선택된 날짜의 availableDates 내 인덱스 (이전/다음 거래일 이동용)
     const currentActiveYmd = payload?.target_date || latestDate;
     const currentIdxInAvail = availableDates.indexOf(currentActiveYmd);
-    // availableDates는 내림차순 정렬 (예: ['20261028', '20261027', '20261026', '20261023'])
+    // availableDates는 내림차순 정렬 (예: ['20261030', '20261029', '20261028', ...])
     const prevTradingDate =
         currentIdxInAvail >= 0 && currentIdxInAvail + 1 < availableDates.length
             ? availableDates[currentIdxInAvail + 1]
             : null;
     const nextTradingDate =
         currentIdxInAvail > 0 ? availableDates[currentIdxInAvail - 1] : null;
+
+    // Part 7 코스피 TOP 20 & 코스닥 TOP 20 계산
+    const part7Lists = useMemo(() => {
+        const all = payload?.all_evaluated || [];
+        const minIntensityVal = intensityMinFilter === 'ALL' ? -999 : parseFloat(intensityMinFilter);
+
+        const filterAndRank = (mkt: 'KOSPI' | 'KOSDAQ') => {
+            const base = all.filter((item) => {
+                if (item.시장 !== mkt) return false;
+                if (ma10FilterMode === 'ABOVE_MA10') {
+                    const isAbove =
+                        item.above_ma10 !== undefined
+                            ? item.above_ma10
+                            : (item.raw_disparity10 ?? 100) >= 100;
+                    if (!isAbove) return false;
+                }
+                const int10 = getSupplyIntensity10d(item);
+                if (int10 < minIntensityVal) return false;
+                if (gradeFilter !== 'ALL') {
+                    if (gradeFilter === 'S' && !item.등급?.includes('S등급')) return false;
+                    if (gradeFilter === 'A' && !item.등급?.includes('A등급')) return false;
+                    if (gradeFilter === 'B' && !item.등급?.includes('B등급')) return false;
+                }
+                if (searchQuery.trim()) {
+                    const q = searchQuery.trim().toLowerCase();
+                    const matchName = item.종목명?.toLowerCase().includes(q);
+                    const matchCode = item.종목코드?.toLowerCase().includes(q);
+                    const matchAlgo = item.포착알고리즘?.toLowerCase().includes(q);
+                    if (!matchName && !matchCode && !matchAlgo) return false;
+                }
+                return true;
+            });
+
+            base.sort((a, b) => {
+                const diff = getSupplyIntensity10d(b) - getSupplyIntensity10d(a);
+                if (Math.abs(diff) > 0.0001) return diff;
+                return (b.raw_val_eok || 0) - (a.raw_val_eok || 0);
+            });
+
+            return base.slice(0, 20).map((item, idx) => ({
+                ...item,
+                수급강도순위: idx + 1,
+            }));
+        };
+
+        return {
+            kospiTop20: filterAndRank('KOSPI'),
+            kosdaqTop20: filterAndRank('KOSDAQ'),
+        };
+    }, [payload, ma10FilterMode, intensityMinFilter, gradeFilter, searchQuery]);
 
     const summaryCounts = useMemo(() => {
         const all = payload?.all_evaluated || [];
@@ -533,6 +639,7 @@ export default function DashboardClient() {
             algoMa:
                 payload?.algo_ma_aligned?.length ??
                 all.filter((i) => i.algo_ma || i.포착알고리즘?.includes('5>20>60>120')).length,
+            part7Total: (payload?.part7_kospi_top20?.length || 20) + (payload?.part7_kosdaq_top20?.length || 20),
         };
     }, [payload]);
 
@@ -562,6 +669,11 @@ export default function DashboardClient() {
                         (i) => i.algo_ma || i.포착알고리즘?.includes('5>20>60>120')
                     );
                 break;
+            case 'part7_supply':
+                if (marketFilter === 'KOSPI') list = part7Lists.kospiTop20;
+                else if (marketFilter === 'KOSDAQ') list = part7Lists.kosdaqTop20;
+                else list = [...part7Lists.kospiTop20, ...part7Lists.kosdaqTop20];
+                return list;
             case 'all':
                 list = payload.all_evaluated || [];
                 break;
@@ -583,7 +695,7 @@ export default function DashboardClient() {
             }
             return true;
         });
-    }, [payload, activeTab, marketFilter, gradeFilter, searchQuery]);
+    }, [payload, activeTab, marketFilter, gradeFilter, searchQuery, part7Lists]);
 
     const renderGradeBadge = (grade: string) => {
         if (!grade) return <span className={styles.gradeNormal}>-</span>;
@@ -667,7 +779,208 @@ export default function DashboardClient() {
         );
     };
 
+    const renderIntensityZoneBadge = (intensityVal: number, zoneStr?: string) => {
+        let cls = styles.zoneLow;
+        let label = zoneStr || `${intensityVal >= 0 ? '+' : ''}${intensityVal.toFixed(1)}%`;
+        if (intensityVal >= 20) {
+            cls = styles.zone20;
+            if (!zoneStr) label = '20%↑ 초고강도';
+        } else if (intensityVal >= 10) {
+            cls = styles.zone10;
+            if (!zoneStr) label = '10~20% 고강도';
+        } else if (intensityVal >= 5) {
+            cls = styles.zone5;
+            if (!zoneStr) label = '5~10% 중강도';
+        } else if (intensityVal >= 3) {
+            cls = styles.zone3;
+            if (!zoneStr) label = '3~5% 관심구간';
+        } else if (intensityVal >= 1) {
+            cls = styles.zone1;
+            if (!zoneStr) label = '1~3% 초기구간';
+        }
+        return <span className={`${styles.zoneBadge} ${cls}`}>{label}</span>;
+    };
+
+    const renderPart7SubTable = (title: string, badgeLabel: string, rows: StockGemItem[], isKospi: boolean) => {
+        return (
+            <div className={styles.part7SectionBlock}>
+                <div className={styles.part7SectionHeader}>
+                    <div className={styles.part7HeaderTitleRow}>
+                        <span className={`${styles.marketBadge} ${isKospi ? styles.marketKospi : styles.marketKosdaq}`}>
+                            {badgeLabel}
+                        </span>
+                        <h3 className={styles.part7SubTitle}>{title}</h3>
+                    </div>
+                    <span className={styles.part7CountMeta}>
+                        상위 {rows.length}종목 표시 {ma10FilterMode === 'ABOVE_MA10' ? '(10일선 위 지지 종목 한정)' : ''}
+                    </span>
+                </div>
+
+                {rows.length === 0 ? (
+                    <div className={styles.emptyMsg}>해당 조건을 만족하는 종목이 없습니다.</div>
+                ) : (
+                    <div className={styles.tableWrapper}>
+                        <table className={styles.dataTable}>
+                            <thead>
+                                <tr>
+                                    <th>수급순위</th>
+                                    <th>시장</th>
+                                    <th className={styles.alignLeft}>종목명 (코드)</th>
+                                    <th>종가(원)</th>
+                                    <th>등락률</th>
+                                    <th>10일선 (MA10 · 이격)</th>
+                                    <th>10일 합산강도 (구간)</th>
+                                    <th>외인강도 / 기관강도</th>
+                                    <th>기간별 강도 (3·5·10·20일)</th>
+                                    <th className={styles.alignLeft}>연속순매수 · 집중형태</th>
+                                    <th className={styles.alignLeft}>10일 주가반응 · 고점근접</th>
+                                    <th>등급 (종합순위)</th>
+                                    <th className={styles.alignLeft}>포착 알고리즘</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {rows.map((row, idx) => {
+                                    const int10 = getSupplyIntensity10d(row);
+                                    const int10Str = row['10일합산강도(%)'] || `${int10 >= 0 ? '+' : ''}${int10.toFixed(2)}%`;
+                                    const fIntStr = row['10일외인강도(%)'] || '-';
+                                    const oIntStr = row['10일기관강도(%)'] || '-';
+                                    const int3Str = row['3일합산강도(%)'] || '-';
+                                    const int5Str = row['5일합산강도(%)'] || '-';
+                                    const int20Str = row['20일합산강도(%)'] || '-';
+                                    const isAboveMa10 =
+                                        row.above_ma10 !== undefined
+                                            ? row.above_ma10
+                                            : (row.raw_disparity10 ?? 100) >= 100;
+
+                                    return (
+                                        <tr
+                                            key={row.종목코드}
+                                            className={idx < 3 ? styles.rowSGrade : ''}
+                                        >
+                                            <td className={styles.rankCell}>
+                                                <span className={idx < 3 ? styles.top3RankBadge : ''}>
+                                                    #{row.수급강도순위 || idx + 1}
+                                                </span>
+                                            </td>
+                                            <td>{renderMarketBadge(row.시장)}</td>
+                                            <td className={styles.alignLeft}>{renderStockLink(row)}</td>
+                                            <td className={styles.priceCell}>{row['종가(원)']}</td>
+                                            <td>{renderRateValue(row['등락률(%)'], row.raw_rate)}</td>
+                                            <td>
+                                                <div className={styles.ma10CellBox}>
+                                                    <span className={styles.ma10Price}>{row.MA10 || row.MA20 || '-'}</span>
+                                                    <span
+                                                        className={
+                                                            isAboveMa10 ? styles.ma10AboveBadge : styles.ma10BelowBadge
+                                                        }
+                                                    >
+                                                        {isAboveMa10 ? '▲10일선위' : '▼10일선아래'}{' '}
+                                                        {row['10일이격도'] || row['20일이격도']}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className={styles.intensityMainCell}>
+                                                    <strong
+                                                        className={
+                                                            int10 > 0
+                                                                ? styles.intensityPos
+                                                                : int10 < 0
+                                                                ? styles.intensityNeg
+                                                                : ''
+                                                        }
+                                                    >
+                                                        {int10Str}
+                                                    </strong>
+                                                    {renderIntensityZoneBadge(int10, row.수급강도구간)}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className={styles.subIntensityCol}>
+                                                    <span>
+                                                        외인:{' '}
+                                                        <strong
+                                                            className={
+                                                                String(fIntStr).startsWith('+')
+                                                                    ? styles.rateUp
+                                                                    : String(fIntStr).startsWith('-')
+                                                                    ? styles.rateDown
+                                                                    : ''
+                                                            }
+                                                        >
+                                                            {fIntStr}
+                                                        </strong>
+                                                    </span>
+                                                    <span>
+                                                        기관:{' '}
+                                                        <strong
+                                                            className={
+                                                                String(oIntStr).startsWith('+')
+                                                                    ? styles.rateUp
+                                                                    : String(oIntStr).startsWith('-')
+                                                                    ? styles.rateDown
+                                                                    : ''
+                                                            }
+                                                        >
+                                                            {oIntStr}
+                                                        </strong>
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className={styles.periodCompareRow}>
+                                                    <span title="3일 합산강도(초기 변화)">3일 {int3Str}</span>
+                                                    <span title="5일 합산강도(1주)">5일 {int5Str}</span>
+                                                    <strong className={styles.period10Highlight} title="10일 합산강도(2주 기준)">
+                                                        10일 {int10Str}
+                                                    </strong>
+                                                    <span title="20일 합산강도(1개월)">20일 {int20Str}</span>
+                                                </div>
+                                            </td>
+                                            <td className={styles.alignLeft}>
+                                                <div className={styles.streakCellBox}>
+                                                    <span className={styles.streakText}>
+                                                        {row.연속순매수 || `외인 ${row['10일외인매수일']} · 기관 ${row['10일기관매수일']}`}
+                                                    </span>
+                                                    <span className={styles.concentrationText}>
+                                                        {row.매수집중형태 || `누적 ${row['10일합산순매수']}주`}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className={styles.alignLeft}>
+                                                <div className={styles.reactionCellBox}>
+                                                    <span className={styles.reactionPrimary}>
+                                                        {row.수급주가반응 || `20일이격 ${row['20일이격도']}`}
+                                                    </span>
+                                                    <span className={styles.highProxText}>
+                                                        고점근접: {row.고점근접도 || '-'}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className={styles.scoreCell}>
+                                                    {renderGradeBadge(row.등급)}
+                                                    <span className={styles.scoreSub}>
+                                                        종합 #{row.종합순위} ({row.종합점수?.toFixed(1)}점)
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className={styles.alignLeft}>{renderAlgoBadges(row.포착알고리즘)}</td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     const activeConfig = TAB_CONFIG[activeTab];
+    const isKrxFallback = Boolean(
+        payload && payload.krx_base_date && payload.target_date && payload.krx_base_date < payload.target_date
+    );
 
     return (
         <div className={styles.dashboardContainer}>
@@ -818,13 +1131,14 @@ export default function DashboardClient() {
 
                     {/* 3. 특화 알고리즘 포착 수 카드 */}
                     <div className={styles.metaCard}>
-                        <span className={styles.metaLabel}>🎯 특화 알고리즘 & 이평선 정배열 포착 수</span>
+                        <span className={styles.metaLabel}>🎯 특화 알고리즘 · 정배열 · 10일수급강도</span>
                         <div className={styles.algoCountRow}>
                             <span className={`${styles.algoBadge} ${styles.algoTag1}`}>🎯#1눌림목 {summaryCounts.algo1}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTag2}`}>🕵️#2연속매집 {summaryCounts.algo2}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTag3}`}>🚀#3초입돌파 {summaryCounts.algo3}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTag4}`}>📈#4외인지분↑ {summaryCounts.algo4}</span>
                             <span className={`${styles.algoBadge} ${styles.algoTagMa}`}>📐5&gt;20&gt;60&gt;120 {summaryCounts.algoMa}</span>
+                            <span className={`${styles.algoBadge} ${styles.algoTagSupply}`}>🔥수급강도 20+20</span>
                         </div>
                         <span className={styles.metaSub}>업데이트: {payload?.updated_at || '-'}</span>
                     </div>
@@ -918,7 +1232,7 @@ export default function DashboardClient() {
                 {statusMessage && <div className={styles.statusBanner}>{statusMessage}</div>}
             </header>
 
-            {/* 5대 핵심 알고리즘 파트 탭 네비게이션 */}
+            {/* 핵심 알고리즘 파트 탭 네비게이션 */}
             <nav className={styles.partTabs}>
                 {(Object.keys(TAB_CONFIG) as TabKey[]).map((key) => {
                     const cfg = TAB_CONFIG[key];
@@ -929,6 +1243,7 @@ export default function DashboardClient() {
                     else if (key === 'algo3') count = payload?.algo3_breakout?.length || 0;
                     else if (key === 'algo4') count = payload?.algo4_smart_money?.length || 0;
                     else if (key === 'algo_ma') count = summaryCounts.algoMa;
+                    else if (key === 'part7_supply') count = 40;
                     else if (key === 'all') count = payload?.all_evaluated?.length || 0;
 
                     return (
@@ -939,7 +1254,7 @@ export default function DashboardClient() {
                             onClick={() => setActiveTab(key)}
                         >
                             <span>{cfg.label}</span>
-                            <span className={styles.tabCount}>{count}</span>
+                            <span className={styles.tabCount}>{key === 'part7_supply' ? '20+20' : count}</span>
                         </button>
                     );
                 })}
@@ -970,10 +1285,52 @@ export default function DashboardClient() {
                                     className={`${styles.segBtn} ${marketFilter === m ? styles.segBtnActive : ''}`}
                                     onClick={() => setMarketFilter(m)}
                                 >
-                                    {m === 'ALL' ? '전체 시장' : m}
+                                    {m === 'ALL'
+                                        ? activeTab === 'part7_supply'
+                                            ? '코스피20 + 코스닥20 동시보기'
+                                            : '전체 시장'
+                                        : m === 'KOSPI' && activeTab === 'part7_supply'
+                                        ? '코스피 TOP 20'
+                                        : m === 'KOSDAQ' && activeTab === 'part7_supply'
+                                        ? '코스닥 TOP 20'
+                                        : m}
                                 </button>
                             ))}
                         </div>
+
+                        {activeTab === 'part7_supply' && (
+                            <>
+                                <div className={styles.SegmentedGroup}>
+                                    <button
+                                        type="button"
+                                        className={`${styles.segBtn} ${ma10FilterMode === 'ALL' ? styles.segBtnActive : ''}`}
+                                        onClick={() => setMa10FilterMode('ALL')}
+                                    >
+                                        10일선 무관 전체
+                                    </button>
+                                    <button
+                                        type="button"
+                                        className={`${styles.segBtn} ${ma10FilterMode === 'ABOVE_MA10' ? styles.segBtnActive : ''}`}
+                                        onClick={() => setMa10FilterMode('ABOVE_MA10')}
+                                    >
+                                        📈 10일선(MA10) 위 지지 종목만
+                                    </button>
+                                </div>
+
+                                <select
+                                    className={styles.selectBox}
+                                    value={intensityMinFilter}
+                                    onChange={(e) => setIntensityMinFilter(e.target.value as IntensityMinFilter)}
+                                    aria-label="연구용 수급강도 구간 필터"
+                                >
+                                    <option value="ALL">전체 강도 구간</option>
+                                    <option value="1">1%↑ (초기구간 이상)</option>
+                                    <option value="3">3%↑ (관심구간 이상)</option>
+                                    <option value="5">5%↑ (중강도 이상)</option>
+                                    <option value="10">10%↑ (고강도 이상)</option>
+                                </select>
+                            </>
+                        )}
 
                         <select
                             className={styles.selectBox}
@@ -997,10 +1354,61 @@ export default function DashboardClient() {
                     </div>
                 </div>
 
+                {/* Part 7 전용: 수급 분석 학습·모의검증 안내 카드 */}
+                {activeTab === 'part7_supply' && (
+                    <div className={styles.part7StudyBanner}>
+                        <div className={styles.part7BannerTopRow}>
+                            <div>
+                                <strong>📊 [수급 강도 산출 공식 및 장마감 폴백 안내]</strong>
+                                <p className={styles.part7BannerDesc}>
+                                    • <strong>합산 강도(%)</strong> = (10거래일 외국인+기관 누적 순매수 수량) ÷ (같은 10거래일 전체 거래량) × 100{' '}
+                                    | <strong>외인 강도(%)</strong> = 10일 외인 누적 순매수 ÷ 10일 거래량 × 100 |{' '}
+                                    <strong>기관 강도(%)</strong> = 10일 기관 누적 순매수 ÷ 10일 거래량 × 100
+                                </p>
+                                <p className={styles.part7BannerDesc}>
+                                    • <strong>데이터 수집 & 폴백:</strong> 장 마감 직후 KRX Open API에 당일 데이터가 아직 미반영된 경우,{' '}
+                                    <code>stock.naver.com</code> 일봉 차트 거래량(<code>fchart</code>) 및 매매동향 API(<code>/trend</code>)를 실시간 결합하여 10일 수급강도와 10일 이동평균선(<code>MA10</code>)을 끊김 없이 산출합니다.
+                                </p>
+                            </div>
+                            <div className={styles.part7DataSourceBadgeBox}>
+                                <span
+                                    className={`${styles.dataSourceBadge} ${
+                                        isKrxFallback ? styles.dataSourceNaver : styles.dataSourceKrx
+                                    }`}
+                                >
+                                    {isKrxFallback
+                                        ? `⚡ 네이버 API 실시간 폴백 가동 중 (KRX 기준: ${formatDateReadable(payload?.krx_base_date)})`
+                                        : `✅ KRX 확정 데이터 + 네이버 수급 결합 (${formatDateReadable(payload?.target_date)})`}
+                                </span>
+                                <span className={styles.part7CautionNote}>
+                                    ⚠️ 최종 원칙: 외국인·기관이 샀다는 사실은 분석의 출발점이며, 높은 순매수 강도도 미래 수익을 보장하지 않습니다.
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* 데이터 테이블 */}
                 <div className={styles.tableWrapper}>
                     {loading ? (
                         <div className={styles.emptyMsg}>데이터를 불러오는 중입니다...</div>
+                    ) : activeTab === 'part7_supply' ? (
+                        <div className={styles.part7DualContainer}>
+                            {(marketFilter === 'ALL' || marketFilter === 'KOSPI') &&
+                                renderPart7SubTable(
+                                    '코스피(KOSPI) 10일 외국인+기관 수급강도 순위 TOP 20',
+                                    'KOSPI TOP 20',
+                                    part7Lists.kospiTop20,
+                                    true
+                                )}
+                            {(marketFilter === 'ALL' || marketFilter === 'KOSDAQ') &&
+                                renderPart7SubTable(
+                                    '코스닥(KOSDAQ) 10일 외국인+기관 수급강도 순위 TOP 20',
+                                    'KOSDAQ TOP 20',
+                                    part7Lists.kosdaqTop20,
+                                    false
+                                )}
+                        </div>
                     ) : currentList.length === 0 ? (
                         <div className={styles.emptyMsg}>조건에 해당하는 종목이 없습니다.</div>
                     ) : activeTab === 'top30' || activeTab === 'all' ? (
@@ -1173,9 +1581,9 @@ export default function DashboardClient() {
                 </div>
             </section>
 
-            {/* 하단 5대 알고리즘 상세 가이드 */}
+            {/* 하단 알고리즘 상세 가이드 */}
             <section className={styles.guideSection}>
-                <h3 className={styles.guideTitle}>📌 중단기 5대 알고리즘 채점 및 발굴 기준 요약</h3>
+                <h3 className={styles.guideTitle}>📌 중단기 5대 알고리즘 · 이평선 정배열 · 10일 수급강도 발굴 기준 요약</h3>
                 <div className={styles.guideGrid}>
                     <div className={styles.guideCard}>
                         <h4>🌟 알고리즘 5 (100점 멀티팩터 종합)</h4>
@@ -1212,6 +1620,12 @@ export default function DashboardClient() {
                         <h4>📐 이평선 완전 정배열 (5 &gt; 20 &gt; 60 &gt; 120)</h4>
                         <p>
                             「이동평균선 투자의 정석」 제1스테이지(Stage 1) 기준, 단기(5일) &gt; 중기(20일) &gt; 수급(60일) &gt; 경기(120일)선이 위에서부터 차례대로 정렬된 대세 상승 추세 종목
+                        </p>
+                    </div>
+                    <div className={styles.guideCard}>
+                        <h4>🔥 Part 7: 10일 외국인+기관 수급강도 TOP 20</h4>
+                        <p>
+                            10거래일 누적 (외국인+기관 순매수 수량 ÷ 같은 10일 전체 거래량 × 100) 기준으로 코스피 20위·코스닥 20위를 산출하며, 3·5·10·20일 강도 비교 및 10일선(MA10) 지지 여부를 함께 검증합니다.
                         </p>
                     </div>
                 </div>
