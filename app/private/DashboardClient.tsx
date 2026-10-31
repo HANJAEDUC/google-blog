@@ -77,6 +77,29 @@ export interface StockGemItem {
     종합순위: number;
 }
 
+export interface IndustryLeaderItem {
+    code: string;
+    name: string;
+    price: string;
+    rate: string;
+    val_eok: number;
+}
+
+export interface IndustryItem {
+    rank: number;
+    no: number;
+    name: string;
+    change_rate: number;
+    rise_count: number;
+    valid_count: number;
+    total_count: number;
+    rise_ratio: number;
+    today_val_eok: number;
+    avg_val_eok: number;
+    val_inc_ratio: number;
+    leaders: IndustryLeaderItem[];
+}
+
 export interface MidtermGemsPayload {
     target_date: string;
     krx_base_date: string;
@@ -90,6 +113,7 @@ export interface MidtermGemsPayload {
     algo_ma_aligned?: StockGemItem[];
     part7_kospi_top20?: StockGemItem[];
     part7_kosdaq_top20?: StockGemItem[];
+    part8_kospi_industries?: IndustryItem[];
     all_evaluated: StockGemItem[];
 }
 
@@ -105,7 +129,7 @@ interface DateWarningState {
     cleanYmd?: string;
 }
 
-type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'algo_ma' | 'part7_supply' | 'all';
+type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'algo_ma' | 'part7_supply' | 'part8_industry' | 'all';
 type MarketFilter = 'ALL' | 'KOSPI' | 'KOSDAQ';
 type Ma10FilterMode = 'ALL' | 'ABOVE_MA10';
 type IntensityMinFilter = 'ALL' | '1' | '3' | '5' | '10';
@@ -176,6 +200,13 @@ const TAB_CONFIG: Record<
         title: '🔥 [Part 7: 수급 매매 학습·모의검증] 10일선 · 외국인+기관 수급강도(%) 순위 (코스피 TOP 20 / 코스닥 TOP 20)',
         principle:
             '합산 강도(%) = (10거래일 외국인+기관 누적 순매수 수량 ÷ 같은 10거래일 전체 거래량) × 100 | 장 마감 시 KRX 미반영 데이터는 네이버 API(일봉 거래량+수급)로 자동 폴백 계산 | 1%·3%·5%·10%·20% 구간은 연구용 관찰 구간이며 자동 매수 신호가 아닙니다.',
+    },
+    part8_industry: {
+        label: '🏢 Part 8: 코스피 업종 강도 (3대 지표)',
+        shortBadge: '🏢업종강도',
+        title: '🏢 [Part 8: 코스피 장 마감 후 업종 강도 분석] 3대 지표 (업종등락률 · 상승비율 · 거래대금증가율) & 대장주',
+        principle:
+            '외국인·기관·개인을 따로 합산하기 전, 장 마감 후 실제로 강하게 상승한 업종을 찾고 그 강세가 업종 전반에 확산됐는지 3대 지표로 평가합니다. (분석 순서: 강한 업종 발견 → 업종 내 강한 종목 발견 → 외국인·기관 수급 확인)',
     },
     all: {
         label: '📋 전체 채점 종목',
@@ -313,6 +344,7 @@ export default function DashboardClient() {
     // Part 7 전용 필터 상태 (10일선 위 필터 / 수급강도 구간 필터)
     const [ma10FilterMode, setMa10FilterMode] = useState<Ma10FilterMode>('ALL');
     const [intensityMinFilter, setIntensityMinFilter] = useState<IntensityMinFilter>('ALL');
+    const [selectedIndustry, setSelectedIndustry] = useState<IndustryItem | null>(null);
 
     // 초기 최신 데이터 및 날짜 인덱스 로드
     const loadInitialData = async () => {
@@ -640,8 +672,20 @@ export default function DashboardClient() {
                 payload?.algo_ma_aligned?.length ??
                 all.filter((i) => i.algo_ma || i.포착알고리즘?.includes('5>20>60>120')).length,
             part7Total: (payload?.part7_kospi_top20?.length || 20) + (payload?.part7_kosdaq_top20?.length || 20),
+            part8Total: payload?.part8_kospi_industries?.length || 0,
         };
     }, [payload]);
+
+    const filteredIndustries = useMemo(() => {
+        const list = payload?.part8_kospi_industries || [];
+        if (!searchQuery.trim()) return list;
+        const q = searchQuery.trim().toLowerCase();
+        return list.filter((ind) => {
+            const matchName = ind.name.toLowerCase().includes(q);
+            const matchLeader = ind.leaders.some((l) => l.name.toLowerCase().includes(q) || l.code.includes(q));
+            return matchName || matchLeader;
+        });
+    }, [payload, searchQuery]);
 
     const currentList = useMemo(() => {
         if (!payload) return [];
@@ -977,6 +1021,145 @@ export default function DashboardClient() {
         );
     };
 
+    const renderPart8IndustryTable = () => {
+        const industries = filteredIndustries;
+        const top3 = industries.slice(0, 3);
+
+        return (
+            <div className={styles.part8Container}>
+                {/* 3대 강세 업종 요약 카드 바 */}
+                <div className={styles.part8Top3CardGrid}>
+                    {top3.map((ind, idx) => {
+                        const medal = idx === 0 ? '🥇 1위 주도업종' : idx === 1 ? '🥈 2위 주도업종' : '🥉 3위 주도업종';
+                        const ldr = ind.leaders[0];
+                        return (
+                            <div key={ind.no} className={styles.part8Top3Card}>
+                                <div className={styles.part8CardHead}>
+                                    <span className={styles.part8MedalBadge}>{medal}</span>
+                                    <strong className={styles.part8CardTitle}>{ind.name}</strong>
+                                </div>
+                                <div className={styles.part8CardMetricRow}>
+                                    <div className={styles.part8MetricCol}>
+                                        <span className={styles.part8MetricLabel}>업종 등락률</span>
+                                        <strong className={ind.change_rate >= 0 ? styles.rateUp : styles.rateDown}>
+                                            {ind.change_rate >= 0 ? '+' : ''}{ind.change_rate.toFixed(2)}%
+                                        </strong>
+                                    </div>
+                                    <div className={styles.part8MetricCol}>
+                                        <span className={styles.part8MetricLabel}>상승 종목 비율</span>
+                                        <strong className={styles.rateUp}>
+                                            {ind.rise_ratio.toFixed(1)}% <small>({ind.rise_count}/{ind.valid_count})</small>
+                                        </strong>
+                                    </div>
+                                    <div className={styles.part8MetricCol}>
+                                        <span className={styles.part8MetricLabel}>20일대비 대금증가</span>
+                                        <strong className={ind.val_inc_ratio >= 0 ? styles.intensityPos : styles.intensityNeg}>
+                                            {ind.val_inc_ratio >= 0 ? '+' : ''}{ind.val_inc_ratio.toFixed(1)}%
+                                        </strong>
+                                    </div>
+                                </div>
+                                {ldr && (
+                                    <div className={styles.part8CardLeader}>
+                                        <span>
+                                            대장주: <strong>{ldr.name}</strong> ({String(ldr.rate).startsWith('-') ? ldr.rate : `+${ldr.rate}`}%, {ldr.val_eok}억)
+                                        </span>
+                                    </div>
+                                )}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                {/* 코스피 업종 전체 랭킹 테이블 */}
+                <div className={styles.tableWrapper}>
+                    <table className={styles.dataTable}>
+                        <thead>
+                            <tr>
+                                <th>강도순위</th>
+                                <th className={styles.alignLeft}>업종명 (코스피)</th>
+                                <th>업종 등락률</th>
+                                <th>상승 종목 비율 (상승/유효)</th>
+                                <th>20일평균 대비 거래대금 증가율</th>
+                                <th>당일 거래대금</th>
+                                <th>20일 일평균 대금</th>
+                                <th className={styles.alignLeft}>업종 내 대장주 Top 3 (거래대금순)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {industries.length === 0 ? (
+                                <tr>
+                                    <td colSpan={8} className={styles.emptyMsg}>업종 데이터가 없거나 검색 결과가 없습니다.</td>
+                                </tr>
+                            ) : (
+                                industries.map((ind) => {
+                                    return (
+                                        <tr key={ind.no} className={ind.rank <= 3 ? styles.rowSGrade : ''}>
+                                            <td className={styles.rankCell}>
+                                                <span className={ind.rank <= 3 ? styles.top3RankBadge : ''}>
+                                                    #{ind.rank}
+                                                </span>
+                                            </td>
+                                            <td className={`${styles.alignLeft} ${styles.stockNameLink}`}>
+                                                <strong>{ind.name}</strong>
+                                                <span className={styles.chipRowLabel}> ({ind.total_count}종목)</span>
+                                            </td>
+                                            <td>
+                                                <strong className={ind.change_rate >= 0 ? styles.rateUp : styles.rateDown}>
+                                                    {ind.change_rate >= 0 ? '+' : ''}{ind.change_rate.toFixed(2)}%
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <div className={styles.scoreCell}>
+                                                    <strong className={ind.rise_ratio >= 50 ? styles.rateUp : ''}>
+                                                        {ind.rise_ratio.toFixed(1)}%
+                                                    </strong>
+                                                    <span className={styles.scoreSub}>
+                                                        {ind.rise_count}상승 / {ind.valid_count}종목
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <strong className={ind.val_inc_ratio >= 0 ? styles.intensityPos : styles.intensityNeg}>
+                                                    {ind.val_inc_ratio >= 0 ? '+' : ''}{ind.val_inc_ratio.toFixed(1)}%
+                                                </strong>
+                                            </td>
+                                            <td className={styles.priceCell}>{ind.today_val_eok.toLocaleString()}억</td>
+                                            <td>{ind.avg_val_eok.toLocaleString()}억</td>
+                                            <td className={styles.alignLeft}>
+                                                <div className={styles.leaderPillsRow}>
+                                                    {ind.leaders.map((ldr, lIdx) => {
+                                                        const rawCode = String(ldr.code || '').padStart(6, '0');
+                                                        const naverUrl = `https://finance.naver.com/item/main.naver?code=${rawCode}`;
+                                                        return (
+                                                            <a
+                                                                key={ldr.code}
+                                                                href={naverUrl}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                className={styles.leaderPill}
+                                                                title={`${ldr.name} (${rawCode}) | ${ldr.price}원 (${ldr.rate}%) | 거래대금 ${ldr.val_eok}억`}
+                                                            >
+                                                                <span className={styles.leaderPillRank}>{lIdx + 1}위</span>
+                                                                <span className={styles.leaderPillName}>{ldr.name}</span>
+                                                                <span className={String(ldr.rate).startsWith('-') ? styles.rateDown : styles.rateUp}>
+                                                                    {String(ldr.rate).startsWith('+') || String(ldr.rate).startsWith('-') ? ldr.rate : `+${ldr.rate}`}%
+                                                                </span>
+                                                            </a>
+                                                        );
+                                                    })}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    );
+                                })
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        );
+    };
+
     const activeConfig = TAB_CONFIG[activeTab];
     const isKrxFallback = Boolean(
         payload && payload.krx_base_date && payload.target_date && payload.krx_base_date < payload.target_date
@@ -1244,6 +1427,7 @@ export default function DashboardClient() {
                     else if (key === 'algo4') count = payload?.algo4_smart_money?.length || 0;
                     else if (key === 'algo_ma') count = summaryCounts.algoMa;
                     else if (key === 'part7_supply') count = 40;
+                    else if (key === 'part8_industry') count = summaryCounts.part8Total;
                     else if (key === 'all') count = payload?.all_evaluated?.length || 0;
 
                     return (
@@ -1254,7 +1438,9 @@ export default function DashboardClient() {
                             onClick={() => setActiveTab(key)}
                         >
                             <span>{cfg.label}</span>
-                            <span className={styles.tabCount}>{key === 'part7_supply' ? '20+20' : count}</span>
+                            <span className={styles.tabCount}>
+                                {key === 'part7_supply' ? '20+20' : key === 'part8_industry' ? `${count}개` : count}
+                            </span>
                         </button>
                     );
                 })}
@@ -1392,6 +1578,8 @@ export default function DashboardClient() {
                 <div className={styles.tableWrapper}>
                     {loading ? (
                         <div className={styles.emptyMsg}>데이터를 불러오는 중입니다...</div>
+                    ) : activeTab === 'part8_industry' ? (
+                        renderPart8IndustryTable()
                     ) : activeTab === 'part7_supply' ? (
                         <div className={styles.part7DualContainer}>
                             {(marketFilter === 'ALL' || marketFilter === 'KOSPI') &&
@@ -1626,6 +1814,12 @@ export default function DashboardClient() {
                         <h4>🔥 Part 7: 10일 외국인+기관 수급강도 TOP 20</h4>
                         <p>
                             10거래일 누적 (외국인+기관 순매수 수량 ÷ 같은 10일 전체 거래량 × 100) 기준으로 코스피 20위·코스닥 20위를 산출하며, 3·5·10·20일 강도 비교 및 10일선(MA10) 지지 여부를 함께 검증합니다.
+                        </p>
+                    </div>
+                    <div className={styles.guideCard}>
+                        <h4>🏢 Part 8: 코스피 업종 강도 (3대 지표)</h4>
+                        <p>
+                            외인·기관 수급 확인에 앞서 실제로 강하게 상승한 업종을 찾고, 업종 등락률 · 상승 종목 비율(확산도) · 20일 대비 거래대금 증가율(자금 집중도) 3대 지표로 코스피 주도업종 및 대장주를 평가합니다.
                         </p>
                     </div>
                 </div>

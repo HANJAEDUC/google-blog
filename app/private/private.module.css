@@ -1197,3 +1197,125 @@
     font-size: 11px;
     color: var(--md-sys-color-on-surface-variant);
 }
+
+
+/* ==========================================================================
+   🏢 Part 8: 코스피 장 마감 후 업종 강도 분석 (3대 지표) & 대장주
+   ========================================================================== */
+
+.part8Container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.part8Top3CardGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.part8Top3Card {
+    background: var(--md-sys-color-surface-container-low);
+    border: 1.5px solid var(--md-sys-color-outline-variant);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: transform 0.15s, border-color 0.15s;
+}
+
+.part8Top3Card:hover {
+    transform: translateY(-2px);
+    border-color: #fbbf24;
+}
+
+.part8CardHead {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.part8MedalBadge {
+    font-size: 11.5px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(251, 191, 36, 0.18);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.45);
+}
+
+.part8CardTitle {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--md-sys-color-on-surface);
+}
+
+.part8CardMetricRow {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    background: rgba(0, 0, 0, 0.15);
+    padding: 10px 12px;
+    border-radius: 8px;
+}
+
+.part8MetricCol {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+}
+
+.part8MetricLabel {
+    font-size: 11px;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.part8CardLeader {
+    font-size: 12px;
+    color: var(--md-sys-color-on-surface-variant);
+    border-top: 1px dashed var(--md-sys-color-outline-variant);
+    padding-top: 8px;
+}
+
+.part8CardLeader strong {
+    color: var(--md-sys-color-on-surface);
+}
+
+.leaderPillsRow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.leaderPill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--md-sys-color-surface-container);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 11.5px;
+    text-decoration: none;
+    transition: all 0.15s;
+    color: var(--md-sys-color-on-surface);
+}
+
+.leaderPill:hover {
+    border-color: #38bdf8;
+    background: rgba(56, 189, 248, 0.12);
+}
+
+.leaderPillRank {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface-variant);
+}
+
+.leaderPillName {
+    font-weight: 700;
+}

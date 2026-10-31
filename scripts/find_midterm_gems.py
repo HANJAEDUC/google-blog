@@ -1001,6 +1001,96 @@ def analyze_single_stock(code, info, trend_list, chart_bars, target_date, latest
     }
 
 
+def fetch_kospi_industry_analysis(target_date):
+    """
+    [Part 8] 코스피 장 마감 후 업종 강도 분석 (3대 지표)
+    1. 업종 등락률 (%): 당일 업종 공식 등락률
+    2. 상승 종목 비율 (%): 상승 종목 수 / 유효 거래 종목 수 * 100
+    3. 거래대금 증가율 (%): (당일 업종 거래대금 / 최근 20일 일평균 거래대금 - 1) * 100
+    + 업종 내 거래대금 상위 대장주 Top 3
+    """
+    days = get_cached_trading_days(target_date, count=22)
+    days_20 = [d for d in days if d <= target_date][-20:]
+    code_val_history = {}
+    for d in days_20:
+        kp_items = fetch_krx_day("kospi", d)
+        for it in kp_items:
+            c = it.get("ISU_CD", it.get("ISU_SRT_CD", ""))
+            v = int(it.get("ACC_TRDVAL", 0))
+            if c:
+                code_val_history.setdefault(c, []).append(v)
+    avg_20d_map = {c: sum(vals)/len(vals) for c, vals in code_val_history.items() if vals}
+
+    try:
+        r = requests.get("https://m.stock.naver.com/api/stocks/industry?pageSize=100", headers=HEADERS_NAVER, timeout=5)
+        groups = r.json().get("groups", [])
+    except Exception:
+        groups = []
+
+    if not groups:
+        return []
+
+    def process_group(g):
+        gid = g.get("no")
+        gname = g.get("name", "")
+        try:
+            res = requests.get(f"https://m.stock.naver.com/api/stocks/industry/{gid}?pageSize=100", headers=HEADERS_NAVER, timeout=5)
+            stocks = res.json().get("stocks", [])
+        except Exception:
+            return None
+
+        # 코스피 종목만 필터링 (거래소 코드 KS 또는 sosok 0)
+        ks_stocks = [s for s in stocks if s.get("stockExchangeType", {}).get("code") == "KS" or str(s.get("sosok")) == "0"]
+        if len(ks_stocks) < 2:
+            return None
+
+        valid_stocks = [s for s in ks_stocks if str(s.get("tradeStopType", {}).get("code")) != "2"]
+        rise_count = sum(1 for s in valid_stocks if str(s.get("compareToPreviousPrice", {}).get("code")) in ["1", "2"])
+        rise_ratio = (rise_count / len(valid_stocks) * 100.0) if valid_stocks else 0.0
+
+        today_val = sum(int(s.get("accumulatedTradingValueRaw", 0)) for s in ks_stocks)
+        avg_20d_val = sum(avg_20d_map.get(s.get("itemCode", ""), 0) for s in ks_stocks)
+        val_inc_ratio = ((today_val / avg_20d_val - 1) * 100.0) if avg_20d_val > 0 else 0.0
+        change_rate = float(g.get("changeRate", 0.0))
+
+        # 코스피 업종 내 거래대금 상위 대장주 Top 3
+        sorted_leaders = sorted(ks_stocks, key=lambda s: int(s.get("accumulatedTradingValueRaw", 0)), reverse=True)[:3]
+        leaders = []
+        for s in sorted_leaders:
+            c_raw = int(s.get("accumulatedTradingValueRaw", 0))
+            leaders.append({
+                "code": s.get("itemCode", ""),
+                "name": s.get("stockName", ""),
+                "price": s.get("closePrice", "0"),
+                "rate": s.get("fluctuationsRatio", "0.0"),
+                "val_eok": round(c_raw / 100_000_000, 1)
+            })
+
+        return {
+            "no": gid,
+            "name": gname,
+            "change_rate": change_rate,
+            "rise_count": rise_count,
+            "valid_count": len(valid_stocks),
+            "total_count": len(ks_stocks),
+            "rise_ratio": round(rise_ratio, 1),
+            "today_val_eok": round(today_val / 100_000_000, 1),
+            "avg_val_eok": round(avg_20d_val / 100_000_000, 1),
+            "val_inc_ratio": round(val_inc_ratio, 1),
+            "leaders": leaders
+        }
+
+    with ThreadPoolExecutor(max_workers=10) as ex:
+        results = [res for res in ex.map(process_group, groups) if res is not None]
+
+    # 업종 등락률 내림차순, 상승종목비율 내림차순, 거래대금 증가율 내림차순 정렬
+    results.sort(key=lambda x: (x["change_rate"], x["rise_ratio"], x["val_inc_ratio"]), reverse=True)
+    for idx, item in enumerate(results, 1):
+        item["rank"] = idx
+
+    return results
+
+
 def run_midterm_gems(target_date=None, min_val_eok=10.0):
     if not target_date:
         target_date = get_naver_latest_bizdate()
@@ -1117,6 +1207,20 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
     if not df_part7_kosdaq.empty:
         print(df_part7_kosdaq[p7_cols].to_string(index=False))
 
+    print(f"▶ [Step 4] 코스피(KOSPI) 장 마감 후 업종 강도 분석 (3대 지표) 산출 중...")
+    part8_industries = fetch_kospi_industry_analysis(target_date)
+
+    if part8_industries:
+        print("\n" + "=" * 98)
+        print(f"🏢 [Part 8] 코스피(KOSPI) 장 마감 후 업종 강도 랭킹 TOP 10 (기준일: {target_date})")
+        print("=" * 98)
+        print(f"{'순위':^4} | {'업종명':<16} | {'업종등락률':>9} | {'상승종목비율':>14} | {'거래대금증가율':>13} | {'당일거래대금':>11} | {'대장주 (거래대금 1위)':<20}")
+        print("-" * 98)
+        for it in part8_industries[:10]:
+            ldr = it['leaders'][0]['name'] if it['leaders'] else '-'
+            rise_info = f"{it['rise_ratio']:.1f}% ({it['rise_count']}/{it['valid_count']})"
+            print(f" #{it['rank']:<3} | {it['name']:<16} | {it['change_rate']:+6.2f}% | {rise_info:>14} | {it['val_inc_ratio']:+10.1f}% | {it['today_val_eok']:>8.1f}억 | {ldr:<20}")
+
     # ==========================================================================
     # 파일 저장 (output/ 폴더에 .csv 및 .md 리포트 생성)
     # ==========================================================================
@@ -1150,6 +1254,7 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
         "algo_ma_aligned": df_algo_ma.to_dict(orient="records"),
         "part7_kospi_top20": df_part7_kospi.to_dict(orient="records"),
         "part7_kosdaq_top20": df_part7_kosdaq.to_dict(orient="records"),
+        "part8_kospi_industries": part8_industries,
         "all_evaluated": df_all.to_dict(orient="records")
     }
     with open(json_path, "w", encoding="utf-8") as jf:

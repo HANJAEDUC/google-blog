@@ -2,7 +2,7 @@
   "target_date": "20261030",
   "krx_base_date": "20261029",
   "min_val_eok": 10.0,
-  "updated_at": "2026-10-31 20:30:46",
+  "updated_at": "2026-10-31 21:11:59",
   "top30_overall": [
     {
       "시장": "KOSPI",
@@ -8553,6 +8553,2256 @@
       "AI_전략코멘트": "20일이격도 124.9%, 거래량 2.6배, 최근10일 외인 4일·기관 8일 매수",
       "종합순위": 11,
       "수급강도순위": 20
+    }
+  ],
+  "part8_kospi_industries": [
+    {
+      "no": 323,
+      "name": "해운사",
+      "change_rate": 3.82,
+      "rise_count": 5,
+      "valid_count": 8,
+      "total_count": 8,
+      "rise_ratio": 62.5,
+      "today_val_eok": 732.9,
+      "avg_val_eok": 882.7,
+      "val_inc_ratio": -17.0,
+      "leaders": [
+        {
+          "code": "011200",
+          "name": "HMM",
+          "price": "23,250",
+          "rate": "4.26",
+          "val_eok": 436.5
+        },
+        {
+          "code": "028670",
+          "name": "팬오션",
+          "price": "5,840",
+          "rate": "2.10",
+          "val_eok": 184.7
+        },
+        {
+          "code": "005880",
+          "name": "대한해운",
+          "price": "1,890",
+          "rate": "2.61",
+          "val_eok": 55.8
+        }
+      ],
+      "rank": 1
+    },
+    {
+      "no": 309,
+      "name": "음료",
+      "change_rate": 1.81,
+      "rise_count": 4,
+      "valid_count": 9,
+      "total_count": 9,
+      "rise_ratio": 44.4,
+      "today_val_eok": 57.1,
+      "avg_val_eok": 38.1,
+      "val_inc_ratio": 50.0,
+      "leaders": [
+        {
+          "code": "005300",
+          "name": "롯데칠성",
+          "price": "100,600",
+          "rate": "3.82",
+          "val_eok": 31.2
+        },
+        {
+          "code": "000080",
+          "name": "하이트진로",
+          "price": "15,860",
+          "rate": "1.67",
+          "val_eok": 21.2
+        },
+        {
+          "code": "000890",
+          "name": "보해양조",
+          "price": "1,160",
+          "rate": "-2.68",
+          "val_eok": 2.5
+        }
+      ],
+      "rank": 2
+    },
+    {
+      "no": 261,
+      "name": "제약",
+      "change_rate": 1.42,
+      "rise_count": 16,
+      "valid_count": 44,
+      "total_count": 44,
+      "rise_ratio": 36.4,
+      "today_val_eok": 4296.1,
+      "avg_val_eok": 3358.1,
+      "val_inc_ratio": 27.9,
+      "leaders": [
+        {
+          "code": "207940",
+          "name": "삼성바이오로직스",
+          "price": "1,432,000",
+          "rate": "4.83",
+          "val_eok": 1436.8
+        },
+        {
+          "code": "128940",
+          "name": "한미약품",
+          "price": "407,000",
+          "rate": "4.76",
+          "val_eok": 1026.7
+        },
+        {
+          "code": "068270",
+          "name": "셀트리온",
+          "price": "190,200",
+          "rate": "0.48",
+          "val_eok": 999.5
+        }
+      ],
+      "rank": 3
+    },
+    {
+      "no": 303,
+      "name": "가구",
+      "change_rate": 1.12,
+      "rise_count": 4,
+      "valid_count": 6,
+      "total_count": 7,
+      "rise_ratio": 66.7,
+      "today_val_eok": 24.9,
+      "avg_val_eok": 22.0,
+      "val_inc_ratio": 13.2,
+      "leaders": [
+        {
+          "code": "009240",
+          "name": "한샘",
+          "price": "39,500",
+          "rate": "1.80",
+          "val_eok": 13.3
+        },
+        {
+          "code": "013890",
+          "name": "지누스",
+          "price": "5,840",
+          "rate": "-4.26",
+          "val_eok": 8.2
+        },
+        {
+          "code": "011090",
+          "name": "에넥스",
+          "price": "1,725",
+          "rate": "9.45",
+          "val_eok": 2.3
+        }
+      ],
+      "rank": 4
+    },
+    {
+      "no": 298,
+      "name": "가정용기기와용품",
+      "change_rate": 0.82,
+      "rise_count": 3,
+      "valid_count": 5,
+      "total_count": 5,
+      "rise_ratio": 60.0,
+      "today_val_eok": 176.9,
+      "avg_val_eok": 226.3,
+      "val_inc_ratio": -21.8,
+      "leaders": [
+        {
+          "code": "021240",
+          "name": "코웨이",
+          "price": "103,500",
+          "rate": "1.87",
+          "val_eok": 145.7
+        },
+        {
+          "code": "009450",
+          "name": "경동나비엔",
+          "price": "57,500",
+          "rate": "-2.04",
+          "val_eok": 15.3
+        },
+        {
+          "code": "192400",
+          "name": "쿠쿠홀딩스",
+          "price": "27,500",
+          "rate": "1.48",
+          "val_eok": 9.0
+        }
+      ],
+      "rank": 5
+    },
+    {
+      "no": 296,
+      "name": "운송인프라",
+      "change_rate": 0.7,
+      "rise_count": 2,
+      "valid_count": 3,
+      "total_count": 3,
+      "rise_ratio": 66.7,
+      "today_val_eok": 113.9,
+      "avg_val_eok": 83.2,
+      "val_inc_ratio": 36.9,
+      "leaders": [
+        {
+          "code": "088980",
+          "name": "맥쿼리인프라",
+          "price": "9,600",
+          "rate": "1.16",
+          "val_eok": 100.2
+        },
+        {
+          "code": "415640",
+          "name": "KB발해인프라",
+          "price": "10,000",
+          "rate": "0.00",
+          "val_eok": 11.7
+        },
+        {
+          "code": "005430",
+          "name": "한국공항",
+          "price": "86,300",
+          "rate": "0.12",
+          "val_eok": 2.0
+        }
+      ],
+      "rank": 6
+    },
+    {
+      "no": 315,
+      "name": "손해보험",
+      "change_rate": 0.56,
+      "rise_count": 5,
+      "valid_count": 11,
+      "total_count": 11,
+      "rise_ratio": 45.5,
+      "today_val_eok": 1162.6,
+      "avg_val_eok": 1235.2,
+      "val_inc_ratio": -5.9,
+      "leaders": [
+        {
+          "code": "000810",
+          "name": "삼성화재",
+          "price": "655,000",
+          "rate": "0.61",
+          "val_eok": 615.7
+        },
+        {
+          "code": "005830",
+          "name": "DB손해보험",
+          "price": "184,600",
+          "rate": "1.43",
+          "val_eok": 345.0
+        },
+        {
+          "code": "001450",
+          "name": "현대해상",
+          "price": "43,800",
+          "rate": "1.27",
+          "val_eok": 104.0
+        }
+      ],
+      "rank": 7
+    },
+    {
+      "no": 274,
+      "name": "섬유,의류,신발,호화품",
+      "change_rate": 0.39,
+      "rise_count": 16,
+      "valid_count": 44,
+      "total_count": 45,
+      "rise_ratio": 36.4,
+      "today_val_eok": 393.8,
+      "avg_val_eok": 328.9,
+      "val_inc_ratio": 19.7,
+      "leaders": [
+        {
+          "code": "093240",
+          "name": "형지엘리트",
+          "price": "1,840",
+          "rate": "29.94",
+          "val_eok": 83.9
+        },
+        {
+          "code": "111770",
+          "name": "영원무역",
+          "price": "68,300",
+          "rate": "-0.29",
+          "val_eok": 72.4
+        },
+        {
+          "code": "003610",
+          "name": "방림",
+          "price": "5,840",
+          "rate": "5.61",
+          "val_eok": 47.5
+        }
+      ],
+      "rank": 8
+    },
+    {
+      "no": 324,
+      "name": "상업서비스와공급품",
+      "change_rate": 0.32,
+      "rise_count": 4,
+      "valid_count": 7,
+      "total_count": 9,
+      "rise_ratio": 57.1,
+      "today_val_eok": 117.1,
+      "avg_val_eok": 127.9,
+      "val_inc_ratio": -8.4,
+      "leaders": [
+        {
+          "code": "012750",
+          "name": "에스원",
+          "price": "97,700",
+          "rate": "1.45",
+          "val_eok": 96.7
+        },
+        {
+          "code": "030190",
+          "name": "NICE평가정보",
+          "price": "17,320",
+          "rate": "0.58",
+          "val_eok": 12.3
+        },
+        {
+          "code": "122900",
+          "name": "아이마켓코리아",
+          "price": "8,150",
+          "rate": "0.62",
+          "val_eok": 4.7
+        }
+      ],
+      "rank": 9
+    },
+    {
+      "no": 329,
+      "name": "도로와철도운송",
+      "change_rate": 0.23,
+      "rise_count": 2,
+      "valid_count": 5,
+      "total_count": 5,
+      "rise_ratio": 40.0,
+      "today_val_eok": 211.6,
+      "avg_val_eok": 424.4,
+      "val_inc_ratio": -50.1,
+      "leaders": [
+        {
+          "code": "084670",
+          "name": "동양고속",
+          "price": "32,800",
+          "rate": "0.15",
+          "val_eok": 109.4
+        },
+        {
+          "code": "089860",
+          "name": "롯데렌탈",
+          "price": "52,300",
+          "rate": "2.15",
+          "val_eok": 50.0
+        },
+        {
+          "code": "000650",
+          "name": "천일고속",
+          "price": "182,800",
+          "rate": "-5.77",
+          "val_eok": 46.8
+        }
+      ],
+      "rank": 10
+    },
+    {
+      "no": 263,
+      "name": "게임엔터테인먼트",
+      "change_rate": 0.1,
+      "rise_count": 3,
+      "valid_count": 5,
+      "total_count": 5,
+      "rise_ratio": 60.0,
+      "today_val_eok": 346.7,
+      "avg_val_eok": 520.6,
+      "val_inc_ratio": -33.4,
+      "leaders": [
+        {
+          "code": "036570",
+          "name": "NC",
+          "price": "200,000",
+          "rate": "0.25",
+          "val_eok": 137.7
+        },
+        {
+          "code": "259960",
+          "name": "크래프톤",
+          "price": "181,300",
+          "rate": "0.17",
+          "val_eok": 132.7
+        },
+        {
+          "code": "192080",
+          "name": "더블유게임즈",
+          "price": "54,700",
+          "rate": "1.11",
+          "val_eok": 38.0
+        }
+      ],
+      "rank": 11
+    },
+    {
+      "no": 312,
+      "name": "가스유틸리티",
+      "change_rate": 0.09,
+      "rise_count": 2,
+      "valid_count": 11,
+      "total_count": 11,
+      "rise_ratio": 18.2,
+      "today_val_eok": 102.3,
+      "avg_val_eok": 112.2,
+      "val_inc_ratio": -8.8,
+      "leaders": [
+        {
+          "code": "036460",
+          "name": "한국가스공사",
+          "price": "36,850",
+          "rate": "-0.14",
+          "val_eok": 60.0
+        },
+        {
+          "code": "018670",
+          "name": "SK가스",
+          "price": "256,000",
+          "rate": "1.39",
+          "val_eok": 21.9
+        },
+        {
+          "code": "004690",
+          "name": "삼천리",
+          "price": "117,800",
+          "rate": "-1.01",
+          "val_eok": 4.8
+        }
+      ],
+      "rank": 12
+    },
+    {
+      "no": 318,
+      "name": "종이와목재",
+      "change_rate": 0.0,
+      "rise_count": 4,
+      "valid_count": 10,
+      "total_count": 10,
+      "rise_ratio": 40.0,
+      "today_val_eok": 5.1,
+      "avg_val_eok": 10.1,
+      "val_inc_ratio": -49.2,
+      "leaders": [
+        {
+          "code": "213500",
+          "name": "한솔제지",
+          "price": "6,700",
+          "rate": "-1.76",
+          "val_eok": 1.5
+        },
+        {
+          "code": "009580",
+          "name": "무림P&P",
+          "price": "1,537",
+          "rate": "-1.54",
+          "val_eok": 0.9
+        },
+        {
+          "code": "027970",
+          "name": "한국제지",
+          "price": "1,859",
+          "rate": "-3.63",
+          "val_eok": 0.9
+        }
+      ],
+      "rank": 13
+    },
+    {
+      "no": 302,
+      "name": "식품과기본식료품소매",
+      "change_rate": -0.07,
+      "rise_count": 0,
+      "valid_count": 2,
+      "total_count": 2,
+      "rise_ratio": 0.0,
+      "today_val_eok": 1.7,
+      "avg_val_eok": 1.7,
+      "val_inc_ratio": 0.6,
+      "leaders": [
+        {
+          "code": "006880",
+          "name": "신송홀딩스",
+          "price": "3,960",
+          "rate": "-1.86",
+          "val_eok": 1.0
+        },
+        {
+          "code": "227840",
+          "name": "현대코퍼레이션홀딩스",
+          "price": "12,250",
+          "rate": "0.00",
+          "val_eok": 0.7
+        }
+      ],
+      "rank": 14
+    },
+    {
+      "no": 268,
+      "name": "식품",
+      "change_rate": -0.11,
+      "rise_count": 18,
+      "valid_count": 50,
+      "total_count": 52,
+      "rise_ratio": 36.0,
+      "today_val_eok": 835.6,
+      "avg_val_eok": 926.4,
+      "val_inc_ratio": -9.8,
+      "leaders": [
+        {
+          "code": "003230",
+          "name": "삼양식품",
+          "price": "1,129,000",
+          "rate": "-1.14",
+          "val_eok": 453.1
+        },
+        {
+          "code": "004370",
+          "name": "농심",
+          "price": "394,000",
+          "rate": "1.55",
+          "val_eok": 90.0
+        },
+        {
+          "code": "271560",
+          "name": "오리온",
+          "price": "114,200",
+          "rate": "1.15",
+          "val_eok": 64.7
+        }
+      ],
+      "rank": 15
+    },
+    {
+      "no": 301,
+      "name": "은행",
+      "change_rate": -0.23,
+      "rise_count": 4,
+      "valid_count": 11,
+      "total_count": 11,
+      "rise_ratio": 36.4,
+      "today_val_eok": 4708.4,
+      "avg_val_eok": 5177.5,
+      "val_inc_ratio": -9.1,
+      "leaders": [
+        {
+          "code": "105560",
+          "name": "KB금융",
+          "price": "154,600",
+          "rate": "-1.40",
+          "val_eok": 1681.8
+        },
+        {
+          "code": "055550",
+          "name": "신한지주",
+          "price": "89,200",
+          "rate": "0.79",
+          "val_eok": 1174.0
+        },
+        {
+          "code": "316140",
+          "name": "우리금융지주",
+          "price": "30,750",
+          "rate": "-0.16",
+          "val_eok": 717.9
+        }
+      ],
+      "rank": 16
+    },
+    {
+      "no": 290,
+      "name": "교육서비스",
+      "change_rate": -0.48,
+      "rise_count": 2,
+      "valid_count": 4,
+      "total_count": 4,
+      "rise_ratio": 50.0,
+      "today_val_eok": 1.3,
+      "avg_val_eok": 1.4,
+      "val_inc_ratio": -9.7,
+      "leaders": [
+        {
+          "code": "100220",
+          "name": "비상교육",
+          "price": "4,790",
+          "rate": "0.63",
+          "val_eok": 0.7
+        },
+        {
+          "code": "095720",
+          "name": "웅진씽크빅",
+          "price": "1,116",
+          "rate": "-1.06",
+          "val_eok": 0.2
+        },
+        {
+          "code": "019685",
+          "name": "대교우B",
+          "price": "974",
+          "rate": "-2.40",
+          "val_eok": 0.2
+        }
+      ],
+      "rank": 17
+    },
+    {
+      "no": 305,
+      "name": "항공사",
+      "change_rate": -0.63,
+      "rise_count": 1,
+      "valid_count": 9,
+      "total_count": 9,
+      "rise_ratio": 11.1,
+      "today_val_eok": 381.1,
+      "avg_val_eok": 803.9,
+      "val_inc_ratio": -52.6,
+      "leaders": [
+        {
+          "code": "003490",
+          "name": "대한항공",
+          "price": "26,300",
+          "rate": "-0.57",
+          "val_eok": 300.9
+        },
+        {
+          "code": "180640",
+          "name": "한진칼",
+          "price": "122,900",
+          "rate": "-0.73",
+          "val_eok": 58.9
+        },
+        {
+          "code": "089590",
+          "name": "제주항공",
+          "price": "5,390",
+          "rate": "-2.88",
+          "val_eok": 11.4
+        }
+      ],
+      "rank": 18
+    },
+    {
+      "no": 264,
+      "name": "백화점과일반상점",
+      "change_rate": -0.64,
+      "rise_count": 3,
+      "valid_count": 13,
+      "total_count": 13,
+      "rise_ratio": 23.1,
+      "today_val_eok": 477.9,
+      "avg_val_eok": 697.3,
+      "val_inc_ratio": -31.5,
+      "leaders": [
+        {
+          "code": "004170",
+          "name": "신세계",
+          "price": "240,500",
+          "rate": "-3.02",
+          "val_eok": 117.5
+        },
+        {
+          "code": "023530",
+          "name": "롯데쇼핑",
+          "price": "81,200",
+          "rate": "-1.34",
+          "val_eok": 81.5
+        },
+        {
+          "code": "008770",
+          "name": "호텔신라",
+          "price": "34,150",
+          "rate": "-2.01",
+          "val_eok": 76.4
+        }
+      ],
+      "rank": 19
+    },
+    {
+      "no": 271,
+      "name": "레저용장비와제품",
+      "change_rate": -0.71,
+      "rise_count": 0,
+      "valid_count": 2,
+      "total_count": 2,
+      "rise_ratio": 0.0,
+      "today_val_eok": 3.4,
+      "avg_val_eok": 1.5,
+      "val_inc_ratio": 119.9,
+      "leaders": [
+        {
+          "code": "002450",
+          "name": "삼익악기",
+          "price": "1,003",
+          "rate": "-2.34",
+          "val_eok": 3.1
+        },
+        {
+          "code": "011420",
+          "name": "갤럭시아에스엠",
+          "price": "1,169",
+          "rate": "-0.60",
+          "val_eok": 0.3
+        }
+      ],
+      "rank": 20
+    },
+    {
+      "no": 281,
+      "name": "건강관리장비와용품",
+      "change_rate": -0.91,
+      "rise_count": 3,
+      "valid_count": 5,
+      "total_count": 5,
+      "rise_ratio": 60.0,
+      "today_val_eok": 23.9,
+      "avg_val_eok": 29.9,
+      "val_inc_ratio": -20.1,
+      "leaders": [
+        {
+          "code": "145720",
+          "name": "덴티움",
+          "price": "40,150",
+          "rate": "1.01",
+          "val_eok": 13.6
+        },
+        {
+          "code": "137310",
+          "name": "에스디바이오센서",
+          "price": "6,230",
+          "rate": "-0.80",
+          "val_eok": 6.1
+        },
+        {
+          "code": "377740",
+          "name": "바이오노트",
+          "price": "4,640",
+          "rate": "0.32",
+          "val_eok": 2.6
+        }
+      ],
+      "rank": 21
+    },
+    {
+      "no": 317,
+      "name": "호텔,레스토랑,레저",
+      "change_rate": -0.91,
+      "rise_count": 4,
+      "valid_count": 10,
+      "total_count": 10,
+      "rise_ratio": 40.0,
+      "today_val_eok": 107.9,
+      "avg_val_eok": 140.2,
+      "val_inc_ratio": -23.0,
+      "leaders": [
+        {
+          "code": "032350",
+          "name": "롯데관광개발",
+          "price": "9,990",
+          "rate": "-1.96",
+          "val_eok": 35.5
+        },
+        {
+          "code": "035250",
+          "name": "강원랜드",
+          "price": "13,720",
+          "rate": "0.59",
+          "val_eok": 33.4
+        },
+        {
+          "code": "034230",
+          "name": "파라다이스",
+          "price": "9,390",
+          "rate": "-1.37",
+          "val_eok": 19.1
+        }
+      ],
+      "rank": 22
+    },
+    {
+      "no": 325,
+      "name": "전기유틸리티",
+      "change_rate": -0.98,
+      "rise_count": 0,
+      "valid_count": 4,
+      "total_count": 4,
+      "rise_ratio": 0.0,
+      "today_val_eok": 388.3,
+      "avg_val_eok": 601.1,
+      "val_inc_ratio": -35.4,
+      "leaders": [
+        {
+          "code": "015760",
+          "name": "한국전력",
+          "price": "28,250",
+          "rate": "-0.18",
+          "val_eok": 252.8
+        },
+        {
+          "code": "052690",
+          "name": "한전기술",
+          "price": "84,600",
+          "rate": "-4.62",
+          "val_eok": 107.3
+        },
+        {
+          "code": "051600",
+          "name": "한전KPS",
+          "price": "40,750",
+          "rate": "-1.93",
+          "val_eok": 19.3
+        }
+      ],
+      "rank": 23
+    },
+    {
+      "no": 311,
+      "name": "포장재",
+      "change_rate": -1.28,
+      "rise_count": 2,
+      "valid_count": 16,
+      "total_count": 16,
+      "rise_ratio": 12.5,
+      "today_val_eok": 21.5,
+      "avg_val_eok": 27.1,
+      "val_inc_ratio": -20.7,
+      "leaders": [
+        {
+          "code": "014820",
+          "name": "동원시스템즈",
+          "price": "20,900",
+          "rate": "-0.95",
+          "val_eok": 6.0
+        },
+        {
+          "code": "008730",
+          "name": "율촌화학",
+          "price": "12,200",
+          "rate": "-0.57",
+          "val_eok": 4.1
+        },
+        {
+          "code": "002310",
+          "name": "아세아제지",
+          "price": "7,040",
+          "rate": "-1.26",
+          "val_eok": 3.3
+        }
+      ],
+      "rank": 24
+    },
+    {
+      "no": 314,
+      "name": "출판",
+      "change_rate": -1.32,
+      "rise_count": 0,
+      "valid_count": 2,
+      "total_count": 2,
+      "rise_ratio": 0.0,
+      "today_val_eok": 1.0,
+      "avg_val_eok": 1.8,
+      "val_inc_ratio": -45.7,
+      "leaders": [
+        {
+          "code": "016880",
+          "name": "웅진",
+          "price": "1,630",
+          "rate": "-2.22",
+          "val_eok": 0.7
+        },
+        {
+          "code": "068290",
+          "name": "삼성출판사",
+          "price": "5,770",
+          "rate": "-0.35",
+          "val_eok": 0.3
+        }
+      ],
+      "rank": 25
+    },
+    {
+      "no": 320,
+      "name": "건축제품",
+      "change_rate": -1.38,
+      "rise_count": 2,
+      "valid_count": 4,
+      "total_count": 4,
+      "rise_ratio": 50.0,
+      "today_val_eok": 4.7,
+      "avg_val_eok": 13.8,
+      "val_inc_ratio": -66.0,
+      "leaders": [
+        {
+          "code": "014280",
+          "name": "금강공업",
+          "price": "3,915",
+          "rate": "-3.81",
+          "val_eok": 2.9
+        },
+        {
+          "code": "005750",
+          "name": "대림바스",
+          "price": "4,050",
+          "rate": "-1.10",
+          "val_eok": 1.5
+        },
+        {
+          "code": "006570",
+          "name": "대림통상",
+          "price": "1,877",
+          "rate": "1.46",
+          "val_eok": 0.3
+        }
+      ],
+      "rank": 26
+    },
+    {
+      "no": 283,
+      "name": "전기제품",
+      "change_rate": -1.45,
+      "rise_count": 0,
+      "valid_count": 11,
+      "total_count": 11,
+      "rise_ratio": 0.0,
+      "today_val_eok": 6500.7,
+      "avg_val_eok": 6560.7,
+      "val_inc_ratio": -0.9,
+      "leaders": [
+        {
+          "code": "006400",
+          "name": "삼성SDI",
+          "price": "535,000",
+          "rate": "-0.56",
+          "val_eok": 4225.4
+        },
+        {
+          "code": "373220",
+          "name": "LG에너지솔루션",
+          "price": "352,500",
+          "rate": "-0.98",
+          "val_eok": 1536.9
+        },
+        {
+          "code": "001820",
+          "name": "삼화콘덴서",
+          "price": "101,000",
+          "rate": "-10.78",
+          "val_eok": 319.9
+        }
+      ],
+      "rank": 27
+    },
+    {
+      "no": 291,
+      "name": "조선",
+      "change_rate": -1.48,
+      "rise_count": 1,
+      "valid_count": 14,
+      "total_count": 14,
+      "rise_ratio": 7.1,
+      "today_val_eok": 3538.8,
+      "avg_val_eok": 4955.2,
+      "val_inc_ratio": -28.6,
+      "leaders": [
+        {
+          "code": "329180",
+          "name": "HD현대중공업",
+          "price": "269,000",
+          "rate": "-1.10",
+          "val_eok": 985.4
+        },
+        {
+          "code": "010140",
+          "name": "삼성중공업",
+          "price": "15,930",
+          "rate": "1.34",
+          "val_eok": 833.0
+        },
+        {
+          "code": "042660",
+          "name": "한화오션",
+          "price": "49,200",
+          "rate": "-2.57",
+          "val_eok": 583.8
+        }
+      ],
+      "rank": 28
+    },
+    {
+      "no": 285,
+      "name": "방송과엔터테인먼트",
+      "change_rate": -1.53,
+      "rise_count": 1,
+      "valid_count": 8,
+      "total_count": 8,
+      "rise_ratio": 12.5,
+      "today_val_eok": 357.7,
+      "avg_val_eok": 493.4,
+      "val_inc_ratio": -27.5,
+      "leaders": [
+        {
+          "code": "352820",
+          "name": "하이브",
+          "price": "155,800",
+          "rate": "-1.39",
+          "val_eok": 323.1
+        },
+        {
+          "code": "079160",
+          "name": "CJ CGV",
+          "price": "5,120",
+          "rate": "0.59",
+          "val_eok": 18.2
+        },
+        {
+          "code": "053210",
+          "name": "스카이라이프",
+          "price": "3,675",
+          "rate": "-3.92",
+          "val_eok": 7.2
+        }
+      ],
+      "rank": 29
+    },
+    {
+      "no": 280,
+      "name": "부동산",
+      "change_rate": -1.61,
+      "rise_count": 5,
+      "valid_count": 26,
+      "total_count": 28,
+      "rise_ratio": 19.2,
+      "today_val_eok": 117.7,
+      "avg_val_eok": 81.7,
+      "val_inc_ratio": 44.0,
+      "leaders": [
+        {
+          "code": "396690",
+          "name": "미래에셋글로벌리츠",
+          "price": "706",
+          "rate": "6.17",
+          "val_eok": 16.7
+        },
+        {
+          "code": "395400",
+          "name": "SK리츠",
+          "price": "5,270",
+          "rate": "-0.57",
+          "val_eok": 14.8
+        },
+        {
+          "code": "330590",
+          "name": "롯데리츠",
+          "price": "4,110",
+          "rate": "-3.18",
+          "val_eok": 10.7
+        }
+      ],
+      "rank": 30
+    },
+    {
+      "no": 333,
+      "name": "무선통신서비스",
+      "change_rate": -1.67,
+      "rise_count": 1,
+      "valid_count": 3,
+      "total_count": 3,
+      "rise_ratio": 33.3,
+      "today_val_eok": 496.2,
+      "avg_val_eok": 661.2,
+      "val_inc_ratio": -25.0,
+      "leaders": [
+        {
+          "code": "017670",
+          "name": "SK텔레콤",
+          "price": "74,400",
+          "rate": "-2.87",
+          "val_eok": 328.4
+        },
+        {
+          "code": "032640",
+          "name": "LG유플러스",
+          "price": "14,160",
+          "rate": "1.58",
+          "val_eok": 167.2
+        },
+        {
+          "code": "006490",
+          "name": "프리티",
+          "price": "791",
+          "rate": "-8.55",
+          "val_eok": 0.6
+        }
+      ],
+      "rank": 31
+    },
+    {
+      "no": 300,
+      "name": "양방향미디어와서비스",
+      "change_rate": -1.7,
+      "rise_count": 0,
+      "valid_count": 3,
+      "total_count": 3,
+      "rise_ratio": 0.0,
+      "today_val_eok": 1462.1,
+      "avg_val_eok": 1590.2,
+      "val_inc_ratio": -8.1,
+      "leaders": [
+        {
+          "code": "035420",
+          "name": "NAVER",
+          "price": "170,800",
+          "rate": "-2.34",
+          "val_eok": 1077.6
+        },
+        {
+          "code": "035720",
+          "name": "카카오",
+          "price": "29,200",
+          "rate": "-0.34",
+          "val_eok": 361.6
+        },
+        {
+          "code": "020120",
+          "name": "키다리스튜디오",
+          "price": "3,370",
+          "rate": "-3.58",
+          "val_eok": 22.9
+        }
+      ],
+      "rank": 32
+    },
+    {
+      "no": 304,
+      "name": "철강",
+      "change_rate": -1.77,
+      "rise_count": 7,
+      "valid_count": 32,
+      "total_count": 36,
+      "rise_ratio": 21.9,
+      "today_val_eok": 784.2,
+      "avg_val_eok": 1552.0,
+      "val_inc_ratio": -49.5,
+      "leaders": [
+        {
+          "code": "005490",
+          "name": "POSCO홀딩스",
+          "price": "271,500",
+          "rate": "-1.45",
+          "val_eok": 457.4
+        },
+        {
+          "code": "004020",
+          "name": "현대제철",
+          "price": "25,500",
+          "rate": "-3.04",
+          "val_eok": 105.1
+        },
+        {
+          "code": "001430",
+          "name": "세아베스틸지주",
+          "price": "28,200",
+          "rate": "-6.78",
+          "val_eok": 42.8
+        }
+      ],
+      "rank": 33
+    },
+    {
+      "no": 334,
+      "name": "무역회사와판매업체",
+      "change_rate": -1.86,
+      "rise_count": 1,
+      "valid_count": 7,
+      "total_count": 8,
+      "rise_ratio": 14.3,
+      "today_val_eok": 248.2,
+      "avg_val_eok": 348.5,
+      "val_inc_ratio": -28.8,
+      "leaders": [
+        {
+          "code": "047050",
+          "name": "포스코인터내셔널",
+          "price": "48,150",
+          "rate": "-2.23",
+          "val_eok": 140.4
+        },
+        {
+          "code": "298020",
+          "name": "효성티앤씨",
+          "price": "264,000",
+          "rate": "0.19",
+          "val_eok": 43.3
+        },
+        {
+          "code": "001120",
+          "name": "LX인터내셔널",
+          "price": "39,700",
+          "rate": "-1.24",
+          "val_eok": 39.1
+        }
+      ],
+      "rank": 34
+    },
+    {
+      "no": 293,
+      "name": "컴퓨터와주변기기",
+      "change_rate": -1.9,
+      "rise_count": 1,
+      "valid_count": 1,
+      "total_count": 2,
+      "rise_ratio": 100.0,
+      "today_val_eok": 0.6,
+      "avg_val_eok": 1.5,
+      "val_inc_ratio": -59.5,
+      "leaders": [
+        {
+          "code": "004920",
+          "name": "씨아이테크",
+          "price": "7,000",
+          "rate": "3.09",
+          "val_eok": 0.6
+        },
+        {
+          "code": "044380",
+          "name": "주연테크",
+          "price": "436",
+          "rate": "0.00",
+          "val_eok": 0.0
+        }
+      ],
+      "rank": 35
+    },
+    {
+      "no": 310,
+      "name": "광고",
+      "change_rate": -1.9,
+      "rise_count": 0,
+      "valid_count": 3,
+      "total_count": 3,
+      "rise_ratio": 0.0,
+      "today_val_eok": 87.9,
+      "avg_val_eok": 97.3,
+      "val_inc_ratio": -9.7,
+      "leaders": [
+        {
+          "code": "030000",
+          "name": "제일기획",
+          "price": "18,360",
+          "rate": "-2.24",
+          "val_eok": 74.7
+        },
+        {
+          "code": "214320",
+          "name": "이노션",
+          "price": "17,280",
+          "rate": "-1.59",
+          "val_eok": 11.7
+        },
+        {
+          "code": "035000",
+          "name": "HS애드",
+          "price": "6,160",
+          "rate": "-0.32",
+          "val_eok": 1.4
+        }
+      ],
+      "rank": 36
+    },
+    {
+      "no": 272,
+      "name": "화학",
+      "change_rate": -2.02,
+      "rise_count": 19,
+      "valid_count": 60,
+      "total_count": 61,
+      "rise_ratio": 31.7,
+      "today_val_eok": 2209.9,
+      "avg_val_eok": 2845.8,
+      "val_inc_ratio": -22.3,
+      "leaders": [
+        {
+          "code": "003670",
+          "name": "포스코퓨처엠",
+          "price": "160,200",
+          "rate": "-0.44",
+          "val_eok": 440.1
+        },
+        {
+          "code": "051910",
+          "name": "LG화학",
+          "price": "230,500",
+          "rate": "-1.50",
+          "val_eok": 435.4
+        },
+        {
+          "code": "003780",
+          "name": "진양산업",
+          "price": "6,420",
+          "rate": "8.81",
+          "val_eok": 235.5
+        }
+      ],
+      "rank": 37
+    },
+    {
+      "no": 265,
+      "name": "판매업체",
+      "change_rate": -2.2,
+      "rise_count": 2,
+      "valid_count": 2,
+      "total_count": 2,
+      "rise_ratio": 100.0,
+      "today_val_eok": 7.9,
+      "avg_val_eok": 34.8,
+      "val_inc_ratio": -77.4,
+      "leaders": [
+        {
+          "code": "003580",
+          "name": "HLB글로벌",
+          "price": "1,835",
+          "rate": "5.95",
+          "val_eok": 7.8
+        },
+        {
+          "code": "009810",
+          "name": "MDS스피어",
+          "price": "1,720",
+          "rate": "1.18",
+          "val_eok": 0.1
+        }
+      ],
+      "rank": 38
+    },
+    {
+      "no": 25,
+      "name": "기타",
+      "change_rate": -2.26,
+      "rise_count": 100,
+      "valid_count": 100,
+      "total_count": 100,
+      "rise_ratio": 100.0,
+      "today_val_eok": 30972.4,
+      "avg_val_eok": 0.0,
+      "val_inc_ratio": 0.0,
+      "leaders": [
+        {
+          "code": "114800",
+          "name": "KODEX 인버스",
+          "price": "1,177",
+          "rate": "3.79",
+          "val_eok": 14592.7
+        },
+        {
+          "code": "252670",
+          "name": "KODEX 200선물인버스2X",
+          "price": "97",
+          "rate": "6.59",
+          "val_eok": 10960.0
+        },
+        {
+          "code": "0197X0",
+          "name": "SOL SK하이닉스선물단일종목인버스2X",
+          "price": "7,785",
+          "rate": "13.90",
+          "val_eok": 1682.4
+        }
+      ],
+      "rank": 39
+    },
+    {
+      "no": 322,
+      "name": "비철금속",
+      "change_rate": -2.3,
+      "rise_count": 5,
+      "valid_count": 25,
+      "total_count": 26,
+      "rise_ratio": 20.0,
+      "today_val_eok": 351.1,
+      "avg_val_eok": 519.7,
+      "val_inc_ratio": -32.4,
+      "leaders": [
+        {
+          "code": "010130",
+          "name": "고려아연",
+          "price": "862,000",
+          "rate": "-1.82",
+          "val_eok": 171.8
+        },
+        {
+          "code": "006110",
+          "name": "삼아알미늄",
+          "price": "56,500",
+          "rate": "-6.46",
+          "val_eok": 75.2
+        },
+        {
+          "code": "103140",
+          "name": "풍산",
+          "price": "57,200",
+          "rate": "-2.05",
+          "val_eok": 37.1
+        }
+      ],
+      "rank": 40
+    },
+    {
+      "no": 327,
+      "name": "디스플레이패널",
+      "change_rate": -2.3,
+      "rise_count": 0,
+      "valid_count": 1,
+      "total_count": 2,
+      "rise_ratio": 0.0,
+      "today_val_eok": 169.9,
+      "avg_val_eok": 204.3,
+      "val_inc_ratio": -16.8,
+      "leaders": [
+        {
+          "code": "034220",
+          "name": "LG디스플레이",
+          "price": "7,260",
+          "rate": "-2.55",
+          "val_eok": 169.9
+        },
+        {
+          "code": "020760",
+          "name": "일진디스플",
+          "price": "902",
+          "rate": "0.00",
+          "val_eok": 0.0
+        }
+      ],
+      "rank": 41
+    },
+    {
+      "no": 266,
+      "name": "화장품",
+      "change_rate": -2.4,
+      "rise_count": 7,
+      "valid_count": 20,
+      "total_count": 20,
+      "rise_ratio": 35.0,
+      "today_val_eok": 4626.0,
+      "avg_val_eok": 2437.6,
+      "val_inc_ratio": 89.8,
+      "leaders": [
+        {
+          "code": "278470",
+          "name": "에이피알",
+          "price": "255,500",
+          "rate": "-9.56",
+          "val_eok": 3108.5
+        },
+        {
+          "code": "090430",
+          "name": "아모레퍼시픽",
+          "price": "128,200",
+          "rate": "3.05",
+          "val_eok": 448.2
+        },
+        {
+          "code": "192820",
+          "name": "코스맥스",
+          "price": "244,000",
+          "rate": "-1.61",
+          "val_eok": 295.7
+        }
+      ],
+      "rank": 42
+    },
+    {
+      "no": 289,
+      "name": "건축자재",
+      "change_rate": -2.45,
+      "rise_count": 6,
+      "valid_count": 31,
+      "total_count": 31,
+      "rise_ratio": 19.4,
+      "today_val_eok": 132.6,
+      "avg_val_eok": 187.1,
+      "val_inc_ratio": -29.1,
+      "leaders": [
+        {
+          "code": "002380",
+          "name": "KCC",
+          "price": "386,000",
+          "rate": "-3.02",
+          "val_eok": 49.3
+        },
+        {
+          "code": "300720",
+          "name": "한일시멘트",
+          "price": "15,960",
+          "rate": "-3.86",
+          "val_eok": 24.7
+        },
+        {
+          "code": "002030",
+          "name": "아세아",
+          "price": "189,100",
+          "rate": "2.88",
+          "val_eok": 6.9
+        }
+      ],
+      "rank": 43
+    },
+    {
+      "no": 297,
+      "name": "가정용품",
+      "change_rate": -2.74,
+      "rise_count": 0,
+      "valid_count": 2,
+      "total_count": 2,
+      "rise_ratio": 0.0,
+      "today_val_eok": 0.9,
+      "avg_val_eok": 1.9,
+      "val_inc_ratio": -51.0,
+      "leaders": [
+        {
+          "code": "012690",
+          "name": "모나리자",
+          "price": "1,300",
+          "rate": "-1.37",
+          "val_eok": 0.7
+        },
+        {
+          "code": "009770",
+          "name": "삼정펄프",
+          "price": "26,050",
+          "rate": "-2.43",
+          "val_eok": 0.2
+        }
+      ],
+      "rank": 44
+    },
+    {
+      "no": 269,
+      "name": "디스플레이장비및부품",
+      "change_rate": -2.93,
+      "rise_count": 0,
+      "valid_count": 2,
+      "total_count": 3,
+      "rise_ratio": 0.0,
+      "today_val_eok": 84.6,
+      "avg_val_eok": 511.1,
+      "val_inc_ratio": -83.4,
+      "leaders": [
+        {
+          "code": "001210",
+          "name": "금호전기",
+          "price": "7,240",
+          "rate": "-8.70",
+          "val_eok": 70.8
+        },
+        {
+          "code": "108320",
+          "name": "LX세미콘",
+          "price": "30,000",
+          "rate": "-2.76",
+          "val_eok": 13.8
+        },
+        {
+          "code": "009310",
+          "name": "참엔지니어링",
+          "price": "5,330",
+          "rate": "0.00",
+          "val_eok": 0.0
+        }
+      ],
+      "rank": 45
+    },
+    {
+      "no": 330,
+      "name": "생명보험",
+      "change_rate": -3.22,
+      "rise_count": 0,
+      "valid_count": 3,
+      "total_count": 3,
+      "rise_ratio": 0.0,
+      "today_val_eok": 1245.4,
+      "avg_val_eok": 881.2,
+      "val_inc_ratio": 41.3,
+      "leaders": [
+        {
+          "code": "032830",
+          "name": "삼성생명",
+          "price": "268,500",
+          "rate": "-3.42",
+          "val_eok": 1180.4
+        },
+        {
+          "code": "088350",
+          "name": "한화생명",
+          "price": "4,080",
+          "rate": "-1.57",
+          "val_eok": 44.9
+        },
+        {
+          "code": "085620",
+          "name": "미래에셋생명",
+          "price": "19,400",
+          "rate": "-1.47",
+          "val_eok": 20.1
+        }
+      ],
+      "rank": 46
+    },
+    {
+      "no": 326,
+      "name": "항공화물운송과물류",
+      "change_rate": -3.25,
+      "rise_count": 1,
+      "valid_count": 10,
+      "total_count": 10,
+      "rise_ratio": 10.0,
+      "today_val_eok": 475.2,
+      "avg_val_eok": 294.4,
+      "val_inc_ratio": 61.4,
+      "leaders": [
+        {
+          "code": "086280",
+          "name": "현대글로비스",
+          "price": "181,300",
+          "rate": "-3.97",
+          "val_eok": 439.1
+        },
+        {
+          "code": "000120",
+          "name": "CJ대한통운",
+          "price": "66,000",
+          "rate": "1.85",
+          "val_eok": 21.4
+        },
+        {
+          "code": "002320",
+          "name": "한진",
+          "price": "16,540",
+          "rate": "-1.25",
+          "val_eok": 4.3
+        }
+      ],
+      "rank": 47
+    },
+    {
+      "no": 321,
+      "name": "증권",
+      "change_rate": -3.28,
+      "rise_count": 2,
+      "valid_count": 34,
+      "total_count": 34,
+      "rise_ratio": 5.9,
+      "today_val_eok": 1630.4,
+      "avg_val_eok": 1667.1,
+      "val_inc_ratio": -2.2,
+      "leaders": [
+        {
+          "code": "138040",
+          "name": "메리츠금융지주",
+          "price": "131,700",
+          "rate": "0.23",
+          "val_eok": 345.9
+        },
+        {
+          "code": "071050",
+          "name": "한국금융지주",
+          "price": "150,600",
+          "rate": "-5.87",
+          "val_eok": 261.6
+        },
+        {
+          "code": "016360",
+          "name": "삼성증권",
+          "price": "79,100",
+          "rate": "-5.27",
+          "val_eok": 258.8
+        }
+      ],
+      "rank": 48
+    },
+    {
+      "no": 313,
+      "name": "석유와가스",
+      "change_rate": -3.71,
+      "rise_count": 1,
+      "valid_count": 13,
+      "total_count": 13,
+      "rise_ratio": 7.7,
+      "today_val_eok": 2172.8,
+      "avg_val_eok": 3733.8,
+      "val_inc_ratio": -41.8,
+      "leaders": [
+        {
+          "code": "034730",
+          "name": "SK",
+          "price": "494,500",
+          "rate": "-7.57",
+          "val_eok": 814.5
+        },
+        {
+          "code": "096770",
+          "name": "SK이노베이션",
+          "price": "128,200",
+          "rate": "-1.23",
+          "val_eok": 802.5
+        },
+        {
+          "code": "010950",
+          "name": "S-Oil",
+          "price": "123,500",
+          "rate": "0.98",
+          "val_eok": 303.3
+        }
+      ],
+      "rank": 49
+    },
+    {
+      "no": 286,
+      "name": "생물공학",
+      "change_rate": -4.31,
+      "rise_count": 1,
+      "valid_count": 1,
+      "total_count": 2,
+      "rise_ratio": 100.0,
+      "today_val_eok": 0.4,
+      "avg_val_eok": 0.9,
+      "val_inc_ratio": -56.0,
+      "leaders": [
+        {
+          "code": "002630",
+          "name": "오리엔트바이오",
+          "price": "1,230",
+          "rate": "0.08",
+          "val_eok": 0.4
+        },
+        {
+          "code": "011000",
+          "name": "진원생명과학",
+          "price": "2,670",
+          "rate": "0.00",
+          "val_eok": 0.0
+        }
+      ],
+      "rank": 50
+    },
+    {
+      "no": 270,
+      "name": "자동차부품",
+      "change_rate": -4.5,
+      "rise_count": 15,
+      "valid_count": 49,
+      "total_count": 53,
+      "rise_ratio": 30.6,
+      "today_val_eok": 431.2,
+      "avg_val_eok": 616.6,
+      "val_inc_ratio": -30.1,
+      "leaders": [
+        {
+          "code": "161390",
+          "name": "한국타이어앤테크놀로지",
+          "price": "56,700",
+          "rate": "-0.18",
+          "val_eok": 144.3
+        },
+        {
+          "code": "073240",
+          "name": "금호타이어",
+          "price": "5,130",
+          "rate": "-0.77",
+          "val_eok": 73.0
+        },
+        {
+          "code": "007340",
+          "name": "DN오토모티브",
+          "price": "40,350",
+          "rate": "-2.18",
+          "val_eok": 39.5
+        }
+      ],
+      "rank": 51
+    },
+    {
+      "no": 299,
+      "name": "기계",
+      "change_rate": -4.71,
+      "rise_count": 4,
+      "valid_count": 21,
+      "total_count": 22,
+      "rise_ratio": 19.0,
+      "today_val_eok": 2039.5,
+      "avg_val_eok": 2553.7,
+      "val_inc_ratio": -20.1,
+      "leaders": [
+        {
+          "code": "034020",
+          "name": "두산에너빌리티",
+          "price": "53,600",
+          "rate": "-5.47",
+          "val_eok": 1413.8
+        },
+        {
+          "code": "454910",
+          "name": "두산로보틱스",
+          "price": "53,600",
+          "rate": "-6.78",
+          "val_eok": 198.6
+        },
+        {
+          "code": "267270",
+          "name": "HD건설기계",
+          "price": "75,700",
+          "rate": "-3.20",
+          "val_eok": 160.1
+        }
+      ],
+      "rank": 52
+    },
+    {
+      "no": 294,
+      "name": "통신장비",
+      "change_rate": -4.78,
+      "rise_count": 1,
+      "valid_count": 2,
+      "total_count": 3,
+      "rise_ratio": 50.0,
+      "today_val_eok": 835.7,
+      "avg_val_eok": 152.6,
+      "val_inc_ratio": 447.8,
+      "leaders": [
+        {
+          "code": "489790",
+          "name": "한화비전",
+          "price": "50,200",
+          "rate": "2.24",
+          "val_eok": 806.5
+        },
+        {
+          "code": "033240",
+          "name": "자화전자",
+          "price": "18,300",
+          "rate": "-8.27",
+          "val_eok": 29.3
+        },
+        {
+          "code": "019490",
+          "name": "엑시큐어하이트론",
+          "price": "541",
+          "rate": "0.00",
+          "val_eok": 0.0
+        }
+      ],
+      "rank": 53
+    },
+    {
+      "no": 307,
+      "name": "전자제품",
+      "change_rate": -4.8,
+      "rise_count": 0,
+      "valid_count": 4,
+      "total_count": 4,
+      "rise_ratio": 0.0,
+      "today_val_eok": 1126.1,
+      "avg_val_eok": 1562.5,
+      "val_inc_ratio": -27.9,
+      "leaders": [
+        {
+          "code": "066570",
+          "name": "LG전자",
+          "price": "147,800",
+          "rate": "-4.77",
+          "val_eok": 1083.5
+        },
+        {
+          "code": "066575",
+          "name": "LG전자우",
+          "price": "55,000",
+          "rate": "-6.78",
+          "val_eok": 40.2
+        },
+        {
+          "code": "008700",
+          "name": "아남전자",
+          "price": "1,183",
+          "rate": "-3.27",
+          "val_eok": 2.2
+        }
+      ],
+      "rank": 54
+    },
+    {
+      "no": 292,
+      "name": "핸드셋",
+      "change_rate": -5.03,
+      "rise_count": 1,
+      "valid_count": 3,
+      "total_count": 3,
+      "rise_ratio": 33.3,
+      "today_val_eok": 52.8,
+      "avg_val_eok": 110.1,
+      "val_inc_ratio": -52.0,
+      "leaders": [
+        {
+          "code": "192650",
+          "name": "드림텍",
+          "price": "6,530",
+          "rate": "-6.71",
+          "val_eok": 27.1
+        },
+        {
+          "code": "097520",
+          "name": "엠씨넥스",
+          "price": "17,470",
+          "rate": "-7.42",
+          "val_eok": 20.0
+        },
+        {
+          "code": "000670",
+          "name": "영풍",
+          "price": "31,650",
+          "rate": "0.48",
+          "val_eok": 5.7
+        }
+      ],
+      "rank": 55
+    },
+    {
+      "no": 276,
+      "name": "복합기업",
+      "change_rate": -5.16,
+      "rise_count": 1,
+      "valid_count": 23,
+      "total_count": 23,
+      "rise_ratio": 4.3,
+      "today_val_eok": 2726.6,
+      "avg_val_eok": 3122.6,
+      "val_inc_ratio": -12.7,
+      "leaders": [
+        {
+          "code": "028260",
+          "name": "삼성물산",
+          "price": "307,000",
+          "rate": "-5.10",
+          "val_eok": 990.2
+        },
+        {
+          "code": "000150",
+          "name": "두산",
+          "price": "874,000",
+          "rate": "-9.05",
+          "val_eok": 882.3
+        },
+        {
+          "code": "003550",
+          "name": "LG",
+          "price": "95,300",
+          "rate": "-4.22",
+          "val_eok": 408.6
+        }
+      ],
+      "rank": 56
+    },
+    {
+      "no": 295,
+      "name": "에너지장비및서비스",
+      "change_rate": -5.2,
+      "rise_count": 0,
+      "valid_count": 12,
+      "total_count": 12,
+      "rise_ratio": 0.0,
+      "today_val_eok": 1758.2,
+      "avg_val_eok": 2191.6,
+      "val_inc_ratio": -19.8,
+      "leaders": [
+        {
+          "code": "009830",
+          "name": "한화솔루션",
+          "price": "22,000",
+          "rate": "-6.78",
+          "val_eok": 1130.9
+        },
+        {
+          "code": "322000",
+          "name": "HD현대에너지솔루션",
+          "price": "72,700",
+          "rate": "-7.62",
+          "val_eok": 161.9
+        },
+        {
+          "code": "336260",
+          "name": "두산퓨얼셀",
+          "price": "28,350",
+          "rate": "-5.50",
+          "val_eok": 138.0
+        }
+      ],
+      "rank": 57
+    },
+    {
+      "no": 267,
+      "name": "IT서비스",
+      "change_rate": -5.58,
+      "rise_count": 1,
+      "valid_count": 11,
+      "total_count": 11,
+      "rise_ratio": 9.1,
+      "today_val_eok": 421.8,
+      "avg_val_eok": 584.1,
+      "val_inc_ratio": -27.8,
+      "leaders": [
+        {
+          "code": "018260",
+          "name": "삼성에스디에스",
+          "price": "200,000",
+          "rate": "-3.15",
+          "val_eok": 295.5
+        },
+        {
+          "code": "181710",
+          "name": "NHN",
+          "price": "46,050",
+          "rate": "-3.86",
+          "val_eok": 48.1
+        },
+        {
+          "code": "377300",
+          "name": "카카오페이",
+          "price": "33,300",
+          "rate": "-2.06",
+          "val_eok": 37.1
+        }
+      ],
+      "rank": 58
+    },
+    {
+      "no": 279,
+      "name": "건설",
+      "change_rate": -6.07,
+      "rise_count": 6,
+      "valid_count": 37,
+      "total_count": 41,
+      "rise_ratio": 16.2,
+      "today_val_eok": 3735.7,
+      "avg_val_eok": 4110.6,
+      "val_inc_ratio": -9.1,
+      "leaders": [
+        {
+          "code": "028050",
+          "name": "삼성E&A",
+          "price": "60,600",
+          "rate": "-3.50",
+          "val_eok": 1407.8
+        },
+        {
+          "code": "047040",
+          "name": "대우건설",
+          "price": "10,620",
+          "rate": "-8.61",
+          "val_eok": 813.1
+        },
+        {
+          "code": "000720",
+          "name": "현대건설",
+          "price": "82,000",
+          "rate": "-10.28",
+          "val_eok": 574.3
+        }
+      ],
+      "rank": 59
+    },
+    {
+      "no": 306,
+      "name": "전기장비",
+      "change_rate": -6.34,
+      "rise_count": 0,
+      "valid_count": 13,
+      "total_count": 14,
+      "rise_ratio": 0.0,
+      "today_val_eok": 3623.1,
+      "avg_val_eok": 5868.6,
+      "val_inc_ratio": -38.3,
+      "leaders": [
+        {
+          "code": "298040",
+          "name": "효성중공업",
+          "price": "1,803,000",
+          "rate": "-5.65",
+          "val_eok": 811.6
+        },
+        {
+          "code": "010120",
+          "name": "LS ELECTRIC",
+          "price": "146,900",
+          "rate": "-7.26",
+          "val_eok": 767.3
+        },
+        {
+          "code": "267260",
+          "name": "HD현대일렉트릭",
+          "price": "418,500",
+          "rate": "-4.99",
+          "val_eok": 751.5
+        }
+      ],
+      "rank": 60
+    },
+    {
+      "no": 278,
+      "name": "반도체와반도체장비",
+      "change_rate": -6.83,
+      "rise_count": 0,
+      "valid_count": 6,
+      "total_count": 6,
+      "rise_ratio": 0.0,
+      "today_val_eok": 52349.1,
+      "avg_val_eok": 49323.1,
+      "val_inc_ratio": 6.1,
+      "leaders": [
+        {
+          "code": "005930",
+          "name": "삼성전자",
+          "price": "220,500",
+          "rate": "-4.96",
+          "val_eok": 43368.8
+        },
+        {
+          "code": "005935",
+          "name": "삼성전자우",
+          "price": "171,200",
+          "rate": "-6.91",
+          "val_eok": 8930.5
+        },
+        {
+          "code": "029460",
+          "name": "케이씨",
+          "price": "37,500",
+          "rate": "-2.09",
+          "val_eok": 26.1
+        }
+      ],
+      "rank": 61
+    },
+    {
+      "no": 284,
+      "name": "우주항공과국방",
+      "change_rate": -7.48,
+      "rise_count": 0,
+      "valid_count": 8,
+      "total_count": 8,
+      "rise_ratio": 0.0,
+      "today_val_eok": 4350.4,
+      "avg_val_eok": 4020.4,
+      "val_inc_ratio": 8.2,
+      "leaders": [
+        {
+          "code": "012450",
+          "name": "한화에어로스페이스",
+          "price": "682,000",
+          "rate": "-10.26",
+          "val_eok": 2769.6
+        },
+        {
+          "code": "272210",
+          "name": "한화시스템",
+          "price": "59,900",
+          "rate": "-7.28",
+          "val_eok": 477.0
+        },
+        {
+          "code": "079550",
+          "name": "LIG디펜스앤에어로스페이스",
+          "price": "409,000",
+          "rate": "-4.33",
+          "val_eok": 385.4
+        }
+      ],
+      "rank": 62
+    },
+    {
+      "no": 273,
+      "name": "자동차",
+      "change_rate": -7.57,
+      "rise_count": 2,
+      "valid_count": 10,
+      "total_count": 10,
+      "rise_ratio": 20.0,
+      "today_val_eok": 4386.6,
+      "avg_val_eok": 2999.5,
+      "val_inc_ratio": 46.2,
+      "leaders": [
+        {
+          "code": "000270",
+          "name": "기아",
+          "price": "94,800",
+          "rate": "-12.47",
+          "val_eok": 2175.4
+        },
+        {
+          "code": "005380",
+          "name": "현대차",
+          "price": "278,500",
+          "rate": "-4.79",
+          "val_eok": 1713.9
+        },
+        {
+          "code": "005387",
+          "name": "현대차2우B",
+          "price": "149,000",
+          "rate": "-5.76",
+          "val_eok": 278.0
+        }
+      ],
+      "rank": 63
+    },
+    {
+      "no": 282,
+      "name": "전자장비와기기",
+      "change_rate": -9.33,
+      "rise_count": 0,
+      "valid_count": 23,
+      "total_count": 24,
+      "rise_ratio": 0.0,
+      "today_val_eok": 12216.6,
+      "avg_val_eok": 12383.7,
+      "val_inc_ratio": -1.3,
+      "leaders": [
+        {
+          "code": "009150",
+          "name": "삼성전기",
+          "price": "1,166,000",
+          "rate": "-9.82",
+          "val_eok": 10391.7
+        },
+        {
+          "code": "011070",
+          "name": "LG이노텍",
+          "price": "320,500",
+          "rate": "-7.77",
+          "val_eok": 592.8
+        },
+        {
+          "code": "017900",
+          "name": "광전자",
+          "price": "8,620",
+          "rate": "-8.69",
+          "val_eok": 383.8
+        }
+      ],
+      "rank": 64
     }
   ],
   "all_evaluated": [
@@ -22652,9 +24902,9 @@
       "시총대비매집(%)": "-1.89%",
       "외인보유율": "13.32% (-3.47%p)",
       "추세점수(25)": 0.0,
-      "거래량점수(25)": 11.0,
+      "거래량점수(25)": 15.0,
       "수급강도(30)": 0.0,
-      "연속성점수(20)": 15.0,
+      "연속성점수(20)": 10.0,
       "algo1": false,
       "algo1_note": "",
       "algo2": false,
@@ -23444,9 +25694,9 @@
       "시총대비매집(%)": "-0.03%",
       "외인보유율": "38.75% (-0.04%p)",
       "추세점수(25)": 0.0,
-      "거래량점수(25)": 15.0,
-      "수급강도(30)": 0.0,
-      "연속성점수(20)": 10.0,
+      "거래량점수(25)": 8.0,
+      "수급강도(30)": 10.0,
+      "연속성점수(20)": 7.0,
       "algo1": false,
       "algo1_note": "",
       "algo2": false,
@@ -23459,52 +25709,6 @@
       "algo_ma_note": "",
       "AI_전략코멘트": "20일이격도 93.7%, 거래량 1.3배, 최근10일 외인 5일·기관 5일 매수",
       "종합순위": 207
-    },
-    {
-      "시장": "KOSDAQ",
-      "종목코드": "089030",
-      "종목명": "테크윙",
-      "종합점수": 25.0,
-      "등급": "일반",
-      "포착알고리즘": "-",
-      "종가(원)": "36,350",
-      "raw_price": 36350,
-      "등락률(%)": "-7.97%",
-      "raw_rate": -7.97,
-      "거래대금(억)": "142.2억",
-      "raw_val_eok": 142.241185,
-      "20일거래량배수": "0.5배",
-      "raw_vol_ratio": 0.5396034767336939,
-      "회전율(%)": "1.06%",
-      "raw_turnover": 1.0560634453101712,
-      "20일이격도": "79.6%",
-      "MA5": "38,450",
-      "MA20": "45,690",
-      "MA60": "47,194",
-      "MA120": "49,314",
-      "당일외인순매수": "+20,134",
-      "당일기관순매수": "-77,623",
-      "10일외인매수일": "6/10일",
-      "10일기관매수일": "4/10일",
-      "10일합산순매수": "-311,215",
-      "시총대비매집(%)": "-0.84%",
-      "외인보유율": "20.45% (+0.29%p)",
-      "추세점수(25)": 0.0,
-      "거래량점수(25)": 15.0,
-      "수급강도(30)": 0.0,
-      "연속성점수(20)": 10.0,
-      "algo1": false,
-      "algo1_note": "",
-      "algo2": false,
-      "algo2_note": "",
-      "algo3": false,
-      "algo3_note": "",
-      "algo4": false,
-      "algo4_note": "",
-      "algo_ma": false,
-      "algo_ma_note": "",
-      "AI_전략코멘트": "20일이격도 79.6%, 거래량 0.5배, 최근10일 외인 6일·기관 4일 매수",
-      "종합순위": 208
     },
     {
       "시장": "KOSPI",
