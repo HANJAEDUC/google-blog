@@ -129,6 +129,36 @@ interface DateWarningState {
     cleanYmd?: string;
 }
 
+interface StockBriefingNews {
+    title: string;
+    officeName: string;
+    datetime: string;
+    body: string;
+    url: string;
+    isMajor: boolean;
+}
+
+interface StockBriefingDisclosure {
+    title: string;
+    datetime: string;
+    author: string;
+    url: string;
+}
+
+interface StockBriefingData {
+    code: string;
+    stockName: string;
+    price: string;
+    fluctuationRate: string;
+    keywords: string[];
+    newsCount: number;
+    disclosureCount: number;
+    news: StockBriefingNews[];
+    disclosures: StockBriefingDisclosure[];
+    naverUrl: string;
+    naverMobileUrl: string;
+}
+
 type TabKey = 'top30' | 'algo1' | 'algo2' | 'algo3' | 'algo4' | 'algo_ma' | 'part7_supply' | 'part8_industry' | 'all';
 type MarketFilter = 'ALL' | 'KOSPI' | 'KOSDAQ';
 type Ma10FilterMode = 'ALL' | 'ABOVE_MA10';
@@ -345,6 +375,39 @@ export default function DashboardClient() {
     const [ma10FilterMode, setMa10FilterMode] = useState<Ma10FilterMode>('ALL');
     const [intensityMinFilter, setIntensityMinFilter] = useState<IntensityMinFilter>('ALL');
     const [selectedIndustry, setSelectedIndustry] = useState<IndustryItem | null>(null);
+
+    // 🔍 종목별 1달 내 소식/공시 1페이지 브리핑 Drawer 상태
+    const [briefingTarget, setBriefingTarget] = useState<{ code: string; name: string } | null>(null);
+    const [briefingLoading, setBriefingLoading] = useState<boolean>(false);
+    const [briefingData, setBriefingData] = useState<StockBriefingData | null>(null);
+    const [briefingError, setBriefingError] = useState<string | null>(null);
+    const [briefingTab, setBriefingTab] = useState<'ALL' | 'NEWS' | 'DISCLOSURE'>('ALL');
+
+    const handleOpenBriefing = async (code: string, name: string) => {
+        const rawCode = String(code || '').replace(/,/g, '').trim().padStart(6, '0');
+        setBriefingTarget({ code: rawCode, name });
+        setBriefingLoading(true);
+        setBriefingError(null);
+        setBriefingData(null);
+        setBriefingTab('ALL');
+
+        try {
+            const res = await fetch(`/api/stock-briefing?code=${rawCode}&name=${encodeURIComponent(name)}`);
+            if (!res.ok) throw new Error('브리핑 정보를 불러오지 못했습니다.');
+            const data: StockBriefingData = await res.json();
+            setBriefingData(data);
+        } catch (e: unknown) {
+            setBriefingError(e instanceof Error ? e.message : '데이터 로드 실패');
+        } finally {
+            setBriefingLoading(false);
+        }
+    };
+
+    const handleCloseBriefing = () => {
+        setBriefingTarget(null);
+        setBriefingData(null);
+        setBriefingError(null);
+    };
 
     // 초기 최신 데이터 및 날짜 인덱스 로드
     const loadInitialData = async () => {
@@ -801,15 +864,25 @@ export default function DashboardClient() {
 
         return (
             <div className={styles.stockCell}>
-                <a
-                    href={naverUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.stockNameLink}
-                    title={`${item.종목명} (${paddedCode}) 네이버 증권 새 탭 열기`}
-                >
-                    {item.종목명}
-                </a>
+                <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                    <button
+                        type="button"
+                        onClick={() => handleOpenBriefing(paddedCode, item.종목명)}
+                        className={styles.stockNameLink}
+                        style={{ background: 'none', border: 'none', padding: 0, textAlign: 'left', cursor: 'pointer', font: 'inherit', color: 'inherit' }}
+                        title={`${item.종목명} 최근 1달 소식·공시 브리핑 열기`}
+                    >
+                        {item.종목명}
+                    </button>
+                    <button
+                        type="button"
+                        className={styles.btnBriefingTrigger}
+                        onClick={() => handleOpenBriefing(paddedCode, item.종목명)}
+                        title={`${item.종목명} 최근 1달 소식·공시 1페이지 브리핑`}
+                    >
+                        🔍 브리핑
+                    </button>
+                </div>
                 <a
                     href={naverUrl}
                     target="_blank"
@@ -1129,22 +1202,21 @@ export default function DashboardClient() {
                                                 <div className={styles.leaderPillsRow}>
                                                     {ind.leaders.map((ldr, lIdx) => {
                                                         const rawCode = String(ldr.code || '').padStart(6, '0');
-                                                        const naverUrl = `https://finance.naver.com/item/main.naver?code=${rawCode}`;
                                                         return (
-                                                            <a
+                                                            <button
                                                                 key={ldr.code}
-                                                                href={naverUrl}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
+                                                                type="button"
+                                                                onClick={() => handleOpenBriefing(rawCode, ldr.name)}
                                                                 className={styles.leaderPill}
-                                                                title={`${ldr.name} (${rawCode}) | ${ldr.price}원 (${ldr.rate}%) | 거래대금 ${ldr.val_eok}억`}
+                                                                title={`${ldr.name} (${rawCode}) | ${ldr.price}원 (${ldr.rate}%) | 거래대금 ${ldr.val_eok}억 | 최근 1달 브리핑 열기`}
+                                                                style={{ cursor: 'pointer' }}
                                                             >
                                                                 <span className={styles.leaderPillRank}>{lIdx + 1}위</span>
                                                                 <span className={styles.leaderPillName}>{ldr.name}</span>
                                                                 <span className={String(ldr.rate).startsWith('-') ? styles.rateDown : styles.rateUp}>
                                                                     {String(ldr.rate).startsWith('+') || String(ldr.rate).startsWith('-') ? ldr.rate : `+${ldr.rate}`}%
                                                                 </span>
-                                                            </a>
+                                                            </button>
                                                         );
                                                     })}
                                                 </div>
@@ -1181,11 +1253,10 @@ export default function DashboardClient() {
                     <div className={styles.actionGroup}>
                         <a
                             href={activeTargetDate ? `/daily_reports/daily_report_${activeTargetDate}.pdf` : '/daily_report_latest.pdf'}
-                            download={`수급데일리리포트_${activeTargetDate || '최신'}.pdf`}
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.btnDailyReportDownload}
-                            title={`${formatDateReadable(activeTargetDate)} 일일 수급 데일리 리포트 (PDF) 다운로드`}
+                            title={`${formatDateReadable(activeTargetDate)} 일일 수급 데일리 리포트 (PDF) 새 창에서 보기`}
                         >
                             📄 {formatDateReadable(activeTargetDate)} 데일리 리포트
                         </a>
@@ -1194,7 +1265,7 @@ export default function DashboardClient() {
                             target="_blank"
                             rel="noopener noreferrer"
                             className={styles.btnPdfDownload}
-                            title="탑다운 수급 매매 실전 전략 완벽 가이드북 (PDF) 다운로드"
+                            title="탑다운 수급 매매 실전 전략 완벽 가이드북 (PDF) 새 창에서 보기"
                         >
                             📘 전략 가이드북
                         </a>
@@ -1844,6 +1915,220 @@ export default function DashboardClient() {
                     </div>
                 </div>
             </section>
+
+            {/* 🔍 최근 1달 소식·공시 1페이지 브리핑 Drawer */}
+            {briefingTarget && (
+                <>
+                    <div className={styles.drawerOverlay} onClick={handleCloseBriefing} />
+                    <aside className={styles.drawerContainer} role="dialog" aria-modal="true">
+                        {/* Header */}
+                        <div className={styles.drawerHeader}>
+                            <div>
+                                <div className={styles.drawerStockTitle}>
+                                    <span className={styles.drawerStockName}>
+                                        {briefingData?.stockName || briefingTarget.name}
+                                    </span>
+                                    <span className={styles.drawerStockCode}>({briefingTarget.code})</span>
+                                </div>
+                                <div className={styles.drawerStockPriceRow}>
+                                    <span className={styles.drawerCurrentPrice}>
+                                        {briefingData?.price ? `${briefingData.price}원` : '-'}
+                                    </span>
+                                    <span
+                                        className={
+                                            briefingData?.fluctuationRate?.startsWith('-')
+                                                ? styles.rateDown
+                                                : styles.rateUp
+                                        }
+                                        style={{ fontWeight: 800 }}
+                                    >
+                                        {briefingData?.fluctuationRate || ''}
+                                    </span>
+                                    <span style={{ fontSize: '11.5px', color: '#9ca3af' }}>
+                                        최근 1개월(30일) 투자 브리핑
+                                    </span>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                className={styles.drawerCloseBtn}
+                                onClick={handleCloseBriefing}
+                                aria-label="브리핑 닫기"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        {/* Sub Tab Navigation */}
+                        <nav className={styles.drawerTabNav}>
+                            <button
+                                type="button"
+                                className={`${styles.drawerTabBtn} ${briefingTab === 'ALL' ? styles.drawerTabBtnActive : ''}`}
+                                onClick={() => setBriefingTab('ALL')}
+                            >
+                                📋 1페이지 종합 요약
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.drawerTabBtn} ${briefingTab === 'NEWS' ? styles.drawerTabBtnActive : ''}`}
+                                onClick={() => setBriefingTab('NEWS')}
+                            >
+                                📰 최근 언론 뉴스 ({briefingData?.newsCount ?? 0})
+                            </button>
+                            <button
+                                type="button"
+                                className={`${styles.drawerTabBtn} ${briefingTab === 'DISCLOSURE' ? styles.drawerTabBtnActive : ''}`}
+                                onClick={() => setBriefingTab('DISCLOSURE')}
+                            >
+                                📢 DART 기업 공시 ({briefingData?.disclosureCount ?? 0})
+                            </button>
+                        </nav>
+
+                        {/* Body */}
+                        <div className={styles.drawerBody}>
+                            {briefingLoading ? (
+                                <div className={styles.drawerLoading}>
+                                    <div style={{ fontSize: '28px' }}>⏳</div>
+                                    <div style={{ fontWeight: 700 }}>최근 1개월 언론 뉴스 및 전자공시(DART)를 분석하고 있습니다...</div>
+                                    <span style={{ fontSize: '11.5px', color: '#6b7280' }}>네이버 증권 &amp; 금감원 공시 실시간 연동 중</span>
+                                </div>
+                            ) : briefingError ? (
+                                <div className={styles.drawerEmpty}>
+                                    <p style={{ color: '#ef4444', fontWeight: 700 }}>⚠️ {briefingError}</p>
+                                    <button
+                                        type="button"
+                                        className={styles.btnWarningPrimary}
+                                        onClick={() => handleOpenBriefing(briefingTarget.code, briefingTarget.name)}
+                                        style={{ marginTop: '10px' }}
+                                    >
+                                        다시 시도
+                                    </button>
+                                </div>
+                            ) : briefingData ? (
+                                <>
+                                    {/* Keywords / Themes */}
+                                    {briefingData.keywords && briefingData.keywords.length > 0 && (
+                                        <div className={styles.drawerKeywordsBox}>
+                                            <div className={styles.drawerKeywordsTitle}>
+                                                🎯 최근 30일 핵심 모멘텀 키워드:
+                                            </div>
+                                            <div className={styles.drawerKeywordsList}>
+                                                {briefingData.keywords.map((kw, i) => (
+                                                    <span key={i} className={styles.drawerKeywordTag}>
+                                                        #{kw}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Tab: ALL or NEWS */}
+                                    {(briefingTab === 'ALL' || briefingTab === 'NEWS') && (
+                                        <div>
+                                            <div className={styles.drawerSectionTitle}>
+                                                📰 최근 30일 주요 경제지 뉴스
+                                                <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 'normal' }}>
+                                                    ({briefingData.news.length}건 포착)
+                                                </span>
+                                            </div>
+
+                                            {briefingData.news.length === 0 ? (
+                                                <div className={styles.drawerEmpty}>최근 30일간 등록된 뉴스가 없습니다.</div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                                                    {(briefingTab === 'ALL' ? briefingData.news.slice(0, 5) : briefingData.news).map(
+                                                        (n, idx) => (
+                                                            <div key={idx} className={styles.drawerCard}>
+                                                                <div className={styles.drawerCardHead}>
+                                                                    <a
+                                                                        href={n.url}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className={styles.drawerCardTitle}
+                                                                    >
+                                                                        {n.title}
+                                                                    </a>
+                                                                </div>
+                                                                <div className={styles.drawerCardMeta}>
+                                                                    <span style={{ fontWeight: 700, color: '#93c5fd' }}>
+                                                                        {n.officeName}
+                                                                    </span>
+                                                                    {n.isMajor && <span className={styles.majorBadge}>주요경제지</span>}
+                                                                    <span>{n.datetime}</span>
+                                                                </div>
+                                                                {n.body && <p className={styles.drawerCardBody}>{n.body}</p>}
+                                                            </div>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Tab: ALL or DISCLOSURE */}
+                                    {(briefingTab === 'ALL' || briefingTab === 'DISCLOSURE') && (
+                                        <div>
+                                            <div className={styles.drawerSectionTitle} style={{ marginTop: '12px' }}>
+                                                📢 최근 30일 DART 공식 공시
+                                                <span style={{ fontSize: '11px', color: '#9ca3af', fontWeight: 'normal' }}>
+                                                    ({briefingData.disclosures.length}건)
+                                                </span>
+                                            </div>
+
+                                            {briefingData.disclosures.length === 0 ? (
+                                                <div className={styles.drawerEmpty}>최근 30일간 등록된 기업 공시가 없습니다.</div>
+                                            ) : (
+                                                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '8px' }}>
+                                                    {(briefingTab === 'ALL' ? briefingData.disclosures.slice(0, 4) : briefingData.disclosures).map(
+                                                        (d, idx) => (
+                                                            <div key={idx} className={styles.drawerCard}>
+                                                                <a
+                                                                    href={d.url}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className={styles.drawerCardTitle}
+                                                                >
+                                                                    {d.title}
+                                                                </a>
+                                                                <div className={styles.drawerCardMeta}>
+                                                                    <span style={{ color: '#fbbf24', fontWeight: 700 }}>
+                                                                        {d.author}
+                                                                    </span>
+                                                                    <span>{d.datetime}</span>
+                                                                </div>
+                                                            </div>
+                                                        )
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </>
+                            ) : null}
+                        </div>
+
+                        {/* Footer */}
+                        <div className={styles.drawerFooter}>
+                            <a
+                                href={briefingData?.naverUrl || `https://finance.naver.com/item/main.naver?code=${briefingTarget.code}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.drawerExtLink}
+                            >
+                                🔗 네이버페이 증권 상세창 ↗
+                            </a>
+                            <a
+                                href={`https://dart.fss.or.kr/dsab007/main.do?autoSearch=true&searchTerm=${briefingTarget.code}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={styles.drawerExtLink}
+                            >
+                                📄 전자공시(DART) 전문 ↗
+                            </a>
+                        </div>
+                    </aside>
+                </>
+            )}
         </div>
     );
 }
