@@ -1311,6 +1311,14 @@ def run_midterm_gems(target_date=None, min_val_eok=10.0):
             except Exception as e:
                 print(f"   ⚠️ 웹 대시보드 동기화 실패: {e}")
 
+    # 일일 수급 데일리 리포트 PDF 자동 생성
+    try:
+        from generate_daily_report_pdf import generate_daily_report_for_date
+        generate_daily_report_for_date(target_date)
+        print(f"   ▶ 일일 수급 데일리 리포트 PDF 생성 완료: daily_report_{target_date}.pdf")
+    except Exception as e:
+        print(f"   ⚠️ 일일 수급 데일리 리포트 PDF 생성 생략/실패: {e}")
+
     # Markdown 리포트 작성
     md_lines = [
         f"# 💎 [중단기 5대 알고리즘 통합 리포트] 백데이터 + 거래량 + 네이버 수급 정밀 발굴 ({target_date})\n",
