@@ -1319,3 +1319,84 @@
 .leaderPillName {
     font-weight: 700;
 }
+
+/* ==========================================================================
+   📄 Top-Down 수급매매 PDF 가이드북 배너 & 버튼
+   ========================================================================== */
+.btnPdfDownload {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    border: 1px solid #3b82f6;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.btnPdfDownload:hover {
+    background: linear-gradient(135deg, #1d4ed8, #1e40af);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+    transform: translateY(-1px);
+}
+
+.pdfBanner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.12), rgba(30, 58, 138, 0.22));
+    border: 1.5px solid rgba(59, 130, 246, 0.4);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+.pdfBannerLeft {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pdfIcon {
+    font-size: 24px;
+}
+
+.pdfBannerTitle {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: var(--md-sys-color-on-surface);
+}
+
+.pdfBannerDesc {
+    font-size: 11.5px;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 2px 0 0 0;
+}
+
+.btnDownloadGuide {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #ffffff !important;
+    background: #2563eb;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.15s ease;
+    white-space: nowrap;
+}
+
+.btnDownloadGuide:hover {
+    background: #1d4ed8;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+}

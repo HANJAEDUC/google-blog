@@ -1178,6 +1178,15 @@ export default function DashboardClient() {
                         </p>
                     </div>
                     <div className={styles.actionGroup}>
+                        <a
+                            href="/TopDown_Supply_Demand_Guide.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.btnPdfDownload}
+                            title="탑다운 수급 매매 실전 전략 완벽 가이드북 (PDF) 다운로드"
+                        >
+                            📥 탑다운 가이드 PDF
+                        </a>
                         <button
                             type="button"
                             className={styles.btnRefresh}
@@ -1331,6 +1340,30 @@ export default function DashboardClient() {
                 <div className={styles.slidingNoticeBar}>
                     💡 선택한 기준일(T)의 장마감 거래를 기준으로, <strong>그 날로부터 과거 60거래일 주가·거래량(이격도·회전율)</strong> 및{' '}
                     <strong>20거래일 외인·기관 수급</strong>을 재계산합니다. (미래 데이터 참조 없음 — 기준일마다 발굴 종목·점수·순위가 달라집니다)
+                </div>
+
+                {/* 📄 탑다운 수급 매매 완성 가이드북 PDF 다운로드 배너 */}
+                <div className={styles.pdfBanner}>
+                    <div className={styles.pdfBannerLeft}>
+                        <span className={styles.pdfIcon}>📘</span>
+                        <div>
+                            <div className={styles.pdfBannerTitle}>
+                                🎯 탑다운(Top-Down) 수급 매매 실전 전략 완벽 가이드북 (PDF)
+                            </div>
+                            <p className={styles.pdfBannerDesc}>
+                                Part 8 주도 업종 & 대장주 → Part 7 10일 수급강도(MA10 지지) → Part 5 외인지분 추세 → Part 3 연속 쌍끌이 매집 타점
+                            </p>
+                        </div>
+                    </div>
+                    <a
+                        href="/TopDown_Supply_Demand_Guide.pdf"
+                        download="탑다운_수급매매_완성가이드.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={styles.btnDownloadGuide}
+                    >
+                        📥 가이드북 PDF 다운로드 (427KB)
+                    </a>
                 </div>
 
                 {/* 날짜 유효성 검증 경고 배너 (미래 날짜 / 휴장일·데이터 없음 / 날짜 형식 오류) */}
