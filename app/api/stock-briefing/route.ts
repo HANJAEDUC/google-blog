@@ -184,7 +184,7 @@ export async function GET(req: NextRequest) {
                             title,
                             datetime: formattedDt,
                             author,
-                            url: `https://finance.naver.com/item/news_notice_detail.naver?code=${code}&no=${
+                            url: `https://finance.naver.com/item/news_notice_read.naver?code=${code}&no=${
                                 it.disclosureId || ''
                             }`,
                         });
@@ -237,3 +237,4 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: `브리핑 데이터를 가져오는 중 오류가 발생했습니다: ${msg}` }, { status: 500 });
     }
 }
+
