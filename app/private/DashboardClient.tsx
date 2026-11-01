@@ -1353,41 +1353,6 @@ export default function DashboardClient() {
                     <strong>20거래일 외인·기관 수급</strong>을 재계산합니다. (미래 데이터 참조 없음 — 기준일마다 발굴 종목·점수·순위가 달라집니다)
                 </div>
 
-                {/* 📄 탑다운 수급 매매 PDF 리포트 & 가이드북 다운로드 배너 */}
-                <div className={styles.pdfBanner}>
-                    <div className={styles.pdfBannerLeft}>
-                        <span className={styles.pdfIcon}>📑</span>
-                        <div>
-                            <div className={styles.pdfBannerTitle}>
-                                🎯 [{formatDateReadable(activeTargetDate)}] 일일 수급 데일리 리포트 & 탑다운 가이드북 (PDF)
-                            </div>
-                            <p className={styles.pdfBannerDesc}>
-                                당일 골든픽(교집합 종목) · 코스피 주도업종 Top 5(Part 8) · 10일 수급강도 Top 20(Part 7) · 스마트머니(Part 5) · 연속매집(Part 3)
-                            </p>
-                        </div>
-                    </div>
-                    <div className={styles.pdfBtnGroup}>
-                        <a
-                            href={activeTargetDate ? `/daily_reports/daily_report_${activeTargetDate}.pdf` : '/daily_report_latest.pdf'}
-                            download={`수급데일리리포트_${activeTargetDate || '최신'}.pdf`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.btnDailyReportDownload}
-                        >
-                            📄 {formatDateReadable(activeTargetDate)} 데일리 리포트 (PDF)
-                        </a>
-                        <a
-                            href="/TopDown_Supply_Demand_Guide.pdf"
-                            download="탑다운_수급매매_완성가이드.pdf"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={styles.btnDownloadSecondary}
-                        >
-                            📘 전략 원리 가이드북
-                        </a>
-                    </div>
-                </div>
-
                 {/* 날짜 유효성 검증 경고 배너 (미래 날짜 / 휴장일·데이터 없음 / 날짜 형식 오류) */}
                 {dateWarning && (
                     <div className={styles.warningAlertBox} role="alert">
