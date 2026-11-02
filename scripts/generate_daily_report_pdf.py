@@ -96,6 +96,7 @@ def build_daily_report_html(data):
 <meta charset="UTF-8">
 <title>[{target_date}] 일일 수급 데일리 리포트</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap');
   @page {{
     size: A4;
     margin: 14mm 13mm;
@@ -106,7 +107,7 @@ def build_daily_report_html(data):
     print-color-adjust: exact;
   }}
   body {{
-    font-family: -apple-system, BlinkMacSystemFont, "Malgun Gothic", "맑은 고딕", "Apple SD Gothic Neo", sans-serif;
+    font-family: "Noto Sans KR", "NanumGothic", "Malgun Gothic", "맑은 고딕", -apple-system, sans-serif;
     color: #1e293b;
     line-height: 1.5;
     font-size: 9.5pt;
@@ -753,6 +754,9 @@ def generate_daily_report_for_date(target_date=None):
         chrome_path,
         "--headless=new",
         "--disable-gpu",
+        "--no-sandbox",
+        "--run-all-compositor-stages-before-draw",
+        "--virtual-time-budget=2000",
         f"--print-to-pdf={pdf_output_path}",
         "--no-pdf-header-footer",
         temp_html_path
