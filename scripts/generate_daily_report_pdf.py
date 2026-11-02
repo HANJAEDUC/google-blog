@@ -733,9 +733,21 @@ def generate_daily_report_for_date(target_date=None):
     with open(temp_html_path, "w", encoding="utf-8") as f:
         f.write(html_content)
         
+    import shutil
+
     chrome_path = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
     if not os.path.exists(chrome_path):
         chrome_path = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
+    if not os.path.exists(chrome_path):
+        for cand in ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser"]:
+            found = shutil.which(cand)
+            if found:
+                chrome_path = found
+                break
+
+    if not os.path.exists(chrome_path) and not shutil.which(chrome_path):
+        print(f"⚠️ Headless Chrome/Edge not found ({chrome_path}). Skipping PDF compilation.")
+        return False, None
 
     cmd = [
         chrome_path,
@@ -747,7 +759,11 @@ def generate_daily_report_for_date(target_date=None):
     ]
     
     print(f"Generating Daily Report PDF for {target_date}...")
-    subprocess.run(cmd, check=True)
+    try:
+        subprocess.run(cmd, check=True)
+    except Exception as e:
+        print(f"⚠️ PDF generation subprocess failed: {e}")
+        return False, None
     
     if os.path.exists(pdf_output_path):
         size_kb = os.path.getsize(pdf_output_path) / 1024
@@ -774,3 +790,4 @@ def generate_daily_report_for_date(target_date=None):
 if __name__ == "__main__":
     t_date = sys.argv[1] if len(sys.argv) > 1 else None
     generate_daily_report_for_date(t_date)
+
